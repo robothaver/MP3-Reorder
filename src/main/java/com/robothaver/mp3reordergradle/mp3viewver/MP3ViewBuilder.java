@@ -13,10 +13,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import javafx.util.Builder;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.io.File;
 import java.util.function.Consumer;
 
 public class MP3ViewBuilder implements Builder<Region> {
@@ -36,10 +39,10 @@ public class MP3ViewBuilder implements Builder<Region> {
 
     @Override
     public Region build() {
-        VBox bottomUI = createBottomUI();
+        VBox controlsContainer = createBottomUI();
         VBox sideContainer = createSideContainer();
 
-        SplitPane splitPane = new SplitPane(bottomUI, sideContainer);
+        SplitPane splitPane = new SplitPane(controlsContainer, sideContainer);
         splitPane.setOrientation(Orientation.HORIZONTAL);
         splitPane.setDividerPositions(0.75);
         VBox.setVgrow(splitPane, Priority.ALWAYS);
@@ -50,12 +53,29 @@ public class MP3ViewBuilder implements Builder<Region> {
                 new Separator(Orientation.VERTICAL),
                 new Button("Settings", new FontIcon(Feather.SETTINGS))
         );
-        Button loadButton = new Button("Open", new FontIcon(Feather.FOLDER_PLUS));
-        loadButton.setOnAction(onLoadSongs);
+        Button loadButton = getLoadButton();
         toolBar.getItems().addFirst(loadButton);
         mainContainer.getChildren().addAll(toolBar, splitPane);
 
         return mainContainer;
+    }
+
+    private Button getLoadButton() {
+        Button loadButton = new Button("Open", new FontIcon(Feather.FOLDER_PLUS));
+        loadButton.setOnAction(event -> {
+            Stage stage = (Stage) loadButton.getScene().getWindow();
+
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setInitialDirectory(new File("."));
+            directoryChooser.setTitle("Choose the Folder Containing Your Songs");
+            File selectedDirectory = directoryChooser.showDialog(stage);
+
+            if (selectedDirectory != null) {
+                model.selectedPathProperty().setValue(selectedDirectory.getAbsolutePath());
+                onLoadSongs.handle(event);
+            }
+        });
+        return loadButton;
     }
 
     private VBox createBottomUI() {
