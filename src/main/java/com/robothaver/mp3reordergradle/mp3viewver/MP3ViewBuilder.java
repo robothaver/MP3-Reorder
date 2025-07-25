@@ -90,7 +90,7 @@ public class MP3ViewBuilder implements Builder<Region> {
 
         HBox buttonContainer = new HBox();
 
-        Button moveSongUpBtn = new Button("⬆\uFE0F");
+        Button moveSongUpBtn = new Button("⬆️");
         moveSongUpBtn.setOnAction(e -> {
             int selectedIndex = mp3FileTableView.getSelectionModel().getSelectedIndex();
             onMoveActiveSongUp.accept(selectedIndex);
@@ -98,7 +98,7 @@ public class MP3ViewBuilder implements Builder<Region> {
             mp3FileTableView.scrollTo(selectedIndex - 10);
         });
 
-        Button moveSongDownBtn = new Button("⬇\uFE0F");
+        Button moveSongDownBtn = new Button("⬇️");
         moveSongDownBtn.setOnAction(e -> {
             int selectedIndex = mp3FileTableView.getSelectionModel().getSelectedIndex();
             onMoveActiveSongDown.accept(selectedIndex);
@@ -147,13 +147,15 @@ public class MP3ViewBuilder implements Builder<Region> {
         sideContainer.getChildren().addAll(titleLabel, titleTextField);
 
         model.selectedSongIndexProperty().addListener((observableValue, oldIndex, currentIndex) -> {
-            Song song = model.getFiles().get((Integer) currentIndex);
-            Mp3File mp3File = song.getMp3File();
-            if (mp3File.hasId3v2Tag()) {
-                ID3v2 tag = mp3File.getId3v2Tag();
-                titleTextField.setText(tag.getTitle());
+            Integer selectedIndex = (Integer) currentIndex;
+            if (selectedIndex != -1) {
+                Song song = model.getFiles().get(selectedIndex);
+                Mp3File mp3File = song.getMp3File();
+                if (mp3File.hasId3v2Tag()) {
+                    ID3v2 tag = mp3File.getId3v2Tag();
+                    titleTextField.setText(tag.getTitle());
+                }
             }
-
         });
         return sideContainer;
     }
