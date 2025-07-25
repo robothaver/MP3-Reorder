@@ -1,0 +1,140 @@
+package com.robothaver.mp3reordergradle.mp3viewver;
+
+
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.Mp3File;
+import com.robothaver.mp3reordergradle.mp3viewver.controls.MP3TableView;
+import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.util.Builder;
+import org.kordamp.ikonli.feather.Feather;
+import org.kordamp.ikonli.javafx.FontIcon;
+
+import java.util.function.Consumer;
+
+public class MP3ViewBuilder implements Builder<Region> {
+    private final EventHandler<ActionEvent> onLoadSongs;
+    private final MP3Model model;
+    private final Consumer<Integer> onMoveActiveSongUp;
+    private final Consumer<Integer> onMoveActiveSongDown;
+    private final Runnable onSetTracks;
+
+    public MP3ViewBuilder(MP3Model model, EventHandler<ActionEvent> onLoadSongs, Consumer<Integer> onMoveActiveSongUp, Consumer<Integer> onMoveActiveSongDown, Runnable onSetTracks) {
+        this.model = model;
+        this.onLoadSongs = onLoadSongs;
+        this.onMoveActiveSongUp = onMoveActiveSongUp;
+        this.onMoveActiveSongDown = onMoveActiveSongDown;
+        this.onSetTracks = onSetTracks;
+    }
+
+    @Override
+    public Region build() {
+        VBox bottomUI = createBottomUI();
+        VBox sideContainer = createSideContainer();
+
+        SplitPane splitPane = new SplitPane(bottomUI, sideContainer);
+        splitPane.setOrientation(Orientation.HORIZONTAL);
+        splitPane.setDividerPositions(0.75);
+        VBox.setVgrow(splitPane, Priority.ALWAYS);
+
+        VBox mainContainer = new VBox();
+        ToolBar toolBar = new ToolBar(
+                new Button("Save", new FontIcon(Feather.SAVE)),
+                new Separator(Orientation.VERTICAL),
+                new Button("Settings", new FontIcon(Feather.SETTINGS))
+        );
+        Button loadButton = new Button("Open", new FontIcon(Feather.FOLDER_PLUS));
+        loadButton.setOnAction(onLoadSongs);
+        toolBar.getItems().addFirst(loadButton);
+        mainContainer.getChildren().addAll(toolBar, splitPane);
+
+        return mainContainer;
+    }
+
+    private VBox createBottomUI() {
+        VBox vBox = new VBox();
+        Label label = new Label("Hello World!");
+
+        TableView<Song> mp3FileTableView = new MP3TableView(model.getFiles()).build();
+
+        mp3FileTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSong, currentSong) -> {
+            model.selectedSongIndexProperty().setValue(model.getFiles().indexOf(currentSong));
+        });
+
+        HBox buttonContainer = new HBox();
+
+        Button moveSongUpBtn = new Button("⬆\uFE0F");
+        moveSongUpBtn.setOnAction(e -> {
+            int selectedIndex = mp3FileTableView.getSelectionModel().getSelectedIndex();
+            onMoveActiveSongUp.accept(selectedIndex);
+            mp3FileTableView.getSelectionModel().select(selectedIndex - 1);
+            mp3FileTableView.scrollTo(selectedIndex - 10);
+        });
+
+        Button moveSongDownBtn = new Button("⬇\uFE0F");
+        moveSongDownBtn.setOnAction(e -> {
+            int selectedIndex = mp3FileTableView.getSelectionModel().getSelectedIndex();
+            onMoveActiveSongDown.accept(selectedIndex);
+            mp3FileTableView.getSelectionModel().select(selectedIndex + 1);
+            mp3FileTableView.scrollTo(selectedIndex - 10);
+        });
+
+        Button log = new Button("Log");
+        log.setOnAction(e -> {
+            Song selectedItem = mp3FileTableView.getSelectionModel().getSelectedItem();
+            System.out.println(selectedItem);
+        });
+
+        Button setTracksButton = new Button("Set tracks by file name");
+        setTracksButton.setOnAction(e -> {
+            mp3FileTableView.getSortOrder().clear();
+            onSetTracks.run();
+
+        });
+
+        buttonContainer.setSpacing(10);
+        buttonContainer.getChildren().addAll(moveSongUpBtn, moveSongDownBtn, log, setTracksButton);
+
+        Label numberOfSongsLabel = new Label("Songs: 0");
+
+        model.getFiles().addListener((ListChangeListener<Song>) c -> {
+            numberOfSongsLabel.setText("Songs: " + model.getFiles().size());
+        });
+
+        vBox.getChildren().addAll(label, buttonContainer, numberOfSongsLabel, mp3FileTableView);
+        return vBox;
+    }
+
+    private VBox createSideContainer() {
+        VBox sideContainer = new VBox();
+        sideContainer.setMaxWidth(400);
+
+        Label titleLabel = new Label("Title");
+        TextField titleTextField = new TextField();
+        titleTextField.setOnAction(e -> {
+            sideContainer.requestFocus();
+            System.out.println(titleTextField.textProperty().getValue());
+        });
+
+
+        sideContainer.getChildren().addAll(titleLabel, titleTextField);
+
+        model.selectedSongIndexProperty().addListener((observableValue, oldIndex, currentIndex) -> {
+            Song song = model.getFiles().get((Integer) currentIndex);
+            Mp3File mp3File = song.getMp3File();
+            if (mp3File.hasId3v2Tag()) {
+                ID3v2 tag = mp3File.getId3v2Tag();
+                titleTextField.setText(tag.getTitle());
+            }
+
+        });
+        return sideContainer;
+    }
+}
