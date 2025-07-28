@@ -57,7 +57,7 @@ public class SongLoader extends Task<List<Song>> {
     private List<Future<Song>> getTaskFutures() {
         try (Stream<Path> stream = Files.list(Paths.get(selectedPath))) {
             List<SongTask> songs = stream
-                    .filter(file -> !file.endsWith(".mp3"))
+                    .filter(file -> file.getFileName().toString().endsWith(".mp3"))
                     .map(path -> new SongTask(path, songLoadingProgress))
                     .toList();
             Platform.runLater(() -> songLoadingProgress.allSongsProperty().setValue(songs.size()));

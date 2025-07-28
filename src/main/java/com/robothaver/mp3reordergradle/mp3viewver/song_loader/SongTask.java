@@ -18,6 +18,7 @@ public class SongTask implements Callable<Song> {
 
     @Override
     public Song call() throws Exception {
+        System.out.println(file);
         Mp3File mp3File = new Mp3File(file);
         Song song = new Song(mp3File, file);
         int trackNumber = -1;
