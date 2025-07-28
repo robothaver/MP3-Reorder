@@ -10,4 +10,5 @@ module com.robothaver.mp3reordergradle {
     exports com.robothaver.mp3reordergradle;
 
     opens com.robothaver.mp3reordergradle.mp3viewver to javafx.base;
+    opens com.robothaver.mp3reordergradle.mp3viewver.song_loader to javafx.base;
 }

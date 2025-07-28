@@ -46,15 +46,15 @@ public class MP3ViewBuilder implements Builder<Region> {
         splitPane.setOrientation(Orientation.HORIZONTAL);
         splitPane.setDividerPositions(0.75);
         VBox.setVgrow(splitPane, Priority.ALWAYS);
-
+        Button saveButton = new Button("Save", new FontIcon(Feather.SAVE));
+        saveButton.setOnAction(event -> {});
         VBox mainContainer = new VBox();
         ToolBar toolBar = new ToolBar(
-                new Button("Save", new FontIcon(Feather.SAVE)),
+                getLoadButton(),
+                saveButton,
                 new Separator(Orientation.VERTICAL),
                 new Button("Settings", new FontIcon(Feather.SETTINGS))
         );
-        Button loadButton = getLoadButton();
-        toolBar.getItems().addFirst(loadButton);
         mainContainer.getChildren().addAll(toolBar, splitPane);
 
         return mainContainer;
@@ -82,10 +82,10 @@ public class MP3ViewBuilder implements Builder<Region> {
         VBox vBox = new VBox();
         Label label = new Label("Hello World!");
 
-        TableView<Song> mp3FileTableView = new MP3TableView(model.getFiles()).build();
+        TableView<Song> mp3FileTableView = new MP3TableView(model.getSongs()).build();
 
         mp3FileTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSong, currentSong) -> {
-            model.selectedSongIndexProperty().setValue(model.getFiles().indexOf(currentSong));
+            model.selectedSongIndexProperty().setValue(model.getSongs().indexOf(currentSong));
         });
 
         HBox buttonContainer = new HBox();
@@ -124,8 +124,8 @@ public class MP3ViewBuilder implements Builder<Region> {
 
         Label numberOfSongsLabel = new Label("Songs: 0");
 
-        model.getFiles().addListener((ListChangeListener<Song>) c -> {
-            numberOfSongsLabel.setText("Songs: " + model.getFiles().size());
+        model.getSongs().addListener((ListChangeListener<Song>) c -> {
+            numberOfSongsLabel.setText("Songs: " + model.getSongs().size());
         });
 
         vBox.getChildren().addAll(label, buttonContainer, numberOfSongsLabel, mp3FileTableView);
@@ -149,7 +149,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         model.selectedSongIndexProperty().addListener((observableValue, oldIndex, currentIndex) -> {
             Integer selectedIndex = (Integer) currentIndex;
             if (selectedIndex != -1) {
-                Song song = model.getFiles().get(selectedIndex);
+                Song song = model.getSongs().get(selectedIndex);
                 Mp3File mp3File = song.getMp3File();
                 if (mp3File.hasId3v2Tag()) {
                     ID3v2 tag = mp3File.getId3v2Tag();

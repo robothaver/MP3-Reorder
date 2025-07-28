@@ -11,7 +11,7 @@ public class MP3Interactor {
     }
 
     public void setTracksForSongsByName() {
-        ObservableList<Song> songs = model.getFiles();
+        ObservableList<Song> songs = model.getSongs();
         songs.sort((o1, o2) -> MP3FileUtils.compareFileNames(o1.getFileName(), o2.getFileName()));
         for (int i = 0; i < songs.size(); i++) {
             songs.get(i).setTrack(i + 1);
@@ -19,7 +19,7 @@ public class MP3Interactor {
     }
 
     public void moveSelectedSongUp(int selectedIndex) {
-        ObservableList<Song> songs = model.getFiles();
+        ObservableList<Song> songs = model.getSongs();
         if (selectedIndex != 0 && selectedIndex != -1) {
             Song selectedSong = songs.get(selectedIndex);
             Song previousSong = songs.get(selectedIndex - 1);
@@ -34,7 +34,7 @@ public class MP3Interactor {
     }
 
     public void moveSelectedSongDown(int selectedIndex) {
-        ObservableList<Song> songs = model.getFiles();
+        ObservableList<Song> songs = model.getSongs();
         if (selectedIndex != songs.size() - 1 && selectedIndex != -1) {
             Song selectedSong = songs.get(selectedIndex);
             Song nextSong = songs.get(selectedIndex + 1);

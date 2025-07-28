@@ -1,6 +1,8 @@
 package com.robothaver.mp3reordergradle.mp3viewver;
 
-import javafx.collections.ObservableList;
+import com.robothaver.mp3reordergradle.mp3viewver.controls.SongLoadingDialogViewBuilder;
+import com.robothaver.mp3reordergradle.mp3viewver.song_loader.SongLoader;
+import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.util.Builder;
 
@@ -22,18 +24,16 @@ public class MP3Controller {
     }
 
     private void loadSongs() {
-        System.out.println("BUTTON CLIUCKED");
-        SongLoader songLoader = new SongLoader(model.selectedPathProperty().getValue());
+        Dialog<Void> dialog = new SongLoadingDialogViewBuilder(model.selectedPathProperty().getValue(), model.getSongLoadingProgress()).build();
+
+        SongLoader songLoader = new SongLoader(model.selectedPathProperty().getValue(), dialog, model.getSongLoadingProgress());
         songLoader.setOnSucceeded(event -> {
-            System.out.println("LOADED ALL SONGS");
-            ObservableList<Song> songs = model.getFiles();
-            songs.clear();
-            songs.addAll(songLoader.getValue());
-            System.out.println(songLoader.getValue());
+            model.getSongs().setAll(songLoader.getValue());
+            DialogPane dialogPane = dialog.getDialogPane();
+            dialogPane.getScene().getWindow().hide();
         });
-        Thread thread = new Thread(songLoader);
-        thread.setDaemon(true);
-        thread.start();
+
+        new Thread(songLoader).start();
     }
 
     public Region getView() {
