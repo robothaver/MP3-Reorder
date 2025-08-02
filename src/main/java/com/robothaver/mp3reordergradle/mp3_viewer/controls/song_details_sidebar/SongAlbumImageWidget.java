@@ -11,7 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Objects;
 
 public class SongAlbumImageWidget implements Builder<VBox> {
-    private final Image defaultImage = new Image(getClass().getResource("/com/robothaver/mp3reordergradle/Images/no_image.png").toExternalForm());
+    private final Image defaultImage = new Image(getClass().getResource("/com/robothaver/mp3reordergradle/Images/no_image.png").toString());
     private ImageView imageView;
     private Rectangle clip;
 

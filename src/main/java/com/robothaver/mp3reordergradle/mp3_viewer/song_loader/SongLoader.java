@@ -22,6 +22,7 @@ public class SongLoader extends Task<List<Song>> {
     private final String selectedPath;
     private final Dialog<Void> dialog;
     private final SongLoadingProgress songLoadingProgress;
+    private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
     public SongLoader(String selectedPath, Dialog<Void> dialog, SongLoadingProgress songLoadingProgress) {
         this.selectedPath = selectedPath;
@@ -62,14 +63,12 @@ public class SongLoader extends Task<List<Song>> {
                     .toList();
             Platform.runLater(() -> songLoadingProgress.allSongsProperty().setValue(songs.size()));
 
-            try (ExecutorService myExecutor = Executors.newVirtualThreadPerTaskExecutor()) {
-                return myExecutor.invokeAll(songs);
-            } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
-            }
+            return executor.invokeAll(songs);
         } catch (IOException e) {
             System.out.println("Selected path not found!");
             throw new IllegalStateException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
