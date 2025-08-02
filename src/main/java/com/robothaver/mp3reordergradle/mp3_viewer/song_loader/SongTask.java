@@ -1,7 +1,7 @@
-package com.robothaver.mp3reordergradle.mp3viewver.song_loader;
+package com.robothaver.mp3reordergradle.mp3_viewer.song_loader;
 
 import com.mpatric.mp3agic.Mp3File;
-import com.robothaver.mp3reordergradle.mp3viewver.Song;
+import com.robothaver.mp3reordergradle.mp3_viewer.Song;
 import javafx.application.Platform;
 
 import java.nio.file.Path;
@@ -18,7 +18,6 @@ public class SongTask implements Callable<Song> {
 
     @Override
     public Song call() throws Exception {
-        System.out.println(file);
         Mp3File mp3File = new Mp3File(file);
         Song song = new Song(mp3File, file);
         int trackNumber = -1;

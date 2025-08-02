@@ -1,8 +1,8 @@
-package com.robothaver.mp3reordergradle.mp3viewver.controls;
+package com.robothaver.mp3reordergradle.mp3_viewer.controls;
 
 import atlantafx.base.theme.Styles;
-import com.robothaver.mp3reordergradle.mp3viewver.Song;
-import com.robothaver.mp3reordergradle.mp3viewver.utils.MP3FileUtils;
+import com.robothaver.mp3reordergradle.mp3_viewer.Song;
+import com.robothaver.mp3reordergradle.mp3_viewer.utils.MP3FileUtils;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;

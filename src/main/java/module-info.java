@@ -5,10 +5,11 @@ module com.robothaver.mp3reordergradle {
     requires mp3agic;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.feather;
+    requires java.desktop;
 
     opens com.robothaver.mp3reordergradle to javafx.fxml;
     exports com.robothaver.mp3reordergradle;
 
-    opens com.robothaver.mp3reordergradle.mp3viewver to javafx.base;
-    opens com.robothaver.mp3reordergradle.mp3viewver.song_loader to javafx.base;
+    opens com.robothaver.mp3reordergradle.mp3_viewer to javafx.base;
+    opens com.robothaver.mp3reordergradle.mp3_viewer.song_loader to javafx.base;
 }

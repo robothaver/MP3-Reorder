@@ -1,7 +1,7 @@
 package com.robothaver.mp3reordergradle;
 
 import atlantafx.base.theme.PrimerDark;
-import com.robothaver.mp3reordergradle.mp3viewver.MP3Controller;
+import com.robothaver.mp3reordergradle.mp3_viewer.MP3Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

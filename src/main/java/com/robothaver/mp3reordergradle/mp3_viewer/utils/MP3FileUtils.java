@@ -1,4 +1,4 @@
-package com.robothaver.mp3reordergradle.mp3viewver.utils;
+package com.robothaver.mp3reordergradle.mp3_viewer.utils;
 
 import java.text.Collator;
 import java.util.Locale;

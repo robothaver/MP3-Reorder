@@ -1,6 +1,6 @@
-package com.robothaver.mp3reordergradle.mp3viewver.song_loader;
+package com.robothaver.mp3reordergradle.mp3_viewer.song_loader;
 
-import com.robothaver.mp3reordergradle.mp3viewver.Song;
+import com.robothaver.mp3reordergradle.mp3_viewer.Song;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.Dialog;

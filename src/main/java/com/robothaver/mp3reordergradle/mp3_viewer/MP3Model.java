@@ -1,10 +1,7 @@
-package com.robothaver.mp3reordergradle.mp3viewver;
+package com.robothaver.mp3reordergradle.mp3_viewer;
 
-import com.robothaver.mp3reordergradle.mp3viewver.song_loader.SongLoadingProgress;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import com.robothaver.mp3reordergradle.mp3_viewer.song_loader.SongLoadingProgress;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

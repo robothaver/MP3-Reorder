@@ -1,9 +1,7 @@
-package com.robothaver.mp3reordergradle.mp3viewver.song_loader;
+package com.robothaver.mp3reordergradle.mp3_viewer.song_loader;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 public class SongLoadingProgress {
     private final IntegerProperty allSongs = new SimpleIntegerProperty();

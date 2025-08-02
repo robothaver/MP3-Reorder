@@ -1,9 +1,8 @@
-package com.robothaver.mp3reordergradle.mp3viewver;
+package com.robothaver.mp3reordergradle.mp3_viewer;
 
 
-import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.Mp3File;
-import com.robothaver.mp3reordergradle.mp3viewver.controls.MP3TableView;
+import com.robothaver.mp3reordergradle.mp3_viewer.controls.MP3TableView;
+import com.robothaver.mp3reordergradle.mp3_viewer.controls.song_details_sidebar.SongDetailsSideBarViewBuilder;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -40,14 +39,15 @@ public class MP3ViewBuilder implements Builder<Region> {
     @Override
     public Region build() {
         VBox controlsContainer = createBottomUI();
-        VBox sideContainer = createSideContainer();
+        ScrollPane sideContainer = (ScrollPane) new SongDetailsSideBarViewBuilder(model).build();
 
         SplitPane splitPane = new SplitPane(controlsContainer, sideContainer);
         splitPane.setOrientation(Orientation.HORIZONTAL);
         splitPane.setDividerPositions(0.75);
         VBox.setVgrow(splitPane, Priority.ALWAYS);
         Button saveButton = new Button("Save", new FontIcon(Feather.SAVE));
-        saveButton.setOnAction(event -> {});
+        saveButton.setOnAction(event -> {
+        });
         VBox mainContainer = new VBox();
         ToolBar toolBar = new ToolBar(
                 getLoadButton(),
@@ -80,12 +80,15 @@ public class MP3ViewBuilder implements Builder<Region> {
 
     private VBox createBottomUI() {
         VBox vBox = new VBox();
-        Label label = new Label("Hello World!");
 
         TableView<Song> mp3FileTableView = new MP3TableView(model.getSongs()).build();
 
-        mp3FileTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSong, currentSong) -> {
-            model.selectedSongIndexProperty().setValue(model.getSongs().indexOf(currentSong));
+        mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldValue, newValue) -> {
+            int index = (int) newValue;
+            if (index != -1) {
+                model.selectedSongIndexProperty().setValue(newValue);
+                model.getSongs().get(index).init();
+            }
         });
 
         HBox buttonContainer = new HBox();
@@ -116,7 +119,6 @@ public class MP3ViewBuilder implements Builder<Region> {
         setTracksButton.setOnAction(e -> {
             mp3FileTableView.getSortOrder().clear();
             onSetTracks.run();
-
         });
 
         buttonContainer.setSpacing(10);
@@ -124,39 +126,11 @@ public class MP3ViewBuilder implements Builder<Region> {
 
         Label numberOfSongsLabel = new Label("Songs: 0");
 
-        model.getSongs().addListener((ListChangeListener<Song>) c -> {
-            numberOfSongsLabel.setText("Songs: " + model.getSongs().size());
-        });
+        model.getSongs().addListener((ListChangeListener<Song>) c ->
+                numberOfSongsLabel.setText("Songs: " + model.getSongs().size())
+        );
 
-        vBox.getChildren().addAll(label, buttonContainer, numberOfSongsLabel, mp3FileTableView);
+        vBox.getChildren().addAll(buttonContainer, numberOfSongsLabel, mp3FileTableView);
         return vBox;
-    }
-
-    private VBox createSideContainer() {
-        VBox sideContainer = new VBox();
-        sideContainer.setMaxWidth(400);
-
-        Label titleLabel = new Label("Title");
-        TextField titleTextField = new TextField();
-        titleTextField.setOnAction(e -> {
-            sideContainer.requestFocus();
-            System.out.println(titleTextField.textProperty().getValue());
-        });
-
-
-        sideContainer.getChildren().addAll(titleLabel, titleTextField);
-
-        model.selectedSongIndexProperty().addListener((observableValue, oldIndex, currentIndex) -> {
-            Integer selectedIndex = (Integer) currentIndex;
-            if (selectedIndex != -1) {
-                Song song = model.getSongs().get(selectedIndex);
-                Mp3File mp3File = song.getMp3File();
-                if (mp3File.hasId3v2Tag()) {
-                    ID3v2 tag = mp3File.getId3v2Tag();
-                    titleTextField.setText(tag.getTitle());
-                }
-            }
-        });
-        return sideContainer;
     }
 }

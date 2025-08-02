@@ -1,28 +1,25 @@
-package com.robothaver.mp3reordergradle.mp3viewver;
+package com.robothaver.mp3reordergradle.mp3_viewer;
 
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.Mp3File;
-import com.robothaver.mp3reordergradle.mp3viewver.utils.MP3FileUtils;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import com.robothaver.mp3reordergradle.mp3_viewer.utils.MP3FileUtils;
+import javafx.beans.property.*;
 
 import java.nio.file.Path;
 
 public class Song implements Comparable<Song> {
-    private final IntegerProperty track = new SimpleIntegerProperty();
+    private final ObjectProperty<Integer> track = new SimpleObjectProperty<>();
     private final StringProperty fileName = new SimpleStringProperty();
     private final Mp3File mp3File;
     private final Path path;
     private ID3v2 tag;
 
+    private final ObjectProperty<Integer> genre = new SimpleObjectProperty<>();
     private final StringProperty artist = new SimpleStringProperty();
     private final StringProperty title = new SimpleStringProperty();
     private final StringProperty album = new SimpleStringProperty();
     private final StringProperty year = new SimpleStringProperty();
-    private final IntegerProperty genre = new SimpleIntegerProperty();
     private final StringProperty genreDescription = new SimpleStringProperty();
     private final StringProperty comment = new SimpleStringProperty();
     private final StringProperty lyrics = new SimpleStringProperty();
@@ -41,11 +38,19 @@ public class Song implements Comparable<Song> {
         init();
     }
 
+    public String getGenreDescription() {
+        return genreDescription.get();
+    }
+
+    public StringProperty genreDescriptionProperty() {
+        return genreDescription;
+    }
+
     public int getTrack() {
         return track.get();
     }
 
-    public IntegerProperty trackProperty() {
+    public ObjectProperty<Integer> trackProperty() {
         return track;
     }
 
@@ -67,10 +72,6 @@ public class Song implements Comparable<Song> {
 
     public ID3v2 getTag() {
         return tag;
-    }
-
-    public void setTag(ID3v2 tag) {
-        this.tag = tag;
     }
 
     public String getArtist() {
@@ -109,16 +110,8 @@ public class Song implements Comparable<Song> {
         return genre.get();
     }
 
-    public IntegerProperty genreProperty() {
+    public Property<Integer> genreProperty() {
         return genre;
-    }
-
-    public String getGenreDescription() {
-        return genreDescription.get();
-    }
-
-    public StringProperty genreDescriptionProperty() {
-        return genreDescription;
     }
 
     public String getComment() {
@@ -202,7 +195,9 @@ public class Song implements Comparable<Song> {
         tag.setTrack(String.valueOf(value));
     }
     
-    private void init() {
+    public void init() {
+        if (tag != null) return;
+
         if (mp3File.hasId3v2Tag()) {
             tag = mp3File.getId3v2Tag();
             loadDataFromTag();

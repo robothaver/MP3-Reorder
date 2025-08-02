@@ -1,6 +1,6 @@
-package com.robothaver.mp3reordergradle.mp3viewver;
+package com.robothaver.mp3reordergradle.mp3_viewer;
 
-import com.robothaver.mp3reordergradle.mp3viewver.utils.MP3FileUtils;
+import com.robothaver.mp3reordergradle.mp3_viewer.utils.MP3FileUtils;
 import javafx.collections.ObservableList;
 
 public class MP3Interactor {
