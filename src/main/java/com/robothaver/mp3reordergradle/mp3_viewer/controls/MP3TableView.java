@@ -11,13 +11,11 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import javafx.util.StringConverter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class MP3TableView implements Builder<TableView<Song>> {
     private final ObservableList<Song> files;
-
-    public MP3TableView(ObservableList<Song> files) {
-        this.files = files;
-    }
 
     @Override
     public TableView<Song> build() {

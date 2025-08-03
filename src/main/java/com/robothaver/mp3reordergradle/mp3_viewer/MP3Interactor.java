@@ -2,13 +2,11 @@ package com.robothaver.mp3reordergradle.mp3_viewer;
 
 import com.robothaver.mp3reordergradle.mp3_viewer.utils.MP3FileUtils;
 import javafx.collections.ObservableList;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class MP3Interactor {
     private final MP3Model model;
-
-    public MP3Interactor(MP3Model model) {
-        this.model = model;
-    }
 
     public void setTracksForSongsByName() {
         ObservableList<Song> songs = model.getSongs();

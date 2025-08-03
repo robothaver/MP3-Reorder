@@ -3,18 +3,15 @@ package com.robothaver.mp3reordergradle.mp3_viewer.song_loader;
 import com.mpatric.mp3agic.Mp3File;
 import com.robothaver.mp3reordergradle.mp3_viewer.Song;
 import javafx.application.Platform;
+import lombok.RequiredArgsConstructor;
 
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
+@RequiredArgsConstructor
 public class SongTask implements Callable<Song> {
     private final Path file;
     private final SongLoadingProgress songLoadingProgress;
-
-    public SongTask(Path file, SongLoadingProgress songLoadingProgress) {
-        this.file = file;
-        this.songLoadingProgress = songLoadingProgress;
-    }
 
     @Override
     public Song call() throws Exception {

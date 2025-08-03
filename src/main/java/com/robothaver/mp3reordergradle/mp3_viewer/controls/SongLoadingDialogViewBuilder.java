@@ -6,15 +6,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class SongLoadingDialogViewBuilder implements Builder<Dialog<Void>> {
     private final SongLoadingProgress songLoadingProgress;
     private final String loadingSource;
-
-    public SongLoadingDialogViewBuilder(String loadingSource, SongLoadingProgress songLoadingProgress) {
-        this.songLoadingProgress = songLoadingProgress;
-        this.loadingSource = loadingSource;
-    }
 
     @Override
     public Dialog<Void> build() {

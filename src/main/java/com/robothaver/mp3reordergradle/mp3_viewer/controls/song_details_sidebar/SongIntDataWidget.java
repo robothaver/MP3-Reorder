@@ -9,17 +9,15 @@ import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.util.Builder;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class SongIntDataWidget implements Builder<Region> {
     private final String title;
     private final int min;
     private Property<Integer> activeBinding;
     private Spinner<Integer> spinner;
 
-    public SongIntDataWidget(String title, int min) {
-        this.title = title;
-        this.min = min;
-    }
 
     public void bind(Property<Integer> newBinding) {
         if (spinner == null) return;

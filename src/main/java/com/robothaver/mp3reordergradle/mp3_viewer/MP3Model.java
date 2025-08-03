@@ -15,8 +15,16 @@ public class MP3Model {
         return songs;
     }
 
+    public String getSelectedPath() {
+        return selectedPath.get();
+    }
+
     public StringProperty selectedPathProperty() {
         return selectedPath;
+    }
+
+    public int getSelectedSongIndex() {
+        return selectedSongIndex.get();
     }
 
     public IntegerProperty selectedSongIndexProperty() {

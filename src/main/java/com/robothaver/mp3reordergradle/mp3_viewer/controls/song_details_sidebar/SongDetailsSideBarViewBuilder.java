@@ -12,14 +12,11 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Builder;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class SongDetailsSideBarViewBuilder implements Builder<Region> {
     private final MP3Model model;
-
-    public SongDetailsSideBarViewBuilder(MP3Model model) {
-        this.model = model;
-    }
-
 
     @Override
     public Region build() {

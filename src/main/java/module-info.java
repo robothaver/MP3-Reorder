@@ -6,6 +6,7 @@ module com.robothaver.mp3reordergradle {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.feather;
     requires java.desktop;
+    requires static lombok;
 
     opens com.robothaver.mp3reordergradle to javafx.fxml;
     exports com.robothaver.mp3reordergradle;

@@ -24,9 +24,10 @@ public class MP3Controller {
     }
 
     private void loadSongs() {
-        Dialog<Void> dialog = new SongLoadingDialogViewBuilder(model.selectedPathProperty().getValue(), model.getSongLoadingProgress()).build();
+        SongLoadingDialogViewBuilder dialogViewBuilder = new SongLoadingDialogViewBuilder(model.getSongLoadingProgress(), model.getSelectedPath());
+        Dialog<Void> dialog = dialogViewBuilder.build();
 
-        SongLoader songLoader = new SongLoader(model.selectedPathProperty().getValue(), dialog, model.getSongLoadingProgress());
+        SongLoader songLoader = new SongLoader(model.getSelectedPath(), dialog, model.getSongLoadingProgress());
         songLoader.setOnSucceeded(event -> {
             model.getSongs().setAll(songLoader.getValue());
             DialogPane dialogPane = dialog.getDialogPane();

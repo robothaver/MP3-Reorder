@@ -4,6 +4,7 @@ plugins {
     id("org.javamodularity.moduleplugin") version "1.8.12"
     id("org.openjfx.javafxplugin") version "0.0.13"
     id("org.beryx.jlink") version "3.0.1"
+    id("io.freefair.lombok") version "8.14"
 }
 
 group = "com.robothaver"

@@ -6,15 +6,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class SongTextDataWidget implements Builder<Region> {
     private final String title;
     private Property<String> activeBinding;
     private TextField textField;
-
-    public SongTextDataWidget(String title) {
-        this.title = title;
-    }
 
     public void bind(Property<String> newBinding) {
         if (textField == null) return;

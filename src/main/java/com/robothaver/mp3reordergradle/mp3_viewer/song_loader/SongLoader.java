@@ -4,6 +4,7 @@ import com.robothaver.mp3reordergradle.mp3_viewer.Song;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.Dialog;
+import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,17 +19,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
+@RequiredArgsConstructor
 public class SongLoader extends Task<List<Song>> {
     private final String selectedPath;
     private final Dialog<Void> dialog;
     private final SongLoadingProgress songLoadingProgress;
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
-
-    public SongLoader(String selectedPath, Dialog<Void> dialog, SongLoadingProgress songLoadingProgress) {
-        this.selectedPath = selectedPath;
-        this.dialog = dialog;
-        this.songLoadingProgress = songLoadingProgress;
-    }
 
     @Override
     protected List<Song> call() {

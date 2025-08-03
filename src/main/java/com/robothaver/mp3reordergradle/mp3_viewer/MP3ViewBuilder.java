@@ -15,26 +15,21 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Builder;
+import lombok.RequiredArgsConstructor;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.File;
 import java.util.function.Consumer;
 
+@RequiredArgsConstructor
 public class MP3ViewBuilder implements Builder<Region> {
-    private final EventHandler<ActionEvent> onLoadSongs;
     private final MP3Model model;
+    private final EventHandler<ActionEvent> onLoadSongs;
     private final Consumer<Integer> onMoveActiveSongUp;
     private final Consumer<Integer> onMoveActiveSongDown;
     private final Runnable onSetTracks;
 
-    public MP3ViewBuilder(MP3Model model, EventHandler<ActionEvent> onLoadSongs, Consumer<Integer> onMoveActiveSongUp, Consumer<Integer> onMoveActiveSongDown, Runnable onSetTracks) {
-        this.model = model;
-        this.onLoadSongs = onLoadSongs;
-        this.onMoveActiveSongUp = onMoveActiveSongUp;
-        this.onMoveActiveSongDown = onMoveActiveSongDown;
-        this.onSetTracks = onSetTracks;
-    }
 
     @Override
     public Region build() {
