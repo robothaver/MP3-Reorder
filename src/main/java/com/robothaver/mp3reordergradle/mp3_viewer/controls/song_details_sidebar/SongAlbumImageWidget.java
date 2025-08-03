@@ -8,9 +8,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
 
 import java.io.ByteArrayInputStream;
+import java.util.Objects;
 
 public class SongAlbumImageWidget implements Builder<VBox> {
-    private final Image defaultImage = new Image(getClass().getResource("/com/robothaver/mp3reordergradle/Images/no_image.png").toString());
+    private final Image defaultImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/no_image.png")));
     private ImageView imageView;
     private Rectangle clip;
 

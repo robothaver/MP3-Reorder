@@ -91,7 +91,6 @@ public class SongDetailsSideBarViewBuilder implements Builder<Region> {
 
                 genreSpinner.bind(song.genreProperty());
                 trackSpinner.bind(song.trackProperty());
-
                 titleTextField.bind(song.titleProperty());
                 artistTextField.bind(song.artistProperty());
                 albumTextField.bind(song.albumProperty());
