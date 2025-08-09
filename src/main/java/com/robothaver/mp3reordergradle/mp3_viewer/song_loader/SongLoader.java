@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,12 +49,23 @@ public class SongLoader extends Task<List<Song>> {
 
                 Platform.runLater(() -> songLoadingProgress.allSongsProperty().setValue(songTasks.size()));
 
-                return executor.invokeAll(songTasks).stream()
-                        .map(songFuture -> {
+                Stream<CompletableFuture<Song>> songFutures = songTasks.stream()
+                        .map(songTask -> CompletableFuture.supplyAsync(() -> {
                             try {
-                                return songFuture.get();
-                            } catch (InterruptedException | ExecutionException e) {
+                                return songTask.call();
+                            } catch (Exception e) {
                                 System.out.println("Failed to load song: " + e);
+                                return null;
+                            }
+                        }, executor));
+
+
+                return songFutures
+                        .map(songCompletableFuture -> {
+                            try {
+                                return songCompletableFuture.get();
+                            } catch (InterruptedException | ExecutionException e) {
+                                System.out.println("Failed to retrieve song: " + e);
                                 return null;
                             }
                         })
@@ -62,7 +74,7 @@ public class SongLoader extends Task<List<Song>> {
                         .toList();
 
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             System.out.println("Selected path not found!");
             throw new IllegalStateException(e);
         }
