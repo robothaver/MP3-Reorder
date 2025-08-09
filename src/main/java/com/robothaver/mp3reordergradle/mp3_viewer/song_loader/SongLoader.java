@@ -10,13 +10,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -24,7 +23,6 @@ public class SongLoader extends Task<List<Song>> {
     private final String selectedPath;
     private final Dialog<Void> dialog;
     private final SongLoadingProgress songLoadingProgress;
-    private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
     @Override
     protected List<Song> call() {
@@ -35,36 +33,38 @@ public class SongLoader extends Task<List<Song>> {
             songLoadingProgress.songsLoadedProperty().setValue(0);
         });
 
-        List<Song> songs = new ArrayList<>();
-        List<Future<Song>> futures = getTaskFutures();
-        for (Future<Song> future : futures) {
-            try {
-                Song result = future.get();
-                songs.add(result);
-            } catch (ExecutionException | InterruptedException e) {
-                System.err.println("Task failed: " + e.getMessage());
-            }
-        }
-
-        songs.sort(Song::compareTo);
+        List<Song> songs = loadSongs();
         assignTrackNumbers(songs);
         return songs.stream().sorted(Comparator.comparingInt(Song::getTrack)).toList();
     }
 
-    private List<Future<Song>> getTaskFutures() {
+    private List<Song> loadSongs() {
         try (Stream<Path> stream = Files.list(Paths.get(selectedPath))) {
-            List<SongTask> songs = stream
-                    .filter(file -> file.getFileName().toString().endsWith(".mp3"))
-                    .map(path -> new SongTask(path, songLoadingProgress))
-                    .toList();
-            Platform.runLater(() -> songLoadingProgress.allSongsProperty().setValue(songs.size()));
+            try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+                List<SongTask> songTasks = stream
+                        .filter(file -> file.getFileName().toString().endsWith(".mp3"))
+                        .map(path -> new SongTask(path, songLoadingProgress))
+                        .toList();
 
-            return executor.invokeAll(songs);
-        } catch (IOException e) {
+                Platform.runLater(() -> songLoadingProgress.allSongsProperty().setValue(songTasks.size()));
+
+                return executor.invokeAll(songTasks).stream()
+                        .map(songFuture -> {
+                            try {
+                                return songFuture.get();
+                            } catch (InterruptedException | ExecutionException e) {
+                                System.out.println("Failed to load song: " + e);
+                                return null;
+                            }
+                        })
+                        .filter(Objects::nonNull)
+                        .sorted()
+                        .toList();
+
+            }
+        } catch (IOException | InterruptedException e) {
             System.out.println("Selected path not found!");
             throw new IllegalStateException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
 

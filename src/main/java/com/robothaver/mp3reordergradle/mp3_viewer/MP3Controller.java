@@ -29,9 +29,15 @@ public class MP3Controller {
 
         SongLoader songLoader = new SongLoader(model.getSelectedPath(), dialog, model.getSongLoadingProgress());
         songLoader.setOnSucceeded(event -> {
+            System.out.println("Success");
             model.getSongs().setAll(songLoader.getValue());
             DialogPane dialogPane = dialog.getDialogPane();
             dialogPane.getScene().getWindow().hide();
+        });
+        songLoader.setOnFailed(event -> {
+            Throwable ex = songLoader.getException();
+            System.err.println("SongLoader failed: " + ex);
+            ex.printStackTrace();
         });
 
         new Thread(songLoader).start();
