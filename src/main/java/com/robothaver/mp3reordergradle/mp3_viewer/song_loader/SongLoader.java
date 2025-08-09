@@ -44,19 +44,21 @@ public class SongLoader extends Task<List<Song>> {
             try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
                 List<SongTask> songTasks = stream
                         .filter(file -> file.getFileName().toString().endsWith(".mp3"))
-                        .map(path -> new SongTask(path, songLoadingProgress))
+                        .map(SongTask::new)
                         .toList();
 
                 Platform.runLater(() -> songLoadingProgress.allSongsProperty().setValue(songTasks.size()));
 
                 Stream<CompletableFuture<Song>> songFutures = songTasks.stream()
                         .map(songTask -> CompletableFuture.supplyAsync(() -> {
+                            Song song = null;
                             try {
-                                return songTask.call();
+                                song = songTask.call();
                             } catch (Exception e) {
                                 System.out.println("Failed to load song: " + e);
-                                return null;
                             }
+                            Platform.runLater(() -> songLoadingProgress.songsLoadedProperty().setValue(songLoadingProgress.getSongsLoaded() + 1));
+                            return song;
                         }, executor));
 
 
