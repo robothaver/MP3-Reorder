@@ -19,6 +19,7 @@ public class MP3Controller {
                 actionEvent -> loadSongs(),
                 interactor::moveSelectedSongUp,
                 interactor::moveSelectedSongDown,
+                interactor::onTrackChangedForSong,
                 interactor::setTracksForSongsByName
         );
     }

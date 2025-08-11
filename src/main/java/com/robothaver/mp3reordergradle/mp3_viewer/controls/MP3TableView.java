@@ -1,7 +1,6 @@
 package com.robothaver.mp3reordergradle.mp3_viewer.controls;
 
 import atlantafx.base.theme.Styles;
-import com.robothaver.mp3reordergradle.mp3_viewer.MP3Model;
 import com.robothaver.mp3reordergradle.mp3_viewer.Song;
 import com.robothaver.mp3reordergradle.mp3_viewer.utils.MP3FileUtils;
 import javafx.beans.property.IntegerProperty;
@@ -15,10 +14,13 @@ import javafx.util.Builder;
 import javafx.util.StringConverter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.function.Consumer;
+
 @RequiredArgsConstructor
 public class MP3TableView implements Builder<TableView<Song>> {
     private final ObservableList<Song> songs;
     private final IntegerProperty selectedSongIndex;
+    private final Consumer<Integer> onTrackChanged;
 
     @Override
     public TableView<Song> build() {
@@ -55,7 +57,12 @@ public class MP3TableView implements Builder<TableView<Song>> {
         TableColumn<Song, Integer> trackColumn = new TableColumn<>("#");
         trackColumn.setCellValueFactory(new PropertyValueFactory<>("track"));
         trackColumn.setPrefWidth(10);
-        trackColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<>() {
+        trackColumn.setCellFactory(TextFieldTableCell.forTableColumn(createStringConverter()));
+        return trackColumn;
+    }
+
+    private StringConverter<Integer> createStringConverter() {
+        return new StringConverter<>() {
             @Override
             public String toString(Integer integer) {
                 return Integer.toString(integer);
@@ -63,13 +70,17 @@ public class MP3TableView implements Builder<TableView<Song>> {
 
             @Override
             public Integer fromString(String s) {
+                int currentTrack = songs.get(selectedSongIndex.get()).getTrack();
                 try {
-                    return Integer.parseInt(s);
+                    int parseInt = Integer.parseInt(s);
+                    if (parseInt == currentTrack) return parseInt;
+
+                    onTrackChanged.accept(parseInt);
+                    return parseInt;
                 } catch (NumberFormatException e) {
-                    return songs.get(selectedSongIndex.get()).getTrack();
+                    return currentTrack;
                 }
             }
-        }));
-        return trackColumn;
+        };
     }
 }

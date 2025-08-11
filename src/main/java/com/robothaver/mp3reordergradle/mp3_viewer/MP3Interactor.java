@@ -8,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 public class MP3Interactor {
     private final MP3Model model;
 
+    public void onTrackChangedForSong(int newTrack) {
+        System.out.println("New value for track " + newTrack);
+    }
+
     public void setTracksForSongsByName() {
         ObservableList<Song> songs = model.getSongs();
         songs.sort((o1, o2) -> MP3FileUtils.compareFileNames(o1.getFileName(), o2.getFileName()));

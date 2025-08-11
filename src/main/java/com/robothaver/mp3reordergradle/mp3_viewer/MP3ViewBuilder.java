@@ -28,6 +28,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private final EventHandler<ActionEvent> onLoadSongs;
     private final Consumer<Integer> onMoveActiveSongUp;
     private final Consumer<Integer> onMoveActiveSongDown;
+    private final Consumer<Integer> onTrackChanged;
     private final Runnable onSetTracks;
 
 
@@ -76,7 +77,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private VBox createBottomUI() {
         VBox vBox = new VBox();
 
-        TableView<Song> mp3FileTableView = new MP3TableView(model.getSongs(), model.selectedSongIndexProperty()).build();
+        TableView<Song> mp3FileTableView = new MP3TableView(model.getSongs(), model.selectedSongIndexProperty(), onTrackChanged).build();
 
         mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldValue, newValue) -> {
             int index = (int) newValue;
