@@ -76,7 +76,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private VBox createBottomUI() {
         VBox vBox = new VBox();
 
-        TableView<Song> mp3FileTableView = new MP3TableView(model.getSongs()).build();
+        TableView<Song> mp3FileTableView = new MP3TableView(model.getSongs(), model.selectedSongIndexProperty()).build();
 
         mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldValue, newValue) -> {
             int index = (int) newValue;

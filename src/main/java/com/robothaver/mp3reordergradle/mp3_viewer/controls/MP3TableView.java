@@ -1,8 +1,10 @@
 package com.robothaver.mp3reordergradle.mp3_viewer.controls;
 
 import atlantafx.base.theme.Styles;
+import com.robothaver.mp3reordergradle.mp3_viewer.MP3Model;
 import com.robothaver.mp3reordergradle.mp3_viewer.Song;
 import com.robothaver.mp3reordergradle.mp3_viewer.utils.MP3FileUtils;
+import javafx.beans.property.IntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -15,7 +17,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MP3TableView implements Builder<TableView<Song>> {
-    private final ObservableList<Song> files;
+    private final ObservableList<Song> songs;
+    private final IntegerProperty selectedSongIndex;
 
     @Override
     public TableView<Song> build() {
@@ -24,7 +27,7 @@ public class MP3TableView implements Builder<TableView<Song>> {
 
     private TableView<Song> createTable() {
         TableView<Song> mp3FileTableView = new TableView<>();
-        mp3FileTableView.setItems(files);
+        mp3FileTableView.setItems(songs);
         mp3FileTableView.setEditable(true);
         mp3FileTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_NEXT_COLUMN);
         VBox.setVgrow(mp3FileTableView, javafx.scene.layout.Priority.ALWAYS);
@@ -63,7 +66,7 @@ public class MP3TableView implements Builder<TableView<Song>> {
                 try {
                     return Integer.parseInt(s);
                 } catch (NumberFormatException e) {
-                    throw new RuntimeException(e);
+                    return songs.get(selectedSongIndex.get()).getTrack();
                 }
             }
         }));
