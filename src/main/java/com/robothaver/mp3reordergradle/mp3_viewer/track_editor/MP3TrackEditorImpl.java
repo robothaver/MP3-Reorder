@@ -2,14 +2,11 @@ package com.robothaver.mp3reordergradle.mp3_viewer.track_editor;
 
 import com.robothaver.mp3reordergradle.mp3_viewer.MP3Model;
 import com.robothaver.mp3reordergradle.mp3_viewer.Song;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 import static com.robothaver.mp3reordergradle.mp3_viewer.utils.Utils.TRACK_CONFLICT_MESSAGE;
 
@@ -20,7 +17,7 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
     public void setNewTrackForSong(int currentTrack, int newTrack) {
         ObservableList<Song> songs = model.getSongs();
         for (int i = 0; i < songs.size(); i++) {
-            if (i != model.getSelectedSongIndex().get() && songs.get(i).getTrack() == newTrack) {
+            if (i != model.getSelectedSongIndex() && songs.get(i).getTrack() == newTrack) {
                 showTrackConflictMessage(currentTrack, newTrack);
                 break;
             }
@@ -54,7 +51,7 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
 
             }
             case CANCEL -> {
-                model.getSongs().get(model.getSelectedSongIndex().get()).setTrack(currentTrack);
+                model.getSongs().get(model.getSelectedSongIndex()).setTrack(currentTrack);
             }
         }
     }

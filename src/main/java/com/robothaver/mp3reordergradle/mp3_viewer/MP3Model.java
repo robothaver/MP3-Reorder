@@ -24,4 +24,8 @@ public class MP3Model {
     public IntegerProperty selectedSongIndexProperty() {
         return selectedSongIndex;
     }
+
+    public int getSelectedSongIndex() {
+        return selectedSongIndex.get();
+    }
 }

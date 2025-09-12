@@ -9,6 +9,7 @@ import java.util.function.BiConsumer;
 public class TrackFieldTableCell extends TextFieldTableCell<Song, Integer> {
     private final BiConsumer<Integer, Integer> onTrackChanged;
     private Integer currentTrack;
+    private Integer newTrack;
 
     public TrackFieldTableCell(BiConsumer<Integer, Integer> onTrackChanged) {
         this.onTrackChanged = onTrackChanged;
@@ -20,17 +21,17 @@ public class TrackFieldTableCell extends TextFieldTableCell<Song, Integer> {
         super.updateItem(item, empty);
         if (currentTrack == null) {
             currentTrack = item;
+        } else {
+            currentTrack = newTrack;
         }
+        newTrack = item;
     }
-
     @Override
     public void commitEdit(Integer newValue) {
         super.commitEdit(newValue);
         if (!currentTrack.equals(newValue)) {
-            System.out.println("Current value: " + currentTrack + " new Vlaue " + newValue);
             onTrackChanged.accept(currentTrack, newValue);
         }
-        currentTrack = newValue;
     }
 
     private StringConverter<Integer> createStringConverter() {
