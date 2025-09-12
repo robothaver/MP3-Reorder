@@ -9,7 +9,7 @@ public class MP3Interactor {
     private final MP3Model model;
 
     public void onTrackChangedForSong(int newTrack) {
-        System.out.println("New value for track " + newTrack);
+
     }
 
     public void setTracksForSongsByFileName() {
@@ -21,32 +21,28 @@ public class MP3Interactor {
     }
 
     public void moveSelectedSongUp(int selectedIndex) {
-        ObservableList<Song> songs = model.getSongs();
         if (selectedIndex != 0 && selectedIndex != -1) {
-            Song selectedSong = songs.get(selectedIndex);
-            Song previousSong = songs.get(selectedIndex - 1);
-
-            int selectedSongTrack = selectedSong.getTrack();
-            selectedSong.setTrack(previousSong.getTrack());
-            previousSong.setTrack(selectedSongTrack);
-
-            songs.set(selectedIndex, songs.get(selectedIndex - 1));
-            songs.set(selectedIndex - 1, selectedSong);
+            setNewIndexForSong(selectedIndex, selectedIndex - 1);
         }
     }
 
     public void moveSelectedSongDown(int selectedIndex) {
         ObservableList<Song> songs = model.getSongs();
         if (selectedIndex != songs.size() - 1 && selectedIndex != -1) {
-            Song selectedSong = songs.get(selectedIndex);
-            Song nextSong = songs.get(selectedIndex + 1);
-
-            int selectedSongTrack = selectedSong.getTrack();
-            selectedSong.setTrack(nextSong.getTrack());
-            nextSong.setTrack(selectedSongTrack);
-
-            songs.set(selectedIndex, songs.get(selectedIndex + 1));
-            songs.set(selectedIndex + 1, selectedSong);
+            setNewIndexForSong(selectedIndex, selectedIndex + 1);
         }
+    }
+
+    private void setNewIndexForSong(int selectedIndex, int newIndex) {
+        ObservableList<Song> songs = model.getSongs();
+        Song selectedSong = songs.get(selectedIndex);
+        Song previousSong = songs.get(newIndex);
+
+        int selectedSongTrack = selectedSong.getTrack();
+        selectedSong.setTrack(previousSong.getTrack());
+        previousSong.setTrack(selectedSongTrack);
+
+        songs.set(selectedIndex, songs.get(newIndex));
+        songs.set(newIndex, selectedSong);
     }
 }
