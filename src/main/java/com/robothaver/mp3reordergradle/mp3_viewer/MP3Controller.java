@@ -20,7 +20,7 @@ public class MP3Controller {
                 interactor::moveSelectedSongUp,
                 interactor::moveSelectedSongDown,
                 interactor::onTrackChangedForSong,
-                interactor::setTracksForSongsByName
+                interactor::setTracksForSongsByFileName
         );
     }
 
@@ -30,7 +30,7 @@ public class MP3Controller {
 
         SongLoader songLoader = new SongLoader(model.getSelectedPath(), dialog, model.getSongLoadingProgress());
         songLoader.setOnSucceeded(event -> {
-            System.out.println("Success");
+            System.out.println("Loaded songs successfully!");
             model.getSongs().setAll(songLoader.getValue());
             DialogPane dialogPane = dialog.getDialogPane();
             dialogPane.getScene().getWindow().hide();
@@ -45,6 +45,7 @@ public class MP3Controller {
     }
 
     public Region getView() {
+        loadSongs();
         return viewBuilder.build();
     }
 }

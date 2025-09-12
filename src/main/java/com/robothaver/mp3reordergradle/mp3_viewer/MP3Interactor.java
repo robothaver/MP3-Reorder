@@ -12,7 +12,7 @@ public class MP3Interactor {
         System.out.println("New value for track " + newTrack);
     }
 
-    public void setTracksForSongsByName() {
+    public void setTracksForSongsByFileName() {
         ObservableList<Song> songs = model.getSongs();
         songs.sort((o1, o2) -> MP3FileUtils.compareFileNames(o1.getFileName(), o2.getFileName()));
         for (int i = 0; i < songs.size(); i++) {

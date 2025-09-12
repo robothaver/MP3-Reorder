@@ -1,4 +1,4 @@
-package com.robothaver.mp3reordergradle.mp3_viewer.controls;
+package com.robothaver.mp3reordergradle.mp3_viewer.controls.table;
 
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reordergradle.mp3_viewer.Song;
@@ -11,7 +11,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import javafx.util.StringConverter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.function.Consumer;
@@ -57,30 +56,9 @@ public class MP3TableView implements Builder<TableView<Song>> {
         TableColumn<Song, Integer> trackColumn = new TableColumn<>("#");
         trackColumn.setCellValueFactory(new PropertyValueFactory<>("track"));
         trackColumn.setPrefWidth(10);
-        trackColumn.setCellFactory(TextFieldTableCell.forTableColumn(createStringConverter()));
+        trackColumn.setCellFactory(songIntegerTableColumn ->
+            new TrackFieldTableCell(onTrackChanged)
+        );
         return trackColumn;
-    }
-
-    private StringConverter<Integer> createStringConverter() {
-        return new StringConverter<>() {
-            @Override
-            public String toString(Integer integer) {
-                return Integer.toString(integer);
-            }
-
-            @Override
-            public Integer fromString(String s) {
-                int currentTrack = songs.get(selectedSongIndex.get()).getTrack();
-                try {
-                    int parseInt = Integer.parseInt(s);
-                    if (parseInt == currentTrack) return parseInt;
-
-                    onTrackChanged.accept(parseInt);
-                    return parseInt;
-                } catch (NumberFormatException e) {
-                    return currentTrack;
-                }
-            }
-        };
     }
 }

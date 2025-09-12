@@ -1,7 +1,7 @@
 package com.robothaver.mp3reordergradle.mp3_viewer;
 
 
-import com.robothaver.mp3reordergradle.mp3_viewer.controls.MP3TableView;
+import com.robothaver.mp3reordergradle.mp3_viewer.controls.table.MP3TableView;
 import com.robothaver.mp3reordergradle.mp3_viewer.controls.song_details_sidebar.SongDetailsSideBarViewBuilder;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -29,7 +29,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private final Consumer<Integer> onMoveActiveSongUp;
     private final Consumer<Integer> onMoveActiveSongDown;
     private final Consumer<Integer> onTrackChanged;
-    private final Runnable onSetTracks;
+    private final Runnable onSetTracksByFileName;
 
 
     @Override
@@ -114,7 +114,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         Button setTracksButton = new Button("Set tracks by file name");
         setTracksButton.setOnAction(e -> {
             mp3FileTableView.getSortOrder().clear();
-            onSetTracks.run();
+            onSetTracksByFileName.run();
         });
 
         buttonContainer.setSpacing(10);

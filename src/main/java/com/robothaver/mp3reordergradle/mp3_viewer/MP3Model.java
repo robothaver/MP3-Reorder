@@ -4,16 +4,14 @@ import com.robothaver.mp3reordergradle.mp3_viewer.song_loader.SongLoadingProgres
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import lombok.Getter;
 
+@Getter
 public class MP3Model {
     private final ObservableList<Song> songs = FXCollections.observableArrayList();
     private final StringProperty selectedPath = new SimpleStringProperty("bulira  zenék");
     private final IntegerProperty selectedSongIndex = new SimpleIntegerProperty();
-    private SongLoadingProgress songLoadingProgress = new SongLoadingProgress();
-
-    public ObservableList<Song> getSongs() {
-        return songs;
-    }
+    private final SongLoadingProgress songLoadingProgress = new SongLoadingProgress();
 
     public String getSelectedPath() {
         return selectedPath.get();
@@ -23,19 +21,7 @@ public class MP3Model {
         return selectedPath;
     }
 
-    public int getSelectedSongIndex() {
-        return selectedSongIndex.get();
-    }
-
     public IntegerProperty selectedSongIndexProperty() {
         return selectedSongIndex;
-    }
-
-    public SongLoadingProgress getSongLoadingProgress() {
-        return songLoadingProgress;
-    }
-
-    public void setSongLoadingProgress(SongLoadingProgress songLoadingProgress) {
-        this.songLoadingProgress = songLoadingProgress;
     }
 }
