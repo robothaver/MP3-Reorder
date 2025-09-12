@@ -13,13 +13,13 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class MP3TableView implements Builder<TableView<Song>> {
     private final ObservableList<Song> songs;
-    private final IntegerProperty selectedSongIndex;
-    private final Consumer<Integer> onTrackChanged;
+    private final BiConsumer<Integer, Integer> onTrackChanged;
 
     @Override
     public TableView<Song> build() {

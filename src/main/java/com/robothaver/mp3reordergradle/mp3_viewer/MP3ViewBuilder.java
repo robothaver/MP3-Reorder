@@ -20,6 +20,7 @@ import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.File;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private final EventHandler<ActionEvent> onLoadSongs;
     private final Consumer<Integer> onMoveActiveSongUp;
     private final Consumer<Integer> onMoveActiveSongDown;
-    private final Consumer<Integer> onTrackChanged;
+    private final BiConsumer<Integer, Integer> onTrackChanged;
     private final Runnable onSetTracksByFileName;
 
 
@@ -77,7 +78,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private VBox createBottomUI() {
         VBox vBox = new VBox();
 
-        TableView<Song> mp3FileTableView = new MP3TableView(model.getSongs(), model.selectedSongIndexProperty(), onTrackChanged).build();
+        TableView<Song> mp3FileTableView = new MP3TableView(model.getSongs(), onTrackChanged).build();
 
         mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldValue, newValue) -> {
             int index = (int) newValue;

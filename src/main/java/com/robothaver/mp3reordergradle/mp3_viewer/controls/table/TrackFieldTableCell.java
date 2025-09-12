@@ -4,24 +4,33 @@ import com.robothaver.mp3reordergradle.mp3_viewer.Song;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class TrackFieldTableCell extends TextFieldTableCell<Song, Integer> {
-    private final Consumer<Integer> onTrackChanged;
+    private final BiConsumer<Integer, Integer> onTrackChanged;
     private Integer currentTrack;
 
-    public TrackFieldTableCell(Consumer<Integer> onTrackChanged) {
+    public TrackFieldTableCell(BiConsumer<Integer, Integer> onTrackChanged) {
         this.onTrackChanged = onTrackChanged;
         setConverter(createStringConverter());
     }
 
     @Override
-    public void updateItem(Integer newTrack, boolean empty) {
-        super.updateItem(newTrack, empty);
-        if (newTrack != null && currentTrack != null && !newTrack.equals(currentTrack)) {
-            onTrackChanged.accept(newTrack);
+    public void updateItem(Integer item, boolean empty) {
+        super.updateItem(item, empty);
+        if (currentTrack == null) {
+            currentTrack = item;
         }
-        currentTrack = newTrack;
+    }
+
+    @Override
+    public void commitEdit(Integer newValue) {
+        super.commitEdit(newValue);
+        if (!currentTrack.equals(newValue)) {
+            System.out.println("Current value: " + currentTrack + " new Vlaue " + newValue);
+            onTrackChanged.accept(currentTrack, newValue);
+        }
+        currentTrack = newValue;
     }
 
     private StringConverter<Integer> createStringConverter() {
