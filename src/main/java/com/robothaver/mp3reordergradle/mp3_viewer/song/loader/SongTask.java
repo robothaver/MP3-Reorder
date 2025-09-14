@@ -1,7 +1,7 @@
-package com.robothaver.mp3reordergradle.mp3_viewer.loader;
+package com.robothaver.mp3reordergradle.mp3_viewer.song.loader;
 
 import com.mpatric.mp3agic.Mp3File;
-import com.robothaver.mp3reordergradle.mp3_viewer.Song;
+import com.robothaver.mp3reordergradle.mp3_viewer.song.domain.Song;
 import lombok.RequiredArgsConstructor;
 
 import java.nio.file.Path;

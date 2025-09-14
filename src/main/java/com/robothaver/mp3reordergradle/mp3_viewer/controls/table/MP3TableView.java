@@ -1,9 +1,8 @@
 package com.robothaver.mp3reordergradle.mp3_viewer.controls.table;
 
 import atlantafx.base.theme.Styles;
-import com.robothaver.mp3reordergradle.mp3_viewer.Song;
+import com.robothaver.mp3reordergradle.mp3_viewer.song.domain.Song;
 import com.robothaver.mp3reordergradle.mp3_viewer.utils.MP3FileUtils;
-import javafx.beans.property.IntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -14,7 +13,6 @@ import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class MP3TableView implements Builder<TableView<Song>> {

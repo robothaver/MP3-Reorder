@@ -1,6 +1,7 @@
 package com.robothaver.mp3reordergradle.mp3_viewer;
 
-import com.robothaver.mp3reordergradle.mp3_viewer.editor.MP3TrackEditorImpl;
+import com.robothaver.mp3reordergradle.mp3_viewer.song.track.editor.MP3TrackEditorImpl;
+import com.robothaver.mp3reordergradle.mp3_viewer.song.domain.Song;
 import com.robothaver.mp3reordergradle.mp3_viewer.utils.MP3FileUtils;
 import javafx.collections.ObservableList;
 import lombok.RequiredArgsConstructor;

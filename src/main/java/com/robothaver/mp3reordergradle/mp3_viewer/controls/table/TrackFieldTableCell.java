@@ -1,6 +1,6 @@
 package com.robothaver.mp3reordergradle.mp3_viewer.controls.table;
 
-import com.robothaver.mp3reordergradle.mp3_viewer.Song;
+import com.robothaver.mp3reordergradle.mp3_viewer.song.domain.Song;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
 

@@ -1,4 +1,4 @@
-package com.robothaver.mp3reordergradle.mp3_viewer.editor;
+package com.robothaver.mp3reordergradle.mp3_viewer.song.track.editor;
 
 public enum TrackConflictSolutions {
     INSERT, PUT, CANCEL;

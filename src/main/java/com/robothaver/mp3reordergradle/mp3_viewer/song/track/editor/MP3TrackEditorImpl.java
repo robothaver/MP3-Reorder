@@ -1,9 +1,8 @@
-package com.robothaver.mp3reordergradle.mp3_viewer.editor;
+package com.robothaver.mp3reordergradle.mp3_viewer.song.track.editor;
 
 import com.robothaver.mp3reordergradle.mp3_viewer.MP3Model;
-import com.robothaver.mp3reordergradle.mp3_viewer.Song;
+import com.robothaver.mp3reordergradle.mp3_viewer.song.domain.Song;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -68,9 +67,9 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
             case PUT -> {
 
             }
-            case CANCEL -> {
-                songs.get(model.getSelectedSongIndex()).setTrack(currentTrack);
-            }
+            default -> songs
+                    .get(model.getSelectedSongIndex())
+                    .setTrack(currentTrack);
         }
     }
 

@@ -3,7 +3,7 @@ package com.robothaver.mp3reordergradle.mp3_viewer.controls.detailes;
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reordergradle.mp3_viewer.MP3Model;
-import com.robothaver.mp3reordergradle.mp3_viewer.Song;
+import com.robothaver.mp3reordergradle.mp3_viewer.song.domain.Song;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;

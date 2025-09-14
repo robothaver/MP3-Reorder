@@ -3,6 +3,7 @@ package com.robothaver.mp3reordergradle.mp3_viewer;
 
 import com.robothaver.mp3reordergradle.mp3_viewer.controls.table.MP3TableView;
 import com.robothaver.mp3reordergradle.mp3_viewer.controls.detailes.SongDetailsSideBarViewBuilder;
+import com.robothaver.mp3reordergradle.mp3_viewer.song.domain.Song;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
