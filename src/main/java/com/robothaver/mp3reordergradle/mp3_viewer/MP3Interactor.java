@@ -6,6 +6,8 @@ import com.robothaver.mp3reordergradle.mp3_viewer.utils.MP3FileUtils;
 import javafx.collections.ObservableList;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class MP3Interactor {
     private final MP3Model model;
@@ -16,7 +18,7 @@ public class MP3Interactor {
     }
 
     public void setTracksForSongsByFileName() {
-        ObservableList<Song> songs = model.getSongs();
+        List<Song> songs = model.getSongs();
         songs.sort((o1, o2) -> MP3FileUtils.compareFileNames(o2.getFileName(), o1.getFileName()));
         for (int i = 0; i < songs.size(); i++) {
             songs.get(i).setTrack(i + 1);

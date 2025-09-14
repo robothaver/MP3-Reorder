@@ -5,8 +5,8 @@ import java.util.Locale;
 
 public class MP3FileUtils {
     public static int compareFileNames(String source, String target) {
-        int firstTrackNumber = getTrackNumber(source);
-        int secondTrackNumber = getTrackNumber(target);
+        int firstTrackNumber = getTrackNumberFromFileName(source);
+        int secondTrackNumber = getTrackNumberFromFileName(target);
         // Neither name has a track
         if (firstTrackNumber == -1 && secondTrackNumber == -1) {
             Collator collator = Collator.getInstance(Locale.getDefault());
@@ -22,7 +22,7 @@ public class MP3FileUtils {
         }
     }
 
-    public static int getTrackNumber(String fileName) {
+    public static int getTrackNumberFromFileName(String fileName) {
         char[] charArray = fileName.toCharArray();
         int lastNumIndex = 0;
         for (int i = 0; i < fileName.length(); i++) {

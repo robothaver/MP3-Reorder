@@ -3,18 +3,15 @@ package com.robothaver.mp3reordergradle.mp3_viewer.song.domain;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.Mp3File;
-import com.robothaver.mp3reordergradle.mp3_viewer.utils.MP3FileUtils;
 import javafx.beans.property.*;
 
 import java.nio.file.Path;
 
-public class Song implements Comparable<Song> {
+public class Song {
     private final ObjectProperty<Integer> track = new SimpleObjectProperty<>();
     private final StringProperty fileName = new SimpleStringProperty();
     private final Mp3File mp3File;
     private final Path path;
-    private ID3v2 tag;
-
     private final ObjectProperty<Integer> genre = new SimpleObjectProperty<>();
     private final StringProperty artist = new SimpleStringProperty();
     private final StringProperty title = new SimpleStringProperty();
@@ -30,6 +27,7 @@ public class Song implements Comparable<Song> {
     private final StringProperty copyright = new SimpleStringProperty();
     private final StringProperty url = new SimpleStringProperty();
     private final StringProperty encoder = new SimpleStringProperty();
+    private ID3v2 tag;
     private byte[] albumImage;
 
     public Song(Mp3File mp3File, Path path) {
@@ -48,6 +46,10 @@ public class Song implements Comparable<Song> {
 
     public int getTrack() {
         return track.get();
+    }
+
+    public void setTrack(int value) {
+        track.setValue(value);
     }
 
     public ObjectProperty<Integer> trackProperty() {
@@ -190,10 +192,6 @@ public class Song implements Comparable<Song> {
         return albumImage;
     }
 
-    public void setTrack(int value) {
-        track.setValue(value);
-    }
-    
     public void init() {
         if (tag != null) return;
 
@@ -242,10 +240,5 @@ public class Song implements Comparable<Song> {
                 ", fileName=" + fileName.getValue() +
                 ", title=" + title.getValue() +
                 '}';
-    }
-
-    @Override
-    public int compareTo(Song o) {
-        return MP3FileUtils.compareFileNames(getFileName(), o.getFileName());
     }
 }

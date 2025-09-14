@@ -20,13 +20,13 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         ObservableList<Song> songs = model.getSongs();
         for (int i = 0; i < songs.size(); i++) {
             if (i != model.getSelectedSongIndex() && songs.get(i).getTrack() == newTrack) {
-                showTrackConflictMessage(currentTrack, newTrack);
+                showTrackConflictMessage(currentTrack, newTrack, songs.get(i));
                 break;
             }
         }
     }
 
-    private void showTrackConflictMessage(int currentTrack, int newTrack) {
+    private void showTrackConflictMessage(int currentTrack, int newTrack, Song conflictingSong) {
         ButtonType insertButton = new ButtonType(TrackConflictSolutions.INSERT.getDisplayName(), ButtonBar.ButtonData.RIGHT);
         ButtonType putButton = new ButtonType(TrackConflictSolutions.PUT.getDisplayName(), ButtonBar.ButtonData.RIGHT);
         ButtonType cancelButton = new ButtonType(TrackConflictSolutions.CANCEL.getDisplayName(), ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -40,28 +40,34 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         dialog.showAndWait()
                 .ifPresent(buttonType -> {
                     TrackConflictSolutions conflictSolutions = TrackConflictSolutions.fromDisplayName(buttonType.getText());
-                    handleTrackConflict(currentTrack, newTrack, conflictSolutions);
+                    handleTrackConflict(currentTrack, newTrack, conflictSolutions, conflictingSong);
                 });
     }
 
-    private void handleTrackConflict(int currentTrack, int newTrack, TrackConflictSolutions solution) {
+    private void handleTrackConflict(int currentTrack, int newTrack, TrackConflictSolutions solution, Song conflictingSong) {
         ObservableList<Song> songs = model.getSongs();
         Song selectedSong = songs.get(model.getSelectedSongIndex());
+        selectedSong.setTrack(currentTrack);
+
         switch (solution) {
             case INSERT -> {
                 songs.sort(Comparator.comparingInt(Song::getTrack));
-                for (int i = 0; i < songs.size(); i++) {
-                    if (songs.get(i).getTrack() == selectedSong.getTrack() && !songs.get(i).equals(selectedSong) && i != songs.size() - 1) {
-                        setNewIndexForSong(i, i + 1);
-                        songs.get(i + 1).setTrack(i + 2);
-                        for (int j = i + 2; j < songs.size(); j++) {
-                            if (j != songs.size() - 1) {
-                                songs.get(j).setTrack(j + 1);
-                            }
-                        }
-                        break;
+
+                int selectedSongIndex = songs.indexOf(selectedSong);
+                int conflictingSongIndex = songs.indexOf(conflictingSong);
+                int positionDif = selectedSongIndex - conflictingSongIndex;
+
+                // The selected song is further in the list
+                if (positionDif > 0) {
+                    for (int i1 = conflictingSongIndex; i1 < selectedSongIndex; i1++) {
+                        // Move songs further in the list
+                        setNewIndexForSong(selectedSongIndex - i1, selectedSongIndex - i1 - 1);
                     }
-                    // Todo fix not being able to update last element
+                } else {
+                    for (int i1 = selectedSongIndex; i1 < conflictingSongIndex; i1++) {
+                        // Move songs closer in the list
+                        setNewIndexForSong(i1, (i1 + 1));
+                    }
                 }
             }
             case PUT -> {
