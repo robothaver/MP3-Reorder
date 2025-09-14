@@ -3,14 +3,12 @@ package com.robothaver.mp3reordergradle.mp3_viewer.song.loader;
 import com.robothaver.mp3reordergradle.mp3_viewer.song.domain.Song;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.scene.control.Dialog;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -22,18 +20,13 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class SongLoader extends Task<List<Song>> {
     private final String selectedPath;
-    private final Dialog<Void> dialog;
     private final SongLoadingProgress songLoadingProgress;
-    private final List<Song> tracks = new ArrayList<>();
 
     @Override
     protected List<Song> call() {
         System.out.println("Loading songs from " + selectedPath);
 
-        Platform.runLater(() -> {
-            dialog.show();
-            songLoadingProgress.songsLoadedProperty().setValue(0);
-        });
+        Platform.runLater(() -> songLoadingProgress.songsLoadedProperty().setValue(0));
         return loadSongs();
     }
 
@@ -54,7 +47,6 @@ public class SongLoader extends Task<List<Song>> {
                         .map(this::getFutureResult)
                         .filter(Objects::nonNull)
                         .toList();
-
             }
         } catch (IOException e) {
             System.out.println("Selected path not found!");

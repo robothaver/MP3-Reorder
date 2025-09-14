@@ -34,7 +34,7 @@ public class MP3Controller {
         SongLoadingDialogViewBuilder songLoaderDialogViewBuilder = new SongLoadingDialogViewBuilder(model.getSongLoadingProgress(), model.getSelectedPath());
         Dialog<Void> songLoadingProgressDialog = songLoaderDialogViewBuilder.build();
 
-        SongLoader songLoader = new SongLoader(model.getSelectedPath(), songLoadingProgressDialog, model.getSongLoadingProgress());
+        SongLoader songLoader = new SongLoader(model.getSelectedPath(), model.getSongLoadingProgress());
         songLoader.setOnSucceeded(event -> {
             System.out.println("Loaded songs successfully!");
 
@@ -52,6 +52,7 @@ public class MP3Controller {
             ex.printStackTrace();
         });
 
+        songLoadingProgressDialog.show();
         new Thread(songLoader).start();
     }
 
