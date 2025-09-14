@@ -1,12 +1,8 @@
 package com.robothaver.mp3reordergradle.mp3_viewer;
 
-import com.robothaver.mp3reordergradle.mp3_viewer.track_editor.MP3TrackEditorImpl;
+import com.robothaver.mp3reordergradle.mp3_viewer.editor.MP3TrackEditorImpl;
 import com.robothaver.mp3reordergradle.mp3_viewer.utils.MP3FileUtils;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -20,7 +16,7 @@ public class MP3Interactor {
 
     public void setTracksForSongsByFileName() {
         ObservableList<Song> songs = model.getSongs();
-        songs.sort((o1, o2) -> MP3FileUtils.compareFileNames(o1.getFileName(), o2.getFileName()));
+        songs.sort((o1, o2) -> MP3FileUtils.compareFileNames(o2.getFileName(), o1.getFileName()));
         for (int i = 0; i < songs.size(); i++) {
             songs.get(i).setTrack(i + 1);
         }

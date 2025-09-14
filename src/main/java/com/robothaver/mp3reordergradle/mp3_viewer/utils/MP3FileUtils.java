@@ -4,19 +4,21 @@ import java.text.Collator;
 import java.util.Locale;
 
 public class MP3FileUtils {
-    public static int compareFileNames(String firstFile, String secondFile) {
-        int firstTrackNumber = getTrackNumber(firstFile);
-        int secondTrackNumber = getTrackNumber(secondFile);
-
-        if (firstTrackNumber == -1 && secondTrackNumber != -1) {
-            return 1;
-        } else if (firstTrackNumber != -1 && secondTrackNumber == -1) {
-            return -1;
-        } else if (firstTrackNumber != -1) {
-            return Integer.compare(firstTrackNumber, secondTrackNumber);
-        } else {
+    public static int compareFileNames(String source, String target) {
+        int firstTrackNumber = getTrackNumber(source);
+        int secondTrackNumber = getTrackNumber(target);
+        // Neither name has a track
+        if (firstTrackNumber == -1 && secondTrackNumber == -1) {
             Collator collator = Collator.getInstance(Locale.getDefault());
-            return collator.compare(firstFile, secondFile);
+            return collator.compare(target, source);
+        } else if (firstTrackNumber != -1 && secondTrackNumber != -1) {
+            // Both names have a track
+            return Integer.compare(secondTrackNumber, firstTrackNumber);
+        } else if (firstTrackNumber != -1) {
+            // The first name has a track the second one does not
+            return 1;
+        } else {
+            return -1;
         }
     }
 

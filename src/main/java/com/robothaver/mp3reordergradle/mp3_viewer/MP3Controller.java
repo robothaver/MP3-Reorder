@@ -1,7 +1,7 @@
 package com.robothaver.mp3reordergradle.mp3_viewer;
 
 import com.robothaver.mp3reordergradle.mp3_viewer.controls.SongLoadingDialogViewBuilder;
-import com.robothaver.mp3reordergradle.mp3_viewer.song_loader.SongLoader;
+import com.robothaver.mp3reordergradle.mp3_viewer.loader.SongLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.util.Builder;
@@ -31,7 +31,7 @@ public class MP3Controller {
         SongLoader songLoader = new SongLoader(model.getSelectedPath(), dialog, model.getSongLoadingProgress());
         songLoader.setOnSucceeded(event -> {
             System.out.println("Loaded songs successfully!");
-            model.getSongs().setAll(songLoader.getValue());
+            model.getSongs().setAll(songLoader.getValue().getSongs());
             DialogPane dialogPane = dialog.getDialogPane();
             dialogPane.getScene().getWindow().hide();
         });

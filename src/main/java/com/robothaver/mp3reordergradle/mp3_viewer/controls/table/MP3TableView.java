@@ -56,6 +56,7 @@ public class MP3TableView implements Builder<TableView<Song>> {
         TableColumn<Song, Integer> trackColumn = new TableColumn<>("#");
         trackColumn.setCellValueFactory(new PropertyValueFactory<>("track"));
         trackColumn.setPrefWidth(10);
+        trackColumn.setMaxWidth(60);
         trackColumn.setCellFactory(songIntegerTableColumn ->
             new TrackFieldTableCell(onTrackChanged)
         );

@@ -1,4 +1,4 @@
-package com.robothaver.mp3reordergradle.mp3_viewer.controls.song_details_sidebar;
+package com.robothaver.mp3reordergradle.mp3_viewer.controls.detailes;
 
 import atlantafx.base.util.IntegerStringConverter;
 import javafx.beans.property.ObjectProperty;

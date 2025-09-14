@@ -1,4 +1,4 @@
-package com.robothaver.mp3reordergradle.mp3_viewer.song_loader;
+package com.robothaver.mp3reordergradle.mp3_viewer.loader;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

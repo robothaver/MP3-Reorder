@@ -1,4 +1,4 @@
-package com.robothaver.mp3reordergradle.mp3_viewer.controls.song_details_sidebar;
+package com.robothaver.mp3reordergradle.mp3_viewer.controls.detailes;
 
 import javafx.beans.property.Property;
 import javafx.scene.control.Label;

@@ -1,4 +1,4 @@
-package com.robothaver.mp3reordergradle.mp3_viewer.song_loader;
+package com.robothaver.mp3reordergradle.mp3_viewer.loader;
 
 import com.mpatric.mp3agic.Mp3File;
 import com.robothaver.mp3reordergradle.mp3_viewer.Song;

@@ -1,6 +1,4 @@
-package com.robothaver.mp3reordergradle.mp3_viewer.track_editor;
-
-import javax.sound.midi.Track;
+package com.robothaver.mp3reordergradle.mp3_viewer.editor;
 
 public enum TrackConflictSolutions {
     INSERT, PUT, CANCEL;

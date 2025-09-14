@@ -192,7 +192,6 @@ public class Song implements Comparable<Song> {
 
     public void setTrack(int value) {
         track.setValue(value);
-        tag.setTrack(String.valueOf(value));
     }
     
     public void init() {

@@ -1,6 +1,6 @@
 package com.robothaver.mp3reordergradle.mp3_viewer.controls;
 
-import com.robothaver.mp3reordergradle.mp3_viewer.song_loader.SongLoadingProgress;
+import com.robothaver.mp3reordergradle.mp3_viewer.loader.SongLoadingProgress;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
