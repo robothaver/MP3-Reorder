@@ -27,8 +27,8 @@ tasks.withType<JavaCompile> {
 }
 
 application {
-    mainModule.set("com.robothaver.mp3reordergradle")
-    mainClass.set("com.robothaver.mp3reordergradle.MP3Reorder")
+    mainModule.set("com.robothaver.mp3reorder")
+    mainClass.set("com.robothaver.mp3reorder.MP3Reorder")
 }
 
 javafx {

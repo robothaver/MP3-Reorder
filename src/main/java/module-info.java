@@ -1,4 +1,4 @@
-module com.robothaver.mp3reordergradle {
+module com.robothaver.mp3reorder {
     requires javafx.controls;
     requires javafx.fxml;
     requires atlantafx.base;
@@ -8,11 +8,11 @@ module com.robothaver.mp3reordergradle {
     requires java.desktop;
     requires static lombok;
 
-    opens com.robothaver.mp3reordergradle to javafx.fxml;
-    exports com.robothaver.mp3reordergradle;
+    opens com.robothaver.mp3reorder to javafx.fxml;
+    exports com.robothaver.mp3reorder;
 
-    opens com.robothaver.mp3reordergradle.mp3_viewer to javafx.base;
-    opens com.robothaver.mp3reordergradle.mp3_viewer.song.loader to javafx.base;
-    opens com.robothaver.mp3reordergradle.mp3_viewer.song.track to javafx.base;
-    opens com.robothaver.mp3reordergradle.mp3_viewer.song.domain to javafx.base;
+    opens com.robothaver.mp3reorder.mp3_viewer to javafx.base;
+    opens com.robothaver.mp3reorder.mp3_viewer.song.loader to javafx.base;
+    opens com.robothaver.mp3reorder.mp3_viewer.song.track to javafx.base;
+    opens com.robothaver.mp3reorder.mp3_viewer.song.domain to javafx.base;
 }

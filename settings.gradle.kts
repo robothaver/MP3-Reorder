@@ -1,1 +1,1 @@
-rootProject.name = "MP3ReorderGradle"
+rootProject.name = "MP3Reorder"
