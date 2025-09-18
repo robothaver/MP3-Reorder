@@ -7,28 +7,46 @@ import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Comparator;
 import java.util.List;
 
 import static com.robothaver.mp3reorder.mp3_viewer.utils.Utils.TRACK_CONFLICT_MESSAGE;
 
-@RequiredArgsConstructor
 public class MP3TrackEditorImpl implements MP3TrackEditor {
     private final MP3Model model;
+    private final List<Song> songs;
+    private Integer selectedSongCurrentTrack;
+    private Integer selectedSongCurrentNewTrack;
+
+    public MP3TrackEditorImpl(MP3Model model) {
+        this.model = model;
+        this.songs = model.getSongs();
+    }
+
     @Override
     public void setNewTrackForSong(int currentTrack, int newTrack) {
-        ObservableList<Song> songs = model.getSongs();
-        for (int i = 0; i < songs.size(); i++) {
-            if (i != model.getSelectedSongIndex() && songs.get(i).getTrack() == newTrack) {
-                showTrackConflictMessage(currentTrack, songs.get(i));
-                break;
-            }
+        selectedSongCurrentTrack = currentTrack;
+        selectedSongCurrentNewTrack = newTrack;
+
+        Song conflictingSong = tryGetConflictingSong(newTrack);
+        if (conflictingSong != null) {
+            Song selectedSong = songs.get(model.getSelectedSongIndex());
+            TrackConflictSolutions solution = getTrackConflictSolution();
+            handleTrackConflict(solution, selectedSong, conflictingSong);
         }
     }
 
-    private void showTrackConflictMessage(int currentTrack, Song conflictingSong) {
+    private Song tryGetConflictingSong(int track) {
+        for (int i = 0; i < songs.size(); i++) {
+            if (i != model.getSelectedSongIndex() && songs.get(i).getTrack() == track) {
+                return songs.get(i);
+            }
+        }
+        return null;
+    }
+
+    private TrackConflictSolutions getTrackConflictSolution() {
         ButtonType insertButton = new ButtonType(TrackConflictSolutions.INSERT.getDisplayName(), ButtonBar.ButtonData.RIGHT);
         ButtonType putButton = new ButtonType(TrackConflictSolutions.SWITCH.getDisplayName(), ButtonBar.ButtonData.RIGHT);
         ButtonType cancelButton = new ButtonType(TrackConflictSolutions.CANCEL.getDisplayName(), ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -39,48 +57,50 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
                 .options(List.of(cancelButton, putButton, insertButton))
                 .build();
 
-        DialogManagerImpl.getInstance()
+        ButtonType result = DialogManagerImpl.getInstance()
                 .showOptionDialog(trackConflictDetected)
-                .ifPresent(buttonType -> {
-                    TrackConflictSolutions conflictSolutions = TrackConflictSolutions.fromDisplayName(buttonType.getText());
-                    handleTrackConflict(currentTrack, conflictSolutions, conflictingSong);
-                });
+                .orElse(null);
+        if (result == null) {
+            return TrackConflictSolutions.CANCEL;
+        } else {
+            return TrackConflictSolutions.fromDisplayName(result.getText());
+        }
     }
 
-    private void handleTrackConflict(int currentTrack, TrackConflictSolutions solution, Song conflictingSong) {
-        ObservableList<Song> songs = model.getSongs();
-        Song selectedSong = songs.get(model.getSelectedSongIndex());
-        selectedSong.setTrack(currentTrack);
+    private void handleTrackConflict(TrackConflictSolutions solution, Song selectedSong, Song conflictingSong) {
+        selectedSong.setTrack(selectedSongCurrentTrack);
 
         switch (solution) {
-            case INSERT -> {
-                songs.sort(Comparator.comparingInt(Song::getTrack));
-
-                int selectedSongIndex = songs.indexOf(selectedSong);
-                int conflictingSongIndex = songs.indexOf(conflictingSong);
-                int positionDif = selectedSongIndex - conflictingSongIndex;
-
-                // The selected song is further in the list
-                if (positionDif > 0) {
-                    for (int i1 = conflictingSongIndex; i1 < selectedSongIndex; i1++) {
-                        // Move songs further in the list
-                        setNewIndexForSong(selectedSongIndex - i1, selectedSongIndex - i1 - 1);
-                    }
-                } else {
-                    for (int i1 = selectedSongIndex; i1 < conflictingSongIndex; i1++) {
-                        // Move songs closer in the list
-                        setNewIndexForSong(i1, (i1 + 1));
-                    }
-                }
-                model.selectedSongIndexProperty().set(conflictingSongIndex);
-            }
+            case INSERT -> insertSong(selectedSong, conflictingSong);
             case SWITCH -> {
 
             }
             default -> songs
                     .get(model.getSelectedSongIndex())
-                    .setTrack(currentTrack);
+                    .setTrack(selectedSongCurrentTrack);
         }
+    }
+
+    private void insertSong(Song selectedSong, Song conflictingSong) {
+        songs.sort(Comparator.comparingInt(Song::getTrack));
+
+        int selectedSongIndex = songs.indexOf(selectedSong);
+        int conflictingSongIndex = songs.indexOf(conflictingSong);
+        int positionDif = selectedSongIndex - conflictingSongIndex;
+
+        // The selected song is further in the list
+        if (positionDif > 0) {
+            for (int i1 = conflictingSongIndex; i1 < selectedSongIndex; i1++) {
+                // Move songs further in the list
+                setNewIndexForSong(selectedSongIndex - i1, selectedSongIndex - i1 - 1);
+            }
+        } else {
+            for (int i1 = selectedSongIndex; i1 < conflictingSongIndex; i1++) {
+                // Move songs closer in the list
+                setNewIndexForSong(i1, (i1 + 1));
+            }
+        }
+        model.selectedSongIndexProperty().set(conflictingSongIndex);
     }
 
     private void setNewIndexForSong(int selectedIndex, int newIndex) {
