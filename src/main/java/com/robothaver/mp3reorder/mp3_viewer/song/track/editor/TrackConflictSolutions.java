@@ -1,7 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer.song.track.editor;
 
 public enum TrackConflictSolutions {
-    INSERT, PUT, CANCEL;
+    INSERT, SWITCH, CANCEL;
 
     public String getDisplayName() {
         String lowerCase = name().toLowerCase();
@@ -11,7 +11,7 @@ public enum TrackConflictSolutions {
     public static TrackConflictSolutions fromDisplayName(String displayName) {
         return switch (displayName) {
             case "Insert" -> INSERT;
-            case "Put" -> PUT;
+            case "Switch" -> SWITCH;
             case "Cancel" -> CANCEL;
             default -> throw new IllegalArgumentException("Unexpected value: " + displayName);
         };

@@ -20,15 +20,15 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         ObservableList<Song> songs = model.getSongs();
         for (int i = 0; i < songs.size(); i++) {
             if (i != model.getSelectedSongIndex() && songs.get(i).getTrack() == newTrack) {
-                showTrackConflictMessage(currentTrack, newTrack, songs.get(i));
+                showTrackConflictMessage(currentTrack, songs.get(i));
                 break;
             }
         }
     }
 
-    private void showTrackConflictMessage(int currentTrack, int newTrack, Song conflictingSong) {
+    private void showTrackConflictMessage(int currentTrack, Song conflictingSong) {
         ButtonType insertButton = new ButtonType(TrackConflictSolutions.INSERT.getDisplayName(), ButtonBar.ButtonData.RIGHT);
-        ButtonType putButton = new ButtonType(TrackConflictSolutions.PUT.getDisplayName(), ButtonBar.ButtonData.RIGHT);
+        ButtonType putButton = new ButtonType(TrackConflictSolutions.SWITCH.getDisplayName(), ButtonBar.ButtonData.RIGHT);
         ButtonType cancelButton = new ButtonType(TrackConflictSolutions.CANCEL.getDisplayName(), ButtonBar.ButtonData.CANCEL_CLOSE);
 
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -40,11 +40,11 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         dialog.showAndWait()
                 .ifPresent(buttonType -> {
                     TrackConflictSolutions conflictSolutions = TrackConflictSolutions.fromDisplayName(buttonType.getText());
-                    handleTrackConflict(currentTrack, newTrack, conflictSolutions, conflictingSong);
+                    handleTrackConflict(currentTrack, conflictSolutions, conflictingSong);
                 });
     }
 
-    private void handleTrackConflict(int currentTrack, int newTrack, TrackConflictSolutions solution, Song conflictingSong) {
+    private void handleTrackConflict(int currentTrack, TrackConflictSolutions solution, Song conflictingSong) {
         ObservableList<Song> songs = model.getSongs();
         Song selectedSong = songs.get(model.getSelectedSongIndex());
         selectedSong.setTrack(currentTrack);
@@ -69,8 +69,9 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
                         setNewIndexForSong(i1, (i1 + 1));
                     }
                 }
+                model.selectedSongIndexProperty().set(conflictingSongIndex);
             }
-            case PUT -> {
+            case SWITCH -> {
 
             }
             default -> songs

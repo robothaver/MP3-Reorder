@@ -33,6 +33,8 @@ public class MP3ViewBuilder implements Builder<Region> {
     private final BiConsumer<Integer, Integer> onTrackChanged;
     private final Runnable onSetTracksByFileName;
 
+    private TableView<Song> mp3FileTableView;
+
 
     @Override
     public Region build() {
@@ -79,7 +81,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private VBox createBottomUI() {
         VBox vBox = new VBox();
 
-        TableView<Song> mp3FileTableView = new MP3TableView(model.getSongs(), onTrackChanged).build();
+        mp3FileTableView = new MP3TableView(model.getSongs(), this::changeTrack).build();
 
         mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldValue, newValue) -> {
             int index = (int) newValue;
@@ -95,16 +97,14 @@ public class MP3ViewBuilder implements Builder<Region> {
         moveSongUpBtn.setOnAction(e -> {
             int selectedIndex = mp3FileTableView.getSelectionModel().getSelectedIndex();
             onMoveActiveSongUp.accept(selectedIndex);
-            mp3FileTableView.getSelectionModel().select(selectedIndex - 1);
-            mp3FileTableView.scrollTo(selectedIndex - 10);
+            selectIndex(selectedIndex - 1);
         });
 
         Button moveSongDownBtn = new Button("⬇️");
         moveSongDownBtn.setOnAction(e -> {
             int selectedIndex = mp3FileTableView.getSelectionModel().getSelectedIndex();
             onMoveActiveSongDown.accept(selectedIndex);
-            mp3FileTableView.getSelectionModel().select(selectedIndex + 1);
-            mp3FileTableView.scrollTo(selectedIndex - 10);
+            selectIndex(selectedIndex + 1);
         });
 
         Button log = new Button("Log");
@@ -130,5 +130,15 @@ public class MP3ViewBuilder implements Builder<Region> {
 
         vBox.getChildren().addAll(buttonContainer, numberOfSongsLabel, mp3FileTableView);
         return vBox;
+    }
+
+    private void changeTrack(int track1, int track2) {
+        onTrackChanged.accept(track1, track2);
+        selectIndex(model.getSelectedSongIndex());
+    }
+
+    private void selectIndex(int index) {
+        mp3FileTableView.getSelectionModel().select(index);
+        mp3FileTableView.scrollTo(index - 10);
     }
 }
