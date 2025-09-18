@@ -1,14 +1,16 @@
 package com.robothaver.mp3reorder.mp3_viewer.song.track.editor;
 
+import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
+import com.robothaver.mp3reorder.dialog.OptionDialogMessage;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Comparator;
+import java.util.List;
 
 import static com.robothaver.mp3reorder.mp3_viewer.utils.Utils.TRACK_CONFLICT_MESSAGE;
 
@@ -31,13 +33,14 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         ButtonType putButton = new ButtonType(TrackConflictSolutions.SWITCH.getDisplayName(), ButtonBar.ButtonData.RIGHT);
         ButtonType cancelButton = new ButtonType(TrackConflictSolutions.CANCEL.getDisplayName(), ButtonBar.ButtonData.CANCEL_CLOSE);
 
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.getDialogPane().setStyle("-fx-padding: 0px 0px 0px 10px");
-        dialog.setTitle("Track Conflict Detected");
-        dialog.setContentText(TRACK_CONFLICT_MESSAGE);
-        dialog.getDialogPane().getButtonTypes().addAll(cancelButton, putButton, insertButton);
+        OptionDialogMessage trackConflictDetected = OptionDialogMessage.builder()
+                .title("Track Conflict Detected")
+                .message(TRACK_CONFLICT_MESSAGE)
+                .options(List.of(cancelButton, putButton, insertButton))
+                .build();
 
-        dialog.showAndWait()
+        DialogManagerImpl.getInstance()
+                .showOptionDialog(trackConflictDetected)
                 .ifPresent(buttonType -> {
                     TrackConflictSolutions conflictSolutions = TrackConflictSolutions.fromDisplayName(buttonType.getText());
                     handleTrackConflict(currentTrack, conflictSolutions, conflictingSong);

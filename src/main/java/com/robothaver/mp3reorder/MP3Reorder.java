@@ -1,6 +1,7 @@
 package com.robothaver.mp3reorder;
 
 import atlantafx.base.theme.PrimerDark;
+import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ public class MP3Reorder extends Application {
 
     @Override
     public void start(Stage stage) {
+        DialogManagerImpl.init(stage);
         Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
         stage.setTitle("MP3 Reorder");
         stage.setScene(new Scene(new MP3Controller().getView()));
