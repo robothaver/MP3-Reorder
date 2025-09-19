@@ -28,7 +28,7 @@ public class MP3Interactor {
 
         boolean found = false;
         for (Song song : model.getSongs()) {
-            if (song.getFileName().toLowerCase().contains(searchQuery)) {
+            if (song.getFileName().equalsIgnoreCase(searchQuery) || song.getFileName().toLowerCase().contains(searchQuery)) {
                 model.selectedSongIndexProperty().set(model.getSongs().indexOf(song));
                 found = true;
                 break;
