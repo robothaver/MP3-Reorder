@@ -1,19 +1,23 @@
 package com.robothaver.mp3reorder.mp3_viewer;
 
+import com.robothaver.mp3reorder.mp3_viewer.song.track.editor.MP3TrackEditor;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.editor.MP3TrackEditorImpl;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils;
 import javafx.collections.ObservableList;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 public class MP3Interactor {
     private final MP3Model model;
+    private final MP3TrackEditor mp3TrackEditor;
+
+    public MP3Interactor(MP3Model model) {
+        this.model = model;
+        this.mp3TrackEditor = new MP3TrackEditorImpl(model);
+    }
 
     public void onTrackChangedForSong(int currentTrack, int newTrack) {
-        MP3TrackEditorImpl mp3TrackEditor = new MP3TrackEditorImpl(model);
         mp3TrackEditor.setNewTrackForSong(currentTrack, newTrack);
     }
 
@@ -27,27 +31,14 @@ public class MP3Interactor {
 
     public void moveSelectedSongUp(int selectedIndex) {
         if (selectedIndex != 0 && selectedIndex != -1) {
-            setNewIndexForSong(selectedIndex, selectedIndex - 1);
+            mp3TrackEditor.setNewIndexForSong(selectedIndex, selectedIndex - 1);
         }
     }
 
     public void moveSelectedSongDown(int selectedIndex) {
         ObservableList<Song> songs = model.getSongs();
         if (selectedIndex != songs.size() - 1 && selectedIndex != -1) {
-            setNewIndexForSong(selectedIndex, selectedIndex + 1);
+            mp3TrackEditor.setNewIndexForSong(selectedIndex, selectedIndex + 1);
         }
-    }
-
-    private void setNewIndexForSong(int selectedIndex, int newIndex) {
-        ObservableList<Song> songs = model.getSongs();
-        Song selectedSong = songs.get(selectedIndex);
-        Song previousSong = songs.get(newIndex);
-
-        int selectedSongTrack = selectedSong.getTrack();
-        selectedSong.setTrack(previousSong.getTrack());
-        previousSong.setTrack(selectedSongTrack);
-
-        songs.set(selectedIndex, songs.get(newIndex));
-        songs.set(newIndex, selectedSong);
     }
 }

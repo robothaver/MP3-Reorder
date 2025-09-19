@@ -17,7 +17,6 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
     private final MP3Model model;
     private final List<Song> songs;
     private Integer selectedSongCurrentTrack;
-    private Integer selectedSongCurrentNewTrack;
 
     public MP3TrackEditorImpl(MP3Model model) {
         this.model = model;
@@ -27,7 +26,6 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
     @Override
     public void setNewTrackForSong(int currentTrack, int newTrack) {
         selectedSongCurrentTrack = currentTrack;
-        selectedSongCurrentNewTrack = newTrack;
 
         Song conflictingSong = tryGetConflictingSong(newTrack);
         if (conflictingSong != null) {
@@ -35,6 +33,19 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
             TrackConflictSolutions solution = getTrackConflictSolution();
             handleTrackConflict(solution, selectedSong, conflictingSong);
         }
+    }
+
+    @Override
+    public void setNewIndexForSong(int selectedIndex, int newIndex) {
+        Song selectedSong = songs.get(selectedIndex);
+        Song previousSong = songs.get(newIndex);
+
+        int selectedSongTrack = selectedSong.getTrack();
+        selectedSong.setTrack(previousSong.getTrack());
+        previousSong.setTrack(selectedSongTrack);
+
+        songs.set(selectedIndex, songs.get(newIndex));
+        songs.set(newIndex, selectedSong);
     }
 
     private Song tryGetConflictingSong(int track) {
@@ -106,18 +117,5 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         int selectedSongIndex = songs.indexOf(selectedSong);
         setNewIndexForSong(selectedSongIndex, conflictingSongIndex);
         model.selectedSongIndexProperty().set(conflictingSongIndex);
-    }
-
-    private void setNewIndexForSong(int selectedIndex, int newIndex) {
-        ObservableList<Song> songs = model.getSongs();
-        Song selectedSong = songs.get(selectedIndex);
-        Song previousSong = songs.get(newIndex);
-
-        int selectedSongTrack = selectedSong.getTrack();
-        selectedSong.setTrack(previousSong.getTrack());
-        previousSong.setTrack(selectedSongTrack);
-
-        songs.set(selectedIndex, songs.get(newIndex));
-        songs.set(newIndex, selectedSong);
     }
 }
