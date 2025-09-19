@@ -68,13 +68,9 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
     }
 
     private void handleTrackConflict(TrackConflictSolutions solution, Song selectedSong, Song conflictingSong) {
-        selectedSong.setTrack(selectedSongCurrentTrack);
-
         switch (solution) {
             case INSERT -> insertSong(selectedSong, conflictingSong);
-            case SWITCH -> {
-
-            }
+            case SWITCH -> switchTracksForSongs(selectedSong, conflictingSong);
             default -> songs
                     .get(model.getSelectedSongIndex())
                     .setTrack(selectedSongCurrentTrack);
@@ -82,24 +78,33 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
     }
 
     private void insertSong(Song selectedSong, Song conflictingSong) {
+        selectedSong.setTrack(selectedSongCurrentTrack);
         songs.sort(Comparator.comparingInt(Song::getTrack));
-
         int selectedSongIndex = songs.indexOf(selectedSong);
         int conflictingSongIndex = songs.indexOf(conflictingSong);
         int positionDif = selectedSongIndex - conflictingSongIndex;
 
-        // The selected song is further in the list
+        // The selected song is to the right in the list
         if (positionDif > 0) {
             for (int i1 = conflictingSongIndex; i1 < selectedSongIndex; i1++) {
-                // Move songs further in the list
+                // Move songs to the right in the list
                 setNewIndexForSong(selectedSongIndex - i1, selectedSongIndex - i1 - 1);
             }
         } else {
             for (int i1 = selectedSongIndex; i1 < conflictingSongIndex; i1++) {
-                // Move songs closer in the list
+                // Move songs to the left in the list
                 setNewIndexForSong(i1, (i1 + 1));
             }
         }
+        model.selectedSongIndexProperty().set(conflictingSongIndex);
+    }
+
+    private void switchTracksForSongs(Song selectedSong, Song conflictingSong) {
+        // Setting track to original value otherwise they would have the same track
+        selectedSong.setTrack(selectedSongCurrentTrack);
+        int conflictingSongIndex = songs.indexOf(conflictingSong);
+        int selectedSongIndex = songs.indexOf(selectedSong);
+        setNewIndexForSong(selectedSongIndex, conflictingSongIndex);
         model.selectedSongIndexProperty().set(conflictingSongIndex);
     }
 
