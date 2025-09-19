@@ -126,20 +126,7 @@ public class MP3ViewBuilder implements Builder<Region> {
             onSetTracksByFileName.run();
         });
 
-        CustomTextField searchTextField = new SearchTextField().build();
-        SongSearch songSearch = model.getSongSearch();
-        searchTextField.textProperty().bindBidirectional(songSearch.getSearchQuery());
-        PauseTransition pause = new PauseTransition(Duration.seconds(0.35));
-        songSearch.getSearchQuery().addListener((observable, oldValue, newValue) -> {
-            pause.setOnFinished(event -> {
-                onSearchQueryChanged.run();
-                selectIndex(model.getSelectedSongIndex());
-            });
-            pause.playFromStart();
-        });
-        songSearch.getFound().addListener((observable, oldValue, found) ->
-                searchTextField.pseudoClassStateChanged(Styles.STATE_DANGER, !found)
-        );
+        CustomTextField searchTextField = createSearchTextField();
 
         buttonContainer.setSpacing(10);
         buttonContainer.getChildren().addAll(moveSongUpBtn, moveSongDownBtn, log, setTracksButton, searchTextField);
@@ -152,6 +139,26 @@ public class MP3ViewBuilder implements Builder<Region> {
 
         vBox.getChildren().addAll(buttonContainer, numberOfSongsLabel, mp3FileTableView);
         return vBox;
+    }
+
+    private CustomTextField createSearchTextField() {
+        CustomTextField searchTextField = new SearchTextField().build();
+
+        SongSearch songSearch = model.getSongSearch();
+        searchTextField.textProperty().bindBidirectional(songSearch.getSearchQuery());
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.35));
+        songSearch.getSearchQuery().addListener((observable, oldValue, newValue) -> {
+            pause.setOnFinished(event -> {
+                onSearchQueryChanged.run();
+                selectIndex(model.getSelectedSongIndex());
+            });
+            pause.playFromStart();
+        });
+        songSearch.getFound().addListener((observable, oldValue, found) ->
+                searchTextField.pseudoClassStateChanged(Styles.STATE_DANGER, !found)
+        );
+        return searchTextField;
     }
 
     private void changeTrack(int track1, int track2) {
