@@ -1,9 +1,14 @@
 package com.robothaver.mp3reorder.mp3_viewer;
 
 
+import atlantafx.base.controls.CustomTextField;
+import atlantafx.base.theme.Styles;
+import com.robothaver.mp3reorder.mp3_viewer.controls.SearchTextField;
 import com.robothaver.mp3reorder.mp3_viewer.controls.table.MP3TableView;
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.SongDetailsSideBarViewBuilder;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.song.domain.SongSearch;
+import javafx.animation.PauseTransition;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Builder;
+import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -32,6 +38,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private final Consumer<Integer> onMoveActiveSongDown;
     private final BiConsumer<Integer, Integer> onTrackChanged;
     private final Runnable onSetTracksByFileName;
+    private final Runnable onSearchQueryChanged;
 
     private TableView<Song> mp3FileTableView;
 
@@ -119,8 +126,23 @@ public class MP3ViewBuilder implements Builder<Region> {
             onSetTracksByFileName.run();
         });
 
+        CustomTextField searchTextField = new SearchTextField().build();
+        SongSearch songSearch = model.getSongSearch();
+        searchTextField.textProperty().bindBidirectional(songSearch.getSearchQuery());
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.35));
+        songSearch.getSearchQuery().addListener((observable, oldValue, newValue) -> {
+            pause.setOnFinished(event -> {
+                onSearchQueryChanged.run();
+                selectIndex(model.getSelectedSongIndex());
+            });
+            pause.playFromStart();
+        });
+        songSearch.getFound().addListener((observable, oldValue, found) ->
+                searchTextField.pseudoClassStateChanged(Styles.STATE_DANGER, !found)
+        );
+
         buttonContainer.setSpacing(10);
-        buttonContainer.getChildren().addAll(moveSongUpBtn, moveSongDownBtn, log, setTracksButton);
+        buttonContainer.getChildren().addAll(moveSongUpBtn, moveSongDownBtn, log, setTracksButton, searchTextField);
 
         Label numberOfSongsLabel = new Label("Songs: 0");
 
@@ -139,6 +161,6 @@ public class MP3ViewBuilder implements Builder<Region> {
 
     private void selectIndex(int index) {
         mp3FileTableView.getSelectionModel().select(index);
-        mp3FileTableView.scrollTo(index - 10);
+        mp3FileTableView.scrollTo(index - 5);
     }
 }

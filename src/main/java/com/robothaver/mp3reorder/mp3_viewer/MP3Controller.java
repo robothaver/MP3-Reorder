@@ -26,7 +26,8 @@ public class MP3Controller {
                 interactor::moveSelectedSongUp,
                 interactor::moveSelectedSongDown,
                 interactor::onTrackChangedForSong,
-                interactor::setTracksForSongsByFileName
+                interactor::setTracksForSongsByFileName,
+                interactor::onSearchQueryChanged
         );
     }
 
