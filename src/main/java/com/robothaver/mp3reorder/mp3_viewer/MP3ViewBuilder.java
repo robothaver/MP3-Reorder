@@ -3,6 +3,7 @@ package com.robothaver.mp3reorder.mp3_viewer;
 
 import atlantafx.base.controls.CustomTextField;
 import atlantafx.base.theme.Styles;
+import com.robothaver.mp3reorder.mp3_viewer.controls.MenuBarViewBuilder;
 import com.robothaver.mp3reorder.mp3_viewer.controls.SearchTextField;
 import com.robothaver.mp3reorder.mp3_viewer.controls.table.MP3TableView;
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.SongDetailsSideBarViewBuilder;
@@ -56,13 +57,14 @@ public class MP3ViewBuilder implements Builder<Region> {
         saveButton.setOnAction(event -> {
         });
         VBox mainContainer = new VBox();
-        ToolBar toolBar = new ToolBar(
-                getLoadButton(),
-                saveButton,
-                new Separator(Orientation.VERTICAL),
-                new Button("Settings", new FontIcon(Feather.SETTINGS))
-        );
-        mainContainer.getChildren().addAll(toolBar, splitPane);
+//        ToolBar toolBar = new ToolBar(
+//                getLoadButton(),
+//                saveButton,
+//                new Separator(Orientation.VERTICAL),
+//                new Button("Settings", new FontIcon(Feather.SETTINGS))
+//        );
+        MenuBar menuBar = new MenuBarViewBuilder().build();
+        mainContainer.getChildren().addAll(menuBar, splitPane);
 
         return mainContainer;
     }
