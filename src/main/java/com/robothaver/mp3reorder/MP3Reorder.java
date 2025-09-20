@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class MP3Reorder extends Application {
+    public static Stage stage;
+
     public static void main(String[] args) {
         launch(args);
     }

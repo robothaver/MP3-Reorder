@@ -7,4 +7,5 @@ import lombok.Getter;
 @Getter
 public class MenuBarModel {
     private final ObjectProperty<Themes> selectedTheme = new SimpleObjectProperty<>(Themes.PRIMER_DARK);
+    private final ObjectProperty<Size> selectedSize = new SimpleObjectProperty<>(Size.AUTO);
 }

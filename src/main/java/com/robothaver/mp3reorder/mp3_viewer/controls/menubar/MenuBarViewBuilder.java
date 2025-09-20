@@ -1,26 +1,36 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
+import atlantafx.base.theme.Styles;
+import com.robothaver.mp3reorder.MP3Reorder;
+import javafx.application.Application;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.stage.Screen;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final MenuBarModel model;
     private final Consumer<Themes> onThemeChanged;
+    private final BiConsumer<Parent, Size> onSizeChanged;
+    private final MenuBar menuBar = new MenuBar();
     private CheckMenuItem selectedThemeOption;
+
+    private int size = 10;
 
     @Override
     public MenuBar build() {
-        MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(
                 createFileMenu(),
                 createEditMenu(),
@@ -95,11 +105,31 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
         languageOption.getItems().addAll(hungaryianOption, englishOption);
 
+        Menu sizeMenu = new Menu("_Size", new FontIcon(Feather.TYPE));
+        for (Size size : Size.values()) {
+            CheckMenuItem sizeMenuItem = new CheckMenuItem(size.getDisplayName());
+            sizeMenuItem.setOnAction(event -> {
+                onSizeChanged.accept(menuBar.getScene().getRoot(), size);
+            });
+            if (model.getSelectedSize().get().getFontSize() == size.getFontSize()) {
+                sizeMenuItem.setSelected(true);
+            }
+            sizeMenu.getItems().add(sizeMenuItem);
+        }
+
+        model.getSelectedSize().addListener((observable, oldValue, newValue) -> {
+            for (MenuItem item : sizeMenu.getItems()) {
+                boolean selectedOption = item.getText().equals(newValue.getDisplayName());
+                ((CheckMenuItem) item).setSelected(selectedOption);
+            }
+        });
+
         viewMenu.getItems().addAll(
                 detailsSideBar,
                 new SeparatorMenuItem(),
                 themeMenu,
-                languageOption
+                languageOption,
+                sizeMenu
         );
         return viewMenu;
     }

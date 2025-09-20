@@ -2,6 +2,7 @@ package com.robothaver.mp3reorder.mp3_viewer;
 
 
 import atlantafx.base.controls.CustomTextField;
+import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.mp3_viewer.controls.menubar.MenuBarController;
 import com.robothaver.mp3reorder.mp3_viewer.controls.menubar.MenuBarViewBuilder;
@@ -58,34 +59,10 @@ public class MP3ViewBuilder implements Builder<Region> {
         saveButton.setOnAction(event -> {
         });
         VBox mainContainer = new VBox();
-//        ToolBar toolBar = new ToolBar(
-//                getLoadButton(),
-//                saveButton,
-//                new Separator(Orientation.VERTICAL),
-//                new Button("Settings", new FontIcon(Feather.SETTINGS))
-//        );
-        MenuBar menuBar = new MenuBarController(model).build();
+        MenuBar menuBar = new MenuBarController(model).getView();
         mainContainer.getChildren().addAll(menuBar, splitPane);
 
         return mainContainer;
-    }
-
-    private Button getLoadButton() {
-        Button loadButton = new Button("Open", new FontIcon(Feather.FOLDER_PLUS));
-        loadButton.setOnAction(event -> {
-            Stage stage = (Stage) loadButton.getScene().getWindow();
-
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.setInitialDirectory(new File("."));
-            directoryChooser.setTitle("Choose the Folder Containing Your Songs");
-            File selectedDirectory = directoryChooser.showDialog(stage);
-
-            if (selectedDirectory != null) {
-                model.selectedPathProperty().setValue(selectedDirectory.getAbsolutePath());
-                onLoadSongs.handle(event);
-            }
-        });
-        return loadButton;
     }
 
     private VBox createBottomUI() {
@@ -101,46 +78,44 @@ public class MP3ViewBuilder implements Builder<Region> {
             }
         });
 
-        HBox buttonContainer = new HBox();
+        ToolBar toolBar = new ToolBar();
 
-        Button moveSongUpBtn = new Button("⬆️");
+
+        Button moveSongUpBtn = new Button("Up", new FontIcon(Feather.ARROW_UP));
         moveSongUpBtn.setOnAction(e -> {
             int selectedIndex = mp3FileTableView.getSelectionModel().getSelectedIndex();
             onMoveActiveSongUp.accept(selectedIndex);
             selectIndex(selectedIndex - 1);
         });
 
-        Button moveSongDownBtn = new Button("⬇️");
+        Button moveSongDownBtn = new Button("Down", new FontIcon(Feather.ARROW_DOWN));
         moveSongDownBtn.setOnAction(e -> {
             int selectedIndex = mp3FileTableView.getSelectionModel().getSelectedIndex();
             onMoveActiveSongDown.accept(selectedIndex);
             selectIndex(selectedIndex + 1);
         });
 
-        Button log = new Button("Log");
-        log.setOnAction(e -> {
-            Song selectedItem = mp3FileTableView.getSelectionModel().getSelectedItem();
-            System.out.println(selectedItem);
-        });
-
-        Button setTracksButton = new Button("Set tracks by file name");
-        setTracksButton.setOnAction(e -> {
-            mp3FileTableView.getSortOrder().clear();
-            onSetTracksByFileName.run();
-        });
-
-        CustomTextField searchTextField = createSearchTextField();
-
-        buttonContainer.setSpacing(10);
-        buttonContainer.getChildren().addAll(moveSongUpBtn, moveSongDownBtn, log, setTracksButton, searchTextField);
-
-        Label numberOfSongsLabel = new Label("Songs: 0");
+        Label numberOfSongs = new Label("Songs", new FontIcon(Feather.MUSIC));
 
         model.getSongs().addListener((ListChangeListener<Song>) c ->
-                numberOfSongsLabel.setText("Songs: " + model.getSongs().size())
+                numberOfSongs.setText("Songs: " + model.getSongs().size())
         );
 
-        vBox.getChildren().addAll(buttonContainer, numberOfSongsLabel, mp3FileTableView);
+        CustomTextField searchTextField = createSearchTextField();
+        searchTextField.setPrefWidth(300);
+
+        toolBar.setOrientation(Orientation.HORIZONTAL);
+        toolBar.getItems().addAll(
+                moveSongUpBtn,
+                moveSongDownBtn,
+                new Separator(Orientation.VERTICAL),
+                new Spacer(Orientation.HORIZONTAL),
+                numberOfSongs,
+                new Spacer(10),
+                searchTextField
+        );
+
+        vBox.getChildren().addAll(toolBar, mp3FileTableView);
         return vBox;
     }
 
