@@ -1,22 +1,22 @@
-package com.robothaver.mp3reorder.mp3_viewer.controls;
+package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
-import atlantafx.base.theme.*;
-import javafx.application.Application;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.util.Builder;
+import lombok.RequiredArgsConstructor;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.function.Consumer;
 
+@RequiredArgsConstructor
 public class MenuBarViewBuilder implements Builder<MenuBar> {
-    private Theme selectedTheme = new PrimerDark();
-    private HashMap<Theme, CheckMenuItem> themes = new HashMap<>();
+    private final MenuBarModel model;
+    private final Consumer<Themes> onThemeChanged;
+    private CheckMenuItem selectedThemeOption;
 
     @Override
     public MenuBar build() {
@@ -70,34 +70,23 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         CheckMenuItem detailsSideBar = new CheckMenuItem("Details side bar", new FontIcon(Feather.SIDEBAR));
 
         Menu themeMenu = new Menu("_Theme", new FontIcon(Feather.SUN));
-        CheckMenuItem cupertinoDark = new CheckMenuItem("Cupertino dark");
-        themes.put(new CupertinoDark(), cupertinoDark);
-        CheckMenuItem cupertinoLight = new CheckMenuItem("Cupertino light");
-        themes.put(new CupertinoLight(), cupertinoLight);
-        CheckMenuItem nordDark = new CheckMenuItem("Nord dark");
-        themes.put(new NordDark(), nordDark);
-        CheckMenuItem nordLight = new CheckMenuItem("Nord light");
-        themes.put(new NordLight(), nordLight);
-        CheckMenuItem primerDark = new CheckMenuItem("Primer dark");
-        themes.put(selectedTheme, primerDark);
-        CheckMenuItem primerLight = new CheckMenuItem("Primer light");
-        themes.put(new PrimerLight(), primerLight);
-        CheckMenuItem dracula = new CheckMenuItem("Dracula");
-        themes.put(new Dracula(), dracula);
 
-        for (Map.Entry<Theme, CheckMenuItem> themeEntry : themes.entrySet()) {
-            themeEntry.getValue().setOnAction(event -> setTheme(themeEntry.getKey()));
+        for (Themes theme : Themes.values()) {
+            CheckMenuItem themeMenuItem = new CheckMenuItem(theme.getDisplayName());
+            themeMenuItem.setOnAction(event -> onThemeChanged.accept(theme));
+            themeMenu.getItems().add(themeMenuItem);
+            if (model.getSelectedTheme().get().getTheme().equals(theme.getTheme())) {
+                selectedThemeOption = themeMenuItem;
+                themeMenuItem.setSelected(true);
+            }
         }
 
-        themeMenu.getItems().addAll(
-                cupertinoDark,
-                cupertinoLight,
-                nordDark,
-                nordLight,
-                primerDark,
-                primerLight,
-                dracula
-        );
+        model.getSelectedTheme().addListener((observable, oldValue, newValue) -> {
+            for (MenuItem item : themeMenu.getItems()) {
+                boolean selectedOption = item.getText().equals(newValue.getDisplayName());
+                ((CheckMenuItem) item).setSelected(selectedOption);
+            }
+        });
 
         Menu languageOption = new Menu("Language", new FontIcon(Feather.GLOBE));
 
@@ -113,13 +102,6 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
                 languageOption
         );
         return viewMenu;
-    }
-
-    private void setTheme(Theme theme) {
-        themes.get(selectedTheme).setSelected(false);
-        Application.setUserAgentStylesheet(theme.getUserAgentStylesheet());
-        themes.get(theme).setSelected(true);
-        selectedTheme = theme;
     }
 
     private MenuItem createItem(String text, Ikon icon, KeyCombination accelerator) {

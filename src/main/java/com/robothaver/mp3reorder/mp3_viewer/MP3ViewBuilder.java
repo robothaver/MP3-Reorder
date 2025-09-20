@@ -3,7 +3,8 @@ package com.robothaver.mp3reorder.mp3_viewer;
 
 import atlantafx.base.controls.CustomTextField;
 import atlantafx.base.theme.Styles;
-import com.robothaver.mp3reorder.mp3_viewer.controls.MenuBarViewBuilder;
+import com.robothaver.mp3reorder.mp3_viewer.controls.menubar.MenuBarController;
+import com.robothaver.mp3reorder.mp3_viewer.controls.menubar.MenuBarViewBuilder;
 import com.robothaver.mp3reorder.mp3_viewer.controls.SearchTextField;
 import com.robothaver.mp3reorder.mp3_viewer.controls.table.MP3TableView;
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.SongDetailsSideBarViewBuilder;
@@ -63,7 +64,7 @@ public class MP3ViewBuilder implements Builder<Region> {
 //                new Separator(Orientation.VERTICAL),
 //                new Button("Settings", new FontIcon(Feather.SETTINGS))
 //        );
-        MenuBar menuBar = new MenuBarViewBuilder().build();
+        MenuBar menuBar = new MenuBarController(model).build();
         mainContainer.getChildren().addAll(menuBar, splitPane);
 
         return mainContainer;
