@@ -1,15 +1,10 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
-import atlantafx.base.theme.Styles;
-import com.robothaver.mp3reorder.MP3Reorder;
-import javafx.application.Application;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.stage.Screen;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 import org.kordamp.ikonli.Ikon;
@@ -24,10 +19,11 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final MenuBarModel model;
     private final Consumer<Themes> onThemeChanged;
     private final BiConsumer<Parent, Size> onSizeChanged;
+    private final Runnable onOpenDirectory;
+    private final Runnable onExit;
     private final MenuBar menuBar = new MenuBar();
-    private CheckMenuItem selectedThemeOption;
 
-    private int size = 10;
+    private final int size = 10;
 
     @Override
     public MenuBar build() {
@@ -41,16 +37,15 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
     private Menu createFileMenu() {
         Menu fileMenu = new Menu("_File");
-        MenuItem openOption = createItem("Open", Feather.FOLDER, null);
+        MenuItem openOption = createItem("Open", Feather.FOLDER, new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+        openOption.setOnAction(event -> onOpenDirectory.run());
         MenuItem saveOption = createItem("Save", Feather.SAVE, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         MenuItem saveAsOption = createItem("Save As", null, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN, KeyCombination.ALT_DOWN));
         saveAsOption.setOnAction(event -> {
             System.out.println("Save as option pressed!");
         });
         MenuItem exitOption = createItem("Exit", null, null);
-        exitOption.setOnAction(event -> {
-            System.exit(0);
-        });
+        exitOption.setOnAction(event -> onExit.run());
         fileMenu.getItems().addAll(
                 openOption,
                 new SeparatorMenuItem(),
@@ -86,7 +81,6 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
             themeMenuItem.setOnAction(event -> onThemeChanged.accept(theme));
             themeMenu.getItems().add(themeMenuItem);
             if (model.getSelectedTheme().get().getTheme().equals(theme.getTheme())) {
-                selectedThemeOption = themeMenuItem;
                 themeMenuItem.setSelected(true);
             }
         }

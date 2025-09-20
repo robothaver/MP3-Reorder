@@ -4,39 +4,32 @@ package com.robothaver.mp3reorder.mp3_viewer;
 import atlantafx.base.controls.CustomTextField;
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
-import com.robothaver.mp3reorder.mp3_viewer.controls.menubar.MenuBarController;
-import com.robothaver.mp3reorder.mp3_viewer.controls.menubar.MenuBarViewBuilder;
 import com.robothaver.mp3reorder.mp3_viewer.controls.SearchTextField;
-import com.robothaver.mp3reorder.mp3_viewer.controls.table.MP3TableView;
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.SongDetailsSideBarViewBuilder;
+import com.robothaver.mp3reorder.mp3_viewer.controls.menubar.MenuBarController;
+import com.robothaver.mp3reorder.mp3_viewer.controls.table.MP3TableView;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.SongSearch;
 import javafx.animation.PauseTransition;
 import javafx.collections.ListChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.io.File;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class MP3ViewBuilder implements Builder<Region> {
     private final MP3Model model;
-    private final EventHandler<ActionEvent> onLoadSongs;
+    private final Runnable onLoadSongs;
     private final Consumer<Integer> onMoveActiveSongUp;
     private final Consumer<Integer> onMoveActiveSongDown;
     private final BiConsumer<Integer, Integer> onTrackChanged;
@@ -59,7 +52,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         saveButton.setOnAction(event -> {
         });
         VBox mainContainer = new VBox();
-        MenuBar menuBar = new MenuBarController(model).getView();
+        MenuBar menuBar = new MenuBarController(model, onLoadSongs).getView();
         mainContainer.getChildren().addAll(menuBar, splitPane);
 
         return mainContainer;

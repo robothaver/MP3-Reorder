@@ -22,7 +22,7 @@ public class MP3Controller {
         this.interactor = new MP3Interactor(model);
         this.viewBuilder = new MP3ViewBuilder(
                 model,
-                actionEvent -> loadSongs(),
+                this::loadSongs,
                 interactor::moveSelectedSongUp,
                 interactor::moveSelectedSongDown,
                 interactor::onTrackChangedForSong,
