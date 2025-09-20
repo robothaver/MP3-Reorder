@@ -69,7 +69,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
         CheckMenuItem detailsSideBar = new CheckMenuItem("Details side bar", new FontIcon(Feather.SIDEBAR));
 
-        Menu themeMenu = new Menu("_Theme");
+        Menu themeMenu = new Menu("_Theme", new FontIcon(Feather.SUN));
         CheckMenuItem cupertinoDark = new CheckMenuItem("Cupertino dark");
         themes.put(new CupertinoDark(), cupertinoDark);
         CheckMenuItem cupertinoLight = new CheckMenuItem("Cupertino light");
@@ -99,10 +99,18 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
                 dracula
         );
 
+        Menu languageOption = new Menu("Language", new FontIcon(Feather.GLOBE));
+
+        MenuItem hungaryianOption = new CheckMenuItem("Magyar");
+        MenuItem englishOption = new CheckMenuItem("English");
+
+        languageOption.getItems().addAll(hungaryianOption, englishOption);
+
         viewMenu.getItems().addAll(
                 detailsSideBar,
                 new SeparatorMenuItem(),
-                themeMenu
+                themeMenu,
+                languageOption
         );
         return viewMenu;
     }
