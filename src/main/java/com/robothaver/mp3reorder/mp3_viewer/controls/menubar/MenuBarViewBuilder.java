@@ -16,14 +16,14 @@ import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class MenuBarViewBuilder implements Builder<MenuBar> {
+    private final MenuBar menuBar = new MenuBar();
+
     private final MenuBarModel model;
     private final Consumer<Themes> onThemeChanged;
     private final BiConsumer<Parent, Size> onSizeChanged;
     private final Runnable onOpenDirectory;
     private final Runnable onExit;
-    private final MenuBar menuBar = new MenuBar();
-
-    private final int size = 10;
+    private final Runnable onSetTracksByFileName;
 
     @Override
     public MenuBar build() {
@@ -61,6 +61,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         Menu editMenu = new Menu("_Edit");
 
         MenuItem tracksByFilenameOption = createItem("Set tracks by filename", null, null);
+        tracksByFilenameOption.setOnAction(event -> onSetTracksByFileName.run());
         MenuItem removeIndexFromNameOption = createItem("Remove index from name", null, null);
         editMenu.getItems().addAll(
                 tracksByFilenameOption,

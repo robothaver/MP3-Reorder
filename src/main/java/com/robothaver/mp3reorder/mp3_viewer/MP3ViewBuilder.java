@@ -33,7 +33,6 @@ public class MP3ViewBuilder implements Builder<Region> {
     private final Consumer<Integer> onMoveActiveSongUp;
     private final Consumer<Integer> onMoveActiveSongDown;
     private final BiConsumer<Integer, Integer> onTrackChanged;
-    private final Runnable onSetTracksByFileName;
     private final Runnable onSearchQueryChanged;
 
     private TableView<Song> mp3FileTableView;

@@ -1,13 +1,10 @@
 package com.robothaver.mp3reorder.mp3_viewer;
 
+import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.SongSearch;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.editor.MP3TrackEditor;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.editor.MP3TrackEditorImpl;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
-import com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils;
 import javafx.collections.ObservableList;
-
-import java.util.List;
 
 public class MP3Interactor {
     private final MP3Model model;
@@ -39,14 +36,6 @@ public class MP3Interactor {
 
     public void onTrackChangedForSong(int currentTrack, int newTrack) {
         mp3TrackEditor.setNewTrackForSong(currentTrack, newTrack);
-    }
-
-    public void setTracksForSongsByFileName() {
-        List<Song> songs = model.getSongs();
-        songs.sort((o1, o2) -> MP3FileUtils.compareFileNames(o2.getFileName(), o1.getFileName()));
-        for (int i = 0; i < songs.size(); i++) {
-            songs.get(i).setTrack(i + 1);
-        }
     }
 
     public void moveSelectedSongUp(int selectedIndex) {

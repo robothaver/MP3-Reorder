@@ -17,7 +17,8 @@ public class MenuBarController {
                 interactor::selectTheme,
                 interactor::setSize,
                 () -> interactor.openDirectory(loadSongs),
-                () -> System.exit(0)
+                () -> System.exit(0),
+                interactor::setTracksForSongsByFileName
         );
     }
 

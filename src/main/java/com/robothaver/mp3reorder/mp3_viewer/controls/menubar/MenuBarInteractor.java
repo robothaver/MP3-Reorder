@@ -1,6 +1,8 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
+import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.stage.DirectoryChooser;
@@ -8,6 +10,7 @@ import javafx.stage.Window;
 import lombok.RequiredArgsConstructor;
 
 import java.io.File;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class MenuBarInteractor {
@@ -33,6 +36,14 @@ public class MenuBarInteractor {
         if (selectedDirectory != null) {
             mp3Model.selectedPathProperty().setValue(selectedDirectory.getAbsolutePath());
             onLoadSongs.run();
+        }
+    }
+
+    public void setTracksForSongsByFileName() {
+        List<Song> songs = mp3Model.getSongs();
+        songs.sort((o1, o2) -> MP3FileUtils.compareFileNames(o2.getFileName(), o1.getFileName()));
+        for (int i = 0; i < songs.size(); i++) {
+            songs.get(i).setTrack(i + 1);
         }
     }
 }
