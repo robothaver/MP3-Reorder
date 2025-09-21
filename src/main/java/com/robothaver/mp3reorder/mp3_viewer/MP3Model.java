@@ -15,6 +15,7 @@ public class MP3Model {
     private final IntegerProperty selectedSongIndex = new SimpleIntegerProperty();
     private final SongLoadingProgress songLoadingProgress = new SongLoadingProgress();
     private final SongSearch songSearch = new SongSearch();
+    private final BooleanProperty detailsMenuEnabled = new SimpleBooleanProperty(true);
 
     public String getSelectedPath() {
         return selectedPath.get();

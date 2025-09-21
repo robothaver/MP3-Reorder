@@ -1,5 +1,6 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -19,6 +20,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final MenuBar menuBar = new MenuBar();
 
     private final MenuBarModel model;
+    private final BooleanProperty detailsSideMenuEnabled;
     private final Consumer<Themes> onThemeChanged;
     private final BiConsumer<Parent, Size> onSizeChanged;
     private final Runnable onOpenDirectory;
@@ -75,7 +77,8 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private Menu createViewMenu() {
         Menu viewMenu = new Menu("_View");
 
-        CheckMenuItem detailsSideBar = new CheckMenuItem("Details side bar", new FontIcon(Feather.SIDEBAR));
+        CheckMenuItem detailsSideMenuOption = new CheckMenuItem("Details side menu", new FontIcon(Feather.SIDEBAR));
+        detailsSideMenuOption.selectedProperty().bindBidirectional(detailsSideMenuEnabled);
 
         Menu themeMenu = new Menu("_Theme", new FontIcon(Feather.SUN));
 
@@ -122,7 +125,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         });
 
         viewMenu.getItems().addAll(
-                detailsSideBar,
+                detailsSideMenuOption,
                 new SeparatorMenuItem(),
                 themeMenu,
                 languageOption,

@@ -47,7 +47,19 @@ public class MP3ViewBuilder implements Builder<Region> {
         ScrollPane detailsSideMenu = (ScrollPane) new SongDetailsSideMenuViewBuilder(model).build();
 
         SplitPane splitPane = createSplitPane();
-        splitPane.getItems().addAll(tableControls, detailsSideMenu);
+        splitPane.getItems().add(tableControls);
+
+        if (model.getDetailsMenuEnabled().get()) {
+            splitPane.getItems().add(detailsSideMenu);
+        }
+
+        model.getDetailsMenuEnabled().addListener((observable, oldValue, enabled) -> {
+            if (enabled) {
+                splitPane.getItems().add(detailsSideMenu);
+            } else {
+                splitPane.getItems().remove(detailsSideMenu);
+            }
+        });
 
         baseContainer.getChildren().addAll(menuBar, splitPane);
         return baseContainer;

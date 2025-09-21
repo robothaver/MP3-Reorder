@@ -14,6 +14,7 @@ public class MenuBarController {
         interactor = new MenuBarInteractor(model, mp3Model);
         viewBuilder = new MenuBarViewBuilder(
                 model,
+                mp3Model.getDetailsMenuEnabled(),
                 interactor::selectTheme,
                 interactor::setSize,
                 () -> interactor.openDirectory(loadSongs),
