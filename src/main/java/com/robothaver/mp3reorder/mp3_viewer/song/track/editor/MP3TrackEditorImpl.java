@@ -31,6 +31,9 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
             Song selectedSong = songs.get(model.getSelectedSongIndex());
             TrackConflictSolutions solution = getTrackConflictSolution();
             handleTrackConflict(solution, selectedSong, conflictingSong);
+        } else {
+            // Force set list to avoid visual issue with TableView
+            model.getSongs().setAll(model.getSongs().sorted(Comparator.comparingInt(Song::getTrack)));
         }
     }
 
