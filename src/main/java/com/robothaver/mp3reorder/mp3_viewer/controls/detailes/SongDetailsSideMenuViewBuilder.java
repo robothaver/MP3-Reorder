@@ -15,7 +15,7 @@ import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SongDetailsSideBarViewBuilder implements Builder<Region> {
+public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
     private final MP3Model model;
 
     @Override

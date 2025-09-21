@@ -5,7 +5,7 @@ import atlantafx.base.controls.CustomTextField;
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.mp3_viewer.controls.SearchTextField;
-import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.SongDetailsSideBarViewBuilder;
+import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.SongDetailsSideMenuViewBuilder;
 import com.robothaver.mp3reorder.mp3_viewer.controls.menubar.MenuBarController;
 import com.robothaver.mp3reorder.mp3_viewer.controls.table.MP3TableView;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
@@ -41,28 +41,32 @@ public class MP3ViewBuilder implements Builder<Region> {
 
     @Override
     public Region build() {
-        VBox controlsContainer = createBottomUI();
-        ScrollPane sideContainer = (ScrollPane) new SongDetailsSideBarViewBuilder(model).build();
+        VBox baseContainer = new VBox();
+        MenuBar menuBar = new MenuBarController(model, onLoadSongs).getView();
 
-        SplitPane splitPane = new SplitPane(controlsContainer, sideContainer);
+        VBox tableControls = createTableControls();
+        ScrollPane detailsSideMenu = (ScrollPane) new SongDetailsSideMenuViewBuilder(model).build();
+
+        SplitPane splitPane = createSplitPane();
+        splitPane.getItems().addAll(tableControls, detailsSideMenu);
+
+        baseContainer.getChildren().addAll(menuBar, splitPane);
+        return baseContainer;
+    }
+
+    private SplitPane createSplitPane() {
+        SplitPane splitPane = new SplitPane();
         splitPane.setOrientation(Orientation.HORIZONTAL);
         splitPane.setDividerPositions(0.75);
         VBox.setVgrow(splitPane, Priority.ALWAYS);
-        Button saveButton = new Button("Save", new FontIcon(Feather.SAVE));
-        saveButton.setOnAction(event -> {
-        });
-        VBox mainContainer = new VBox();
-        MenuBar menuBar = new MenuBarController(model, onLoadSongs).getView();
-        mainContainer.getChildren().addAll(menuBar, splitPane);
-
-        return mainContainer;
+        return splitPane;
     }
 
-    private VBox createBottomUI() {
-        VBox vBox = new VBox();
+    private VBox createTableControls() {
+        VBox tableContainer = new VBox();
+        ToolBar toolBar = createToolBar();
 
         mp3FileTableView = new MP3TableView(model.getSongs(), this::changeTrack).build();
-
         mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldValue, newValue) -> {
             int index = (int) newValue;
             if (index != -1) {
@@ -71,9 +75,31 @@ public class MP3ViewBuilder implements Builder<Region> {
             }
         });
 
-        ToolBar toolBar = new ToolBar();
+        tableContainer.getChildren().addAll(toolBar, mp3FileTableView);
+        return tableContainer;
+    }
 
+    private CustomTextField createSearchTextField() {
+        CustomTextField searchTextField = new SearchTextField().build();
 
+        SongSearch songSearch = model.getSongSearch();
+        searchTextField.textProperty().bindBidirectional(songSearch.getSearchQuery());
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.35));
+        songSearch.getSearchQuery().addListener((observable, oldValue, newValue) -> {
+            pause.setOnFinished(event -> {
+                onSearchQueryChanged.run();
+                selectIndex(model.getSelectedSongIndex());
+            });
+            pause.playFromStart();
+        });
+        songSearch.getFound().addListener((observable, oldValue, found) ->
+                searchTextField.pseudoClassStateChanged(Styles.STATE_DANGER, !found)
+        );
+        return searchTextField;
+    }
+
+    private ToolBar createToolBar() {
         Button moveSongUpBtn = new Button("Up", new FontIcon(Feather.ARROW_UP));
         moveSongUpBtn.setOnAction(e -> {
             int selectedIndex = mp3FileTableView.getSelectionModel().getSelectedIndex();
@@ -97,6 +123,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         CustomTextField searchTextField = createSearchTextField();
         searchTextField.setPrefWidth(300);
 
+        ToolBar toolBar = new ToolBar();
         toolBar.setOrientation(Orientation.HORIZONTAL);
         toolBar.getItems().addAll(
                 moveSongUpBtn,
@@ -107,29 +134,7 @@ public class MP3ViewBuilder implements Builder<Region> {
                 new Spacer(10),
                 searchTextField
         );
-
-        vBox.getChildren().addAll(toolBar, mp3FileTableView);
-        return vBox;
-    }
-
-    private CustomTextField createSearchTextField() {
-        CustomTextField searchTextField = new SearchTextField().build();
-
-        SongSearch songSearch = model.getSongSearch();
-        searchTextField.textProperty().bindBidirectional(songSearch.getSearchQuery());
-
-        PauseTransition pause = new PauseTransition(Duration.seconds(0.35));
-        songSearch.getSearchQuery().addListener((observable, oldValue, newValue) -> {
-            pause.setOnFinished(event -> {
-                onSearchQueryChanged.run();
-                selectIndex(model.getSelectedSongIndex());
-            });
-            pause.playFromStart();
-        });
-        songSearch.getFound().addListener((observable, oldValue, found) ->
-                searchTextField.pseudoClassStateChanged(Styles.STATE_DANGER, !found)
-        );
-        return searchTextField;
+        return toolBar;
     }
 
     private void changeTrack(int track1, int track2) {
