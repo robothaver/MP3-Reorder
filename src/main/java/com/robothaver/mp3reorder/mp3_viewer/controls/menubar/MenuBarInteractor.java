@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import java.io.File;
 import java.util.List;
 
+import static com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils.getTrackNumberFromFileName;
+
 @RequiredArgsConstructor
 public class MenuBarInteractor {
     private final MenuBarModel model;
@@ -44,6 +46,17 @@ public class MenuBarInteractor {
         songs.sort((o1, o2) -> MP3FileUtils.compareFileNames(o2.getFileName(), o1.getFileName()));
         for (int i = 0; i < songs.size(); i++) {
             songs.get(i).setTrack(i + 1);
+        }
+    }
+
+    public void removeIndexFromFileNames() {
+        List<Song> songs = mp3Model.getSongs();
+        for (Song song : songs) {
+            int track = getTrackNumberFromFileName(song.getFileName());
+            if (track != -1) {
+                String newFileName = song.getFileName().replace(String.valueOf(track), "").trim();
+                song.fileNameProperty().set(newFileName);
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final Runnable onOpenDirectory;
     private final Runnable onExit;
     private final Runnable onSetTracksByFileName;
+    private final Runnable onRemoveIndexFromFileName;
 
     @Override
     public MenuBar build() {
@@ -63,6 +64,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         MenuItem tracksByFilenameOption = createItem("Set tracks by filename", null, null);
         tracksByFilenameOption.setOnAction(event -> onSetTracksByFileName.run());
         MenuItem removeIndexFromNameOption = createItem("Remove index from name", null, null);
+        removeIndexFromNameOption.setOnAction(event -> onRemoveIndexFromFileName.run());
         editMenu.getItems().addAll(
                 tracksByFilenameOption,
                 removeIndexFromNameOption

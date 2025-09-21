@@ -18,7 +18,8 @@ public class MenuBarController {
                 interactor::setSize,
                 () -> interactor.openDirectory(loadSongs),
                 () -> System.exit(0),
-                interactor::setTracksForSongsByFileName
+                interactor::setTracksForSongsByFileName,
+                interactor::removeIndexFromFileNames
         );
     }
 
