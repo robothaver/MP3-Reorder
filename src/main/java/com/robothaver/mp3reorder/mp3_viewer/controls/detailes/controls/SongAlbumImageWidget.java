@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3_viewer.controls.detailes;
+package com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls;
 
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;

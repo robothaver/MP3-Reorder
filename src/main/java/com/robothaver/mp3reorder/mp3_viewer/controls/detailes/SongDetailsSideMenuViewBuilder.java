@@ -2,8 +2,8 @@ package com.robothaver.mp3reorder.mp3_viewer.controls.detailes;
 
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
-import com.mpatric.mp3agic.ID3v24Tag;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
+import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.*;
 import com.robothaver.mp3reorder.mp3_viewer.song.TagUtils;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import javafx.geometry.Insets;
@@ -39,7 +39,7 @@ public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
         SongTextDataWidget artistTextField = new SongTextDataWidget("Artist");
         SongTextDataWidget albumTextField = new SongTextDataWidget("Album");
         SongTextDataWidget yearTextField = new SongTextDataWidget("Year");
-        SongTextDataWidget genreDescriptionTextField = new SongTextDataWidget("Genre description");
+        SongGenreDropDown songGenreDropDown = new SongGenreDropDown("Genre");
         SongTextDataWidget commentTextField = new SongTextDataWidget("Comment");
         SongTextDataWidget lyricsTextField = new SongTextDataWidget("Lyrics");
         SongTextDataWidget composerTextField = new SongTextDataWidget("Composer");
@@ -51,7 +51,6 @@ public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
         SongTextDataWidget encoderTextField = new SongTextDataWidget("Encoder");
 
         SongIntDataWidget trackSpinner = new SongIntDataWidget("Track", 1);
-        SongIntDataWidget genreSpinner = new SongIntDataWidget("Genre", 0);
         SongAlbumImageWidget songAlbumImageWidget = new SongAlbumImageWidget();
 
         scrollPane.widthProperty().addListener((observable, oldValue, newValue) ->
@@ -68,8 +67,7 @@ public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
                 artistTextField.build(),
                 albumTextField.build(),
                 yearTextField.build(),
-                genreSpinner.build(),
-                genreDescriptionTextField.build(),
+                songGenreDropDown.build(),
                 commentTextField.build(),
                 lyricsTextField.build(),
                 composerTextField.build(),
@@ -89,14 +87,13 @@ public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
                 TagUtils.readDataFromTag(song);
                 songAlbumImageWidget.setImage(song.getAlbumImage());
                 songAlbumImageWidget.resizeImage(scrollPane.widthProperty().get());
+                songGenreDropDown.bindToProperties(song.genreProperty(), song.genreDescriptionProperty());
 
-                genreSpinner.bind(song.genreProperty());
                 trackSpinner.bind(song.trackProperty());
                 titleTextField.bind(song.titleProperty());
                 artistTextField.bind(song.artistProperty());
                 albumTextField.bind(song.albumProperty());
                 yearTextField.bind(song.yearProperty());
-                genreDescriptionTextField.bind(song.genreDescriptionProperty());
                 commentTextField.bind(song.commentProperty());
                 lyricsTextField.bind(song.lyricsProperty());
                 composerTextField.bind(song.composerProperty());

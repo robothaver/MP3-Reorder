@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3_viewer.controls.detailes;
+package com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls;
 
 import atlantafx.base.util.IntegerStringConverter;
 import javafx.beans.property.IntegerProperty;

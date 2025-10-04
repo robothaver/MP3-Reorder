@@ -1,0 +1,41 @@
+package com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls;
+
+import com.mpatric.mp3agic.ID3v1Genres;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+public class SongGenreDropDown extends SongComboBoxWidget<SongGenreOption> {
+    private IntegerProperty genreIndex;
+    private StringProperty genreDescription;
+
+    public SongGenreDropDown(String title) {
+        super(title);
+        setOptions();
+        setOnSelectionChanged();
+    }
+
+    public void bindToProperties(IntegerProperty genreIndexProperty, StringProperty genreDescriptionProperty) {
+        genreIndex = genreIndexProperty;
+        genreDescription = genreDescriptionProperty;
+        getComboBox().setValue(new SongGenreOption(genreIndexProperty.get(), genreDescriptionProperty.get()));
+    }
+
+    private void setOptions() {
+        ObservableList<SongGenreOption> genres = FXCollections.observableArrayList();
+        for (int i = 0; i < ID3v1Genres.GENRES.length; i++) {
+            genres.add(new SongGenreOption(i, ID3v1Genres.GENRES[i]));
+        }
+        getComboBox().setItems(genres);
+    }
+
+    private void setOnSelectionChanged() {
+        getComboBox().valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !newValue.toString().equals(SongGenreOption.DEFAULT_NAME)) {
+                genreIndex.set(newValue.getGenre());
+                genreDescription.set(newValue.getGenreDescription());
+            }
+        });
+    }
+}

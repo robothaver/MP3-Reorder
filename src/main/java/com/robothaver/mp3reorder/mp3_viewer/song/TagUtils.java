@@ -1,12 +1,13 @@
 package com.robothaver.mp3reorder.mp3_viewer.song;
 
-import com.mpatric.mp3agic.AbstractID3v2Tag;
+import com.mpatric.mp3agic.ID3v1Genres;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.ID3v24Tag;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 
 public class TagUtils {
-    private TagUtils() {}
+    private TagUtils() {
+    }
 
     public static void readDataFromTag(Song song) {
         if (song.getTag() != null) return;
@@ -45,12 +46,14 @@ public class TagUtils {
             tag.setArtist(song.artistProperty().get());
             tag.setAlbum(song.albumProperty().get());
             tag.setYear(song.yearProperty().get());
-            tag.setGenre(song.genreProperty().get());
-
-            // Todo: Change the genere settings in the details side menu to a
-            //  dropdown that contains all genres and
-            //  does not allow setting custom genre description
-//            tag.setGenreDescription(song.genreDescriptionProperty().get());
+            Integer genre = song.genreProperty().getValue();
+            if (genre != null) {
+                tag.setGenre(genre);
+            }
+            String genreDescription = song.genreDescriptionProperty().get();
+            if (genreDescription != null && ID3v1Genres.matchGenreDescription(genreDescription) != -1) {
+                tag.setGenreDescription(genreDescription);
+            }
             tag.setComment(song.commentProperty().get());
             tag.setLyrics(song.lyricsProperty().get());
             tag.setComposer(song.composerProperty().get());
@@ -63,13 +66,5 @@ public class TagUtils {
         }
         tag.setTrack(String.valueOf(song.getTrack()));
         tag.setTitle(song.titleProperty().get());
-    }
-
-    private static int parseTrackNumber(ID3v2 tag) {
-        try {
-            return Integer.parseInt(tag.getTrack());
-        } catch (NumberFormatException e) {
-            return -1;
-        }
     }
 }
