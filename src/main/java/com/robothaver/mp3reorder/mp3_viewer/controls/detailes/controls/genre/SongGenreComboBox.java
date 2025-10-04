@@ -1,16 +1,17 @@
-package com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls;
+package com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.genre;
 
 import com.mpatric.mp3agic.ID3v1Genres;
+import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.SongComboBoxWidget;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class SongGenreDropDown extends SongComboBoxWidget<SongGenreOption> {
+public class SongGenreComboBox extends SongComboBoxWidget<SongGenreOption> {
     private IntegerProperty genreIndex;
     private StringProperty genreDescription;
 
-    public SongGenreDropDown(String title) {
+    public SongGenreComboBox(String title) {
         super(title);
         setOptions();
         setOnSelectionChanged();

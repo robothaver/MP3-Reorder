@@ -4,6 +4,7 @@ import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.*;
+import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.genre.SongGenreComboBox;
 import com.robothaver.mp3reorder.mp3_viewer.song.TagUtils;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import javafx.geometry.Insets;
@@ -39,7 +40,7 @@ public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
         SongTextDataWidget artistTextField = new SongTextDataWidget("Artist");
         SongTextDataWidget albumTextField = new SongTextDataWidget("Album");
         SongTextDataWidget yearTextField = new SongTextDataWidget("Year");
-        SongGenreDropDown songGenreDropDown = new SongGenreDropDown("Genre");
+        SongGenreComboBox songGenreComboBox = new SongGenreComboBox("Genre");
         SongTextDataWidget commentTextField = new SongTextDataWidget("Comment");
         SongTextDataWidget lyricsTextField = new SongTextDataWidget("Lyrics");
         SongTextDataWidget composerTextField = new SongTextDataWidget("Composer");
@@ -67,7 +68,7 @@ public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
                 artistTextField.build(),
                 albumTextField.build(),
                 yearTextField.build(),
-                songGenreDropDown.build(),
+                songGenreComboBox.build(),
                 commentTextField.build(),
                 lyricsTextField.build(),
                 composerTextField.build(),
@@ -87,7 +88,7 @@ public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
                 TagUtils.readDataFromTag(song);
                 songAlbumImageWidget.setImage(song.getAlbumImage());
                 songAlbumImageWidget.resizeImage(scrollPane.widthProperty().get());
-                songGenreDropDown.bindToProperties(song.genreProperty(), song.genreDescriptionProperty());
+                songGenreComboBox.bindToProperties(song.genreProperty(), song.genreDescriptionProperty());
 
                 trackSpinner.bind(song.trackProperty());
                 titleTextField.bind(song.titleProperty());
