@@ -99,14 +99,14 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
 
         // The selected song is to the right in the list
         if (positionDif > 0) {
-            for (int i1 = conflictingSongIndex; i1 < selectedSongIndex; i1++) {
-                // Move songs to the right in the list
-                setNewIndexForSong(selectedSongIndex - i1, selectedSongIndex - i1 - 1);
+            for (int i = selectedSongIndex; i > conflictingSongIndex; i--) {
+                // Move selected songs to the left in the list
+                setNewIndexForSong(i, i - 1);
             }
         } else {
-            for (int i1 = selectedSongIndex; i1 < conflictingSongIndex; i1++) {
-                // Move songs to the left in the list
-                setNewIndexForSong(i1, (i1 + 1));
+            for (int i = selectedSongIndex; i < conflictingSongIndex; i++) {
+                // Move selected songs to the right the list
+                setNewIndexForSong(i, i + 1);
             }
         }
         model.selectedSongIndexProperty().set(conflictingSongIndex);
