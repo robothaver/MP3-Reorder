@@ -1,12 +1,13 @@
-package com.robothaver.mp3reorder.mp3_viewer.song.track;
+package com.robothaver.mp3reorder.mp3_viewer.song.track.assigner;
 
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.TrackAssignerResult;
 import com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 public class TrackAssignerImpl implements TrackAssigner {
@@ -16,32 +17,16 @@ public class TrackAssignerImpl implements TrackAssigner {
 
     @Override
     public TrackAssignerResult assignTracks() {
-        boolean existingTracksAreValid = existingTracksAreValid();
+        separateSongsByTrack();
+        TrackIssue trackIssue = detectTrackIssue();
         List<Song> processedSongs;
-        if (existingTracksAreValid) {
+        if (trackIssue == TrackIssue.NONE) {
             processedSongs = assignTracksWithExisting(songs);
         } else {
             processedSongs = assignNewTracks(songs);
         }
-        return new TrackAssignerResult(processedSongs, existingTracksAreValid);
-    }
-
-    private boolean existingTracksAreValid() {
-        for (Song song : songs) {
-            // Has track read from the file
-            if (song.getTrack() != -1) {
-                Song duplicateSong = songsWithTracks.stream().filter(song1 -> song1.getTrack() == song.getTrack()).findFirst().orElse(null);
-                // A song with this track already exists
-                if (duplicateSong != null) {
-                    return false;
-                } else {
-                    songsWithTracks.add(song);
-                }
-            } else {
-                songsWithoutTracks.add(song);
-            }
-        }
-        return true;
+        System.out.println("Used existing tracks: " + trackIssue);
+        return new TrackAssignerResult(processedSongs, trackIssue);
     }
 
     private List<Song> assignNewTracks(List<Song> songs) {
@@ -73,6 +58,46 @@ public class TrackAssignerImpl implements TrackAssigner {
         }
 
         return sortedSongs;
+    }
+
+    private TrackIssue detectTrackIssue() {
+        if (!areTracksUnique()) {
+            return TrackIssue.DUPLICATE_TRACKS;
+        } else if (!areTracksInValidRange()) {
+            return TrackIssue.TRACKS_IN_INVALID_RANGE;
+        } else {
+            return TrackIssue.NONE;
+        }
+    }
+
+    private boolean areTracksInValidRange() {
+        for (Song song : songsWithTracks) {
+            if (song.getTrack() <= 0 || song.getTrack() > songs.size()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean areTracksUnique() {
+        Set<Integer> tracks = new HashSet<>();
+        for (Song songsWithTrack : songsWithTracks) {
+            if (!tracks.add(songsWithTrack.getTrack())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void separateSongsByTrack() {
+        for (Song song : songs) {
+            // Has track read from the file
+            if (song.getTrack() != -1) {
+                songsWithTracks.add(song);
+            } else {
+                songsWithoutTracks.add(song);
+            }
+        }
     }
 
     private Song getSongWithTrack(List<Song> songs, int track) {

@@ -82,7 +82,6 @@ public class MP3ViewBuilder implements Builder<Region> {
             int index = (int) newValue;
             if (index != -1) {
                 model.selectedSongIndexProperty().setValue(newValue);
-                model.getSongs().get(index).init();
             }
         });
 

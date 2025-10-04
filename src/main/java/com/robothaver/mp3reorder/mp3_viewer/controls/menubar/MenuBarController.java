@@ -1,6 +1,8 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
+import com.robothaver.mp3reorder.mp3_viewer.song.saver.SongSaver;
+import com.robothaver.mp3reorder.mp3_viewer.song.saver.SongSaverImpl;
 import javafx.scene.control.MenuBar;
 import javafx.util.Builder;
 
@@ -20,7 +22,11 @@ public class MenuBarController {
                 () -> interactor.openDirectory(loadSongs),
                 () -> System.exit(0),
                 interactor::setTracksForSongsByFileName,
-                interactor::removeIndexFromFileNames
+                interactor::removeIndexFromFileNames,
+                () -> {
+                    SongSaver songSaver = new SongSaverImpl();
+                    songSaver.SaveSongs(mp3Model.getSongs());
+                }
         );
     }
 

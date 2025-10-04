@@ -2,10 +2,10 @@ package com.robothaver.mp3reorder.mp3_viewer;
 
 import com.robothaver.mp3reorder.mp3_viewer.controls.SongLoadingDialogViewBuilder;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.TrackAssignerResult;
+import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssignerResult;
 import com.robothaver.mp3reorder.mp3_viewer.song.loader.SongLoader;
-import com.robothaver.mp3reorder.mp3_viewer.song.track.TrackAssigner;
-import com.robothaver.mp3reorder.mp3_viewer.song.track.TrackAssignerImpl;
+import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssigner;
+import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssignerImpl;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.util.Builder;
@@ -52,12 +52,13 @@ public class MP3Controller {
             ex.printStackTrace();
         });
 
-        songLoadingProgressDialog.show();
         new Thread(songLoader).start();
+        songLoadingProgressDialog.showAndWait();
     }
 
     public Region getView() {
+        Region build = viewBuilder.build();
         loadSongs();
-        return viewBuilder.build();
+        return build;
     }
 }

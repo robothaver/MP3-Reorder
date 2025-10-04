@@ -2,7 +2,9 @@ package com.robothaver.mp3reorder.mp3_viewer.controls.detailes;
 
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
+import com.mpatric.mp3agic.ID3v24Tag;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
+import com.robothaver.mp3reorder.mp3_viewer.song.TagUtils;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -33,8 +35,6 @@ public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
         songDetails.setMaxWidth(Double.MAX_VALUE);
         songDetails.setTextAlignment(TextAlignment.CENTER);
 
-        Spacer spacer = new Spacer(Orientation.VERTICAL);
-
         SongTextDataWidget titleTextField = new SongTextDataWidget("Title");
         SongTextDataWidget artistTextField = new SongTextDataWidget("Artist");
         SongTextDataWidget albumTextField = new SongTextDataWidget("Album");
@@ -61,7 +61,7 @@ public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
 
         sideContainer.getChildren().addAll(
                 songDetails,
-                spacer,
+                new Spacer(Orientation.VERTICAL),
                 songAlbumImageWidget.build(),
                 titleTextField.build(),
                 trackSpinner.build(),
@@ -86,6 +86,7 @@ public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
             Integer selectedIndex = (Integer) currentIndex;
             if (selectedIndex != -1) {
                 Song song = model.getSongs().get(selectedIndex);
+                TagUtils.readDataFromTag(song);
                 songAlbumImageWidget.setImage(song.getAlbumImage());
                 songAlbumImageWidget.resizeImage(scrollPane.widthProperty().get());
 

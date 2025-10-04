@@ -1,6 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.detailes;
 
 import atlantafx.base.util.IntegerStringConverter;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.geometry.Pos;
@@ -19,7 +20,8 @@ public class SongIntDataWidget implements Builder<Region> {
     private Spinner<Integer> spinner;
 
 
-    public void bind(Property<Integer> newBinding) {
+    public void bind(IntegerProperty newBinding) {
+        ObjectProperty<Integer> newBindingObject = newBinding.asObject();
         if (spinner == null) return;
 
         ObjectProperty<Integer> objectProperty = spinner.getValueFactory().valueProperty();
@@ -27,8 +29,8 @@ public class SongIntDataWidget implements Builder<Region> {
             objectProperty.unbindBidirectional(activeBinding);
         }
 
-        objectProperty.bindBidirectional(newBinding);
-        activeBinding = newBinding;
+        objectProperty.bindBidirectional(newBindingObject);
+        activeBinding = newBindingObject;
     }
 
     @Override

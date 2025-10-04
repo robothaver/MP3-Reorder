@@ -27,6 +27,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final Runnable onExit;
     private final Runnable onSetTracksByFileName;
     private final Runnable onRemoveIndexFromFileName;
+    private final Runnable onSave;
 
     @Override
     public MenuBar build() {
@@ -43,6 +44,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         MenuItem openOption = createItem("Open", Feather.FOLDER, new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
         openOption.setOnAction(event -> onOpenDirectory.run());
         MenuItem saveOption = createItem("Save", Feather.SAVE, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
+        saveOption.setOnAction(event -> onSave.run());
         MenuItem saveAsOption = createItem("Save As", null, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN, KeyCombination.ALT_DOWN));
         saveAsOption.setOnAction(event -> {
             System.out.println("Save as option pressed!");
