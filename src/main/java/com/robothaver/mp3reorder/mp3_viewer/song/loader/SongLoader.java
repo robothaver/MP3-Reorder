@@ -1,7 +1,9 @@
 package com.robothaver.mp3reorder.mp3_viewer.song.loader;
 
+import com.robothaver.mp3reorder.dialog.progress.ProgressState;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 
@@ -20,13 +22,13 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class SongLoader extends Task<List<Song>> {
     private final String selectedPath;
-    private final SongLoadingProgress songLoadingProgress;
+    private final ProgressState songLoadingProgress;
 
     @Override
     protected List<Song> call() {
         System.out.println("Loading songs from " + selectedPath);
 
-        Platform.runLater(() -> songLoadingProgress.songsLoadedProperty().setValue(0));
+        Platform.runLater(() -> songLoadingProgress.getDone().setValue(0));
         return loadSongs();
     }
 
@@ -38,7 +40,7 @@ public class SongLoader extends Task<List<Song>> {
                         .map(SongTask::new)
                         .toList();
 
-                Platform.runLater(() -> songLoadingProgress.allSongsProperty().setValue(songTasks.size()));
+                Platform.runLater(() -> songLoadingProgress.getAllTask().setValue(songTasks.size()));
 
                 Stream<CompletableFuture<Song>> songFutures = songTasks.stream()
                         .map(songTask -> CompletableFuture.supplyAsync(() -> loadSong(songTask), executor));
@@ -70,7 +72,8 @@ public class SongLoader extends Task<List<Song>> {
         } catch (Exception e) {
             System.out.println("Failed to load song: " + e);
         }
-        Platform.runLater(() -> songLoadingProgress.songsLoadedProperty().setValue(songLoadingProgress.getSongsLoaded() + 1));
+        IntegerProperty songsLoaded = songLoadingProgress.getDone();
+        Platform.runLater(() -> songsLoaded.set(songsLoaded.get() + 1));
         return song;
     }
 }

@@ -1,12 +1,13 @@
 package com.robothaver.mp3reorder.mp3_viewer;
 
-import com.robothaver.mp3reorder.mp3_viewer.controls.SongLoadingDialogViewBuilder;
+import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
+import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
+import com.robothaver.mp3reorder.dialog.progress.ProgressState;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
-import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssignerResult;
 import com.robothaver.mp3reorder.mp3_viewer.song.loader.SongLoader;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssigner;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssignerImpl;
-import javafx.scene.control.*;
+import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssignerResult;
 import javafx.scene.layout.Region;
 import javafx.util.Builder;
 
@@ -31,10 +32,15 @@ public class MP3Controller {
     }
 
     private void loadSongs() {
-        SongLoadingDialogViewBuilder songLoaderDialogViewBuilder = new SongLoadingDialogViewBuilder(model.getSongLoadingProgress(), model.getSelectedPath());
-        Dialog<Void> songLoadingProgressDialog = songLoaderDialogViewBuilder.build();
+        ProgressState progressState = new ProgressState();
+        ProgressDialogState dialogState = new ProgressDialogState(
+                "Loading songs",
+                "Songs loaded: ",
+                "Loading songs...",
+                progressState
+        );
 
-        SongLoader songLoader = new SongLoader(model.getSelectedPath(), model.getSongLoadingProgress());
+        SongLoader songLoader = new SongLoader(model.getSelectedPath(), progressState);
         songLoader.setOnSucceeded(event -> {
             System.out.println("Loaded songs successfully!");
 
@@ -42,18 +48,17 @@ public class MP3Controller {
             TrackAssigner trackAssigner = new TrackAssignerImpl(songs);
             TrackAssignerResult trackAssignerResult = trackAssigner.assignTracks();
             model.getSongs().setAll(trackAssignerResult.getSongs());
-
-            DialogPane dialogPane = songLoadingProgressDialog.getDialogPane();
-            dialogPane.getScene().getWindow().hide();
+            dialogState.getVisible().set(false);
         });
         songLoader.setOnFailed(event -> {
             Throwable ex = songLoader.getException();
             System.err.println("SongLoader failed: " + ex);
             ex.printStackTrace();
+            dialogState.getVisible().set(false);
         });
 
         new Thread(songLoader).start();
-        songLoadingProgressDialog.showAndWait();
+        DialogManagerImpl.getInstance().showProgressDialog(dialogState);
     }
 
     public Region getView() {

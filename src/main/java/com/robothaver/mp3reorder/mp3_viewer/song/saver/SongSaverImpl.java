@@ -30,6 +30,10 @@ public class SongSaverImpl implements SongSaver {
                     .filter(Objects::nonNull)
                     .toList();
             System.out.println(list);
+
+            // Todo: Fully implement song saver,
+            //  update track editor so it does not allow to set the track outside the valid range
+            //  add move to first and move to last buttons to the toolbar
         }
     }
 
