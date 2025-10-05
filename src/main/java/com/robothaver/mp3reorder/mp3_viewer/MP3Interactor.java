@@ -40,14 +40,14 @@ public class MP3Interactor {
 
     public void moveSelectedSongUp(int selectedIndex) {
         if (selectedIndex != 0 && selectedIndex != -1) {
-            mp3TrackEditor.setNewIndexForSong(selectedIndex, selectedIndex - 1);
+            mp3TrackEditor.swapSongsAndTracks(selectedIndex, selectedIndex - 1);
         }
     }
 
     public void moveSelectedSongDown(int selectedIndex) {
         ObservableList<Song> songs = model.getSongs();
         if (selectedIndex != songs.size() - 1 && selectedIndex != -1) {
-            mp3TrackEditor.setNewIndexForSong(selectedIndex, selectedIndex + 1);
+            mp3TrackEditor.swapSongsAndTracks(selectedIndex, selectedIndex + 1);
         }
     }
 }

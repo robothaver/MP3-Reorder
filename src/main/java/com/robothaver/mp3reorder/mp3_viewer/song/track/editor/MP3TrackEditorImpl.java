@@ -27,27 +27,36 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         selectedSongCurrentTrack = currentTrack;
 
         Song conflictingSong = tryGetConflictingSong(newTrack);
+        Song selectedSong = songs.get(model.getSelectedSongIndex());
         if (conflictingSong != null) {
-            Song selectedSong = songs.get(model.getSelectedSongIndex());
+            // There is a song with the same track
             TrackConflictSolutions solution = getTrackConflictSolution();
             handleTrackConflict(solution, selectedSong, conflictingSong);
         } else {
-            // Force set list to avoid visual issue with TableView
-            model.getSongs().setAll(model.getSongs().sorted(Comparator.comparingInt(Song::getTrack)));
+            // Insert song with the new track in the valid range
+            insertSongInTrackRange(newTrack, selectedSong);
         }
     }
 
     @Override
-    public void setNewIndexForSong(int selectedIndex, int newIndex) {
-        Song selectedSong = songs.get(selectedIndex);
-        Song previousSong = songs.get(newIndex);
+    public void swapSongsAndTracks(int index1, int index2) {
+        Song song1 = songs.get(index1);
+        Song song2 = songs.get(index2);
 
-        int selectedSongTrack = selectedSong.getTrack();
-        selectedSong.setTrack(previousSong.getTrack());
-        previousSong.setTrack(selectedSongTrack);
+        int song1Track = song1.getTrack();
+        song1.setTrack(song2.getTrack());
+        song2.setTrack(song1Track);
 
-        songs.set(selectedIndex, songs.get(newIndex));
-        songs.set(newIndex, selectedSong);
+        songs.set(index1, songs.get(index2));
+        songs.set(index2, song1);
+    }
+
+    private void insertSongInTrackRange(int newTrack , Song selectedSong) {
+        if (newTrack < 1) {
+            insertSong(selectedSong, songs.getFirst());
+        } else if (newTrack > songs.size()) {
+            insertSong(selectedSong, songs.getLast());
+        }
     }
 
     private Song tryGetConflictingSong(int track) {
@@ -101,12 +110,12 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         if (positionDif > 0) {
             for (int i = selectedSongIndex; i > conflictingSongIndex; i--) {
                 // Move selected songs to the left in the list
-                setNewIndexForSong(i, i - 1);
+                swapSongsAndTracks(i, i - 1);
             }
         } else {
             for (int i = selectedSongIndex; i < conflictingSongIndex; i++) {
                 // Move selected songs to the right the list
-                setNewIndexForSong(i, i + 1);
+                swapSongsAndTracks(i, i + 1);
             }
         }
         model.selectedSongIndexProperty().set(conflictingSongIndex);
@@ -115,9 +124,9 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
     private void switchTracksForSongs(Song selectedSong, Song conflictingSong) {
         // Setting track to original value otherwise they would have the same track
         selectedSong.setTrack(selectedSongCurrentTrack);
-        int conflictingSongIndex = songs.indexOf(conflictingSong);
         int selectedSongIndex = songs.indexOf(selectedSong);
-        setNewIndexForSong(selectedSongIndex, conflictingSongIndex);
+        int conflictingSongIndex = songs.indexOf(conflictingSong);
+        swapSongsAndTracks(selectedSongIndex, conflictingSongIndex);
         model.selectedSongIndexProperty().set(conflictingSongIndex);
     }
 }
