@@ -28,8 +28,8 @@ public class DialogManagerImpl implements DialogManager {
     }
 
     @Override
-    public void showOkDialog(String message, String title) {
-
+    public void showOkAlert(String title, String message) {
+        new OkAlert(primaryStage, title, message).showAndWait();
     }
 
     @Override

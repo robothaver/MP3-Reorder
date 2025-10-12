@@ -7,7 +7,7 @@ import javafx.scene.control.ButtonType;
 import java.util.Optional;
 
 public interface DialogManager {
-    void showOkDialog(String message, String title);
+    void showOkAlert(String title, String message);
     Optional<ButtonType> showOptionDialog(OptionDialogMessage optionDialogMessage);
     void showProgressDialog(ProgressDialogState state);
     void showErrorListAlert(ErrorListAlertMessage message);
