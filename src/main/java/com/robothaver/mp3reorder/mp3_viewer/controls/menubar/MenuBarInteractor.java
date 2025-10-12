@@ -1,12 +1,11 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
+import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils;
 import javafx.application.Application;
 import javafx.scene.Parent;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Window;
 import lombok.RequiredArgsConstructor;
 
 import java.io.File;
@@ -30,10 +29,8 @@ public class MenuBarInteractor {
     }
 
     public void openDirectory(Runnable onLoadSongs) {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(new File("."));
-        directoryChooser.setTitle("Choose the Folder Containing Your Songs");
-        File selectedDirectory = directoryChooser.showDialog(Window.getWindows().getFirst());
+        File selectedDirectory = DialogManagerImpl.getInstance()
+                .showDirectoryChooserDialog("Choose the Folder Containing Your Songs", new File("."));
 
         if (selectedDirectory != null) {
             mp3Model.selectedPathProperty().setValue(selectedDirectory.getAbsolutePath());

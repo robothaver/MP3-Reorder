@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.dialog;
+package com.robothaver.mp3reorder.dialog.option;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;

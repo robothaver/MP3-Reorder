@@ -1,7 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer.song.track.editor;
 
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
-import com.robothaver.mp3reorder.dialog.OptionDialogMessage;
+import com.robothaver.mp3reorder.dialog.option.OptionDialogMessage;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import javafx.scene.control.ButtonBar;

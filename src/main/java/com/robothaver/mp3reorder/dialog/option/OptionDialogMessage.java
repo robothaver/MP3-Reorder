@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.dialog;
+package com.robothaver.mp3reorder.dialog.option;
 
 import javafx.scene.control.ButtonType;
 import lombok.Builder;

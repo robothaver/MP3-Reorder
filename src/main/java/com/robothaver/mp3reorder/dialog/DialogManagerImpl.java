@@ -2,11 +2,14 @@ package com.robothaver.mp3reorder.dialog;
 
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlert;
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
+import com.robothaver.mp3reorder.dialog.option.OptionDialog;
+import com.robothaver.mp3reorder.dialog.option.OptionDialogMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialog;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.Optional;
 
 public class DialogManagerImpl implements DialogManager {
@@ -48,6 +51,13 @@ public class DialogManagerImpl implements DialogManager {
     public void showErrorListAlert(ErrorListAlertMessage message) {
         parentStageSizeFix();
         new ErrorListAlert(primaryStage, message).showAndWait();
+    }
+
+    @Override
+    public File showDirectoryChooserDialog(String title, File initialDirectory) {
+        DirectoryChooserDialog dialog = new DirectoryChooserDialog(primaryStage, title, initialDirectory);
+        parentStageSizeFix();
+        return dialog.showDialog();
     }
 
     private void parentStageSizeFix() {
