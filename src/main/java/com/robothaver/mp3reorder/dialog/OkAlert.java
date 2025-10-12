@@ -8,8 +8,8 @@ public class OkAlert extends Alert {
     private final String title;
     private final String message;
 
-    public OkAlert(Stage parentStage, String title, String message) {
-        super(AlertType.INFORMATION);
+    public OkAlert(Stage parentStage, AlertType type, String title, String message) {
+        super(type);
         this.parentStage = parentStage;
         this.title = title;
         this.message = message;

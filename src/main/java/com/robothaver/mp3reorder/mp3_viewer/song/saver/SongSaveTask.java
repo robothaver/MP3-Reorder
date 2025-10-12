@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.concurrent.Callable;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -22,34 +21,37 @@ public class SongSaveTask implements Callable<SaveResult> {
     public SaveResult call() {
         try {
             // Get what folder to save in
-            String parentDir;
-            if (savePath != null) {
-                parentDir = savePath.toString();
-            } else {
-                parentDir = song.getPath().getParent().toString();
-            }
+            String parentDir = getParentDir();
+
             // Write the data to the mp3 file's tag
             Mp3File mp3File = song.getMp3File();
             TagUtils.writeDataToTag(song);
 
             String newSongName = buildSongName();
             Path tempSavePath = Paths.get(parentDir, "EDITED_" + newSongName);
-
-            if (song.getFileName().equals("KFT-Afrika.MP3")) {
-                System.out.println(tempSavePath + " For asd");
-            }
             Path newSavePath = Paths.get(parentDir, newSongName);
 
-            // Save song under temporary name than "rename" it
+            // Save song under temporary name than rename it
             mp3File.save(tempSavePath.toString());
-            Files.deleteIfExists(song.getPath());
-//            Files.createFile(newSavePath);
             Files.move(tempSavePath, newSavePath, REPLACE_EXISTING);
+
+            // If the songs is saved to the existing location
+            if (savePath == null) {
+                Files.deleteIfExists(song.getPath());
+            }
 
             return new SaveResult(null);
         } catch (Exception e) {
             e.printStackTrace();
             return new SaveResult(e);
+        }
+    }
+
+    private String getParentDir() {
+        if (savePath != null) {
+            return savePath.toString();
+        } else {
+            return song.getPath().getParent().toString();
         }
     }
 

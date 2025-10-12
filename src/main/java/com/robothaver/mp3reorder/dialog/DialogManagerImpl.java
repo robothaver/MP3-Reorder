@@ -6,6 +6,8 @@ import com.robothaver.mp3reorder.dialog.option.OptionDialog;
 import com.robothaver.mp3reorder.dialog.option.OptionDialogMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialog;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
@@ -30,9 +32,11 @@ public class DialogManagerImpl implements DialogManager {
     }
 
     @Override
-    public void showOkAlert(String title, String message) {
-        parentStageSizeFix();
-        new OkAlert(primaryStage, title, message).showAndWait();
+    public void showAlert(Alert.AlertType type, String title, String message) {
+        Platform.runLater(() -> {
+            parentStageSizeFix();
+            new OkAlert(primaryStage, type, title, message).showAndWait();
+        });
     }
 
     @Override
@@ -43,14 +47,18 @@ public class DialogManagerImpl implements DialogManager {
 
     @Override
     public void showProgressDialog(ProgressDialogState state) {
-        parentStageSizeFix();
-        new ProgressDialog(primaryStage, state).showAndWait();
+        Platform.runLater(() -> {
+            parentStageSizeFix();
+            new ProgressDialog(primaryStage, state).showAndWait();
+        });
     }
 
     @Override
     public void showErrorListAlert(ErrorListAlertMessage message) {
-        parentStageSizeFix();
-        new ErrorListAlert(primaryStage, message).showAndWait();
+        Platform.runLater(() -> {
+            parentStageSizeFix();
+            new ErrorListAlert(primaryStage, message).showAndWait();
+        });
     }
 
     @Override

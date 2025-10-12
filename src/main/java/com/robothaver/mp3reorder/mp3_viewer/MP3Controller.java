@@ -8,6 +8,8 @@ import com.robothaver.mp3reorder.mp3_viewer.song.loader.SongLoader;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssigner;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssignerImpl;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssignerResult;
+import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackIssue;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Region;
 import javafx.util.Builder;
 
@@ -42,16 +44,20 @@ public class MP3Controller {
 
         SongLoader songLoader = new SongLoader(model.getSelectedPath(), progressState);
         songLoader.setOnSucceeded(event -> {
-            System.out.println("Loaded songs successfully!");
-
             List<Song> songs = songLoader.getValue();
             TrackAssigner trackAssigner = new TrackAssignerImpl(songs);
             TrackAssignerResult trackAssignerResult = trackAssigner.assignTracks();
             model.getSongs().setAll(trackAssignerResult.getSongs());
             dialogState.getVisible().set(false);
+
+            if (trackAssignerResult.getTrackIssue() != TrackIssue.NONE) {
+                String message = buildTrackIssueMessage(trackAssignerResult.getTrackIssue());
+                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION , "Song track issue found!", message);
+            }
         });
         songLoader.setOnFailed(event -> {
             Throwable ex = songLoader.getException();
+            DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR , "Loading songs failed", "Loading songs from " + model.getSelectedPath() + " failed. " + ex);
             System.err.println("SongLoader failed: " + ex);
             ex.printStackTrace();
             dialogState.getVisible().set(false);
@@ -59,6 +65,16 @@ public class MP3Controller {
 
         new Thread(songLoader).start();
         DialogManagerImpl.getInstance().showProgressDialog(dialogState);
+    }
+
+    private static String buildTrackIssueMessage(TrackIssue issue) {
+        StringBuilder stringBuilder = new StringBuilder("Existing tracks were ignored because some songs have");
+        if (issue == TrackIssue.DUPLICATE_TRACKS) {
+            stringBuilder.append(" duplicate track numbers.");
+        } else if (issue == TrackIssue.TRACKS_IN_INVALID_RANGE){
+            stringBuilder.append(" track numbers outside the valid range.");
+        }
+        return stringBuilder.toString();
     }
 
     public Region getView() {
