@@ -5,7 +5,6 @@ import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialog;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.stage.Stage;
 
 import java.util.Optional;
@@ -29,32 +28,33 @@ public class DialogManagerImpl implements DialogManager {
 
     @Override
     public void showOkAlert(String title, String message) {
+        parentStageSizeFix();
         new OkAlert(primaryStage, title, message).showAndWait();
     }
 
     @Override
     public Optional<ButtonType> showOptionDialog(OptionDialogMessage optionDialogMessage) {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.initOwner(primaryStage);
-        dialog.getDialogPane().setStyle("-fx-padding: 0px 0px 0px 10px");
-        dialog.setTitle(optionDialogMessage.getTitle());
-        dialog.setContentText(optionDialogMessage.getMessage());
-        dialog.getDialogPane().getButtonTypes().addAll(optionDialogMessage.getOptions());
-        // Fix for maximized window breaking on linux
-        if (primaryStage.isMaximized()) {
-            primaryStage.setWidth(primaryStage.getWidth());
-            primaryStage.setHeight(primaryStage.getHeight());
-        }
-        return dialog.showAndWait();
+        parentStageSizeFix();
+        return new OptionDialog(primaryStage, optionDialogMessage).showAndWait();
     }
 
     @Override
     public void showProgressDialog(ProgressDialogState state) {
+        parentStageSizeFix();
         new ProgressDialog(primaryStage, state).showAndWait();
     }
 
     @Override
     public void showErrorListAlert(ErrorListAlertMessage message) {
+        parentStageSizeFix();
         new ErrorListAlert(primaryStage, message).showAndWait();
+    }
+
+    private void parentStageSizeFix() {
+        // Fix for maximized window breaking on linux
+        if (primaryStage.isMaximized()) {
+            primaryStage.setWidth(primaryStage.getWidth());
+            primaryStage.setHeight(primaryStage.getHeight());
+        }
     }
 }
