@@ -1,5 +1,7 @@
 package com.robothaver.mp3reorder.dialog;
 
+import com.robothaver.mp3reorder.dialog.error.ErrorListAlert;
+import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialog;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import javafx.scene.control.ButtonType;
@@ -49,5 +51,10 @@ public class DialogManagerImpl implements DialogManager {
     @Override
     public void showProgressDialog(ProgressDialogState state) {
         new ProgressDialog(primaryStage, state).showAndWait();
+    }
+
+    @Override
+    public void showErrorListAlert(ErrorListAlertMessage message) {
+        new ErrorListAlert(primaryStage, message).showAndWait();
     }
 }
