@@ -44,19 +44,19 @@ public class ProgressDialog extends Stage {
         VBox progressContainer = new VBox();
         progressContainer.setSpacing(5);
         Label loadingProgressLabel = new Label();
-        loadingProgressLabel.setText(getProgressLabelText(state.getProgressMessagePrefix(), progressState.getDone().get(), progressState.getAllTask().get()));
+        loadingProgressLabel.setText(getProgressLabelText(state.getProgressMessagePrefix(), progressState.getDone(), progressState.getAllTask()));
         ProgressBar progressBar = new ProgressBar();
         progressBar.setMaxWidth(Double.MAX_VALUE);
 
-        progressState.getAllTask().addListener(observable -> {
-            loadingProgressLabel.setText(getProgressLabelText(state.getProgressMessagePrefix(), progressState.getDone().get(), progressState.getAllTask().get()));
+        progressState.allTaskProperty().addListener(observable -> {
+            loadingProgressLabel.setText(getProgressLabelText(state.getProgressMessagePrefix(), progressState.getDone(), progressState.getAllTask()));
             progressBar.setProgress(0);
         });
 
-        progressState.getDone().addListener(observable -> {
-            int done = progressState.getDone().get();
-            int all = progressState.getAllTask().get();
-            loadingProgressLabel.setText(getProgressLabelText(state.getProgressMessagePrefix(), progressState.getDone().get(), progressState.getAllTask().get()));
+        progressState.doneProperty().addListener(observable -> {
+            int done = progressState.getDone();
+            int all = progressState.getAllTask();
+            loadingProgressLabel.setText(getProgressLabelText(state.getProgressMessagePrefix(), progressState.getDone(), progressState.getAllTask()));
             progressBar.setProgress((double) done / all);
         });
         progressContainer.getChildren().addAll(loadingProgressLabel, progressBar);

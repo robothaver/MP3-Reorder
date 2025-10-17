@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 @RequiredArgsConstructor
-public class SongTask implements Callable<Song> {
+public class SongLoadTask implements Callable<Song> {
     @Getter
     private final Path file;
 

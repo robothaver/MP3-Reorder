@@ -1,9 +1,11 @@
 package com.robothaver.mp3reorder.mp3_viewer.song.domain;
 
 import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.Mp3File;
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,9 +16,6 @@ public class Song {
     private final StringProperty fileName = new SimpleStringProperty();
     @Getter
     private final Mp3File mp3File;
-    @Getter
-    private final Path path;
-
     private final IntegerProperty genre = new SimpleIntegerProperty(-1);
     private final StringProperty artist = new SimpleStringProperty("");
     private final StringProperty title = new SimpleStringProperty("");
@@ -32,6 +31,9 @@ public class Song {
     private final StringProperty copyright = new SimpleStringProperty("");
     private final StringProperty url = new SimpleStringProperty("");
     private final StringProperty encoder = new SimpleStringProperty("");
+    @Getter
+    @Setter
+    private Path path;
     @Getter
     @Setter
     private ID3v2 tag;
@@ -56,9 +58,13 @@ public class Song {
         track.setValue(value);
     }
 
-    public IntegerProperty trackProperty() { return track; }
+    public IntegerProperty trackProperty() {
+        return track;
+    }
 
-    public String getFileName() { return fileName.get(); }
+    public String getFileName() {
+        return fileName.get();
+    }
 
     public StringProperty fileNameProperty() {
         return fileName;
@@ -80,7 +86,9 @@ public class Song {
         return year;
     }
 
-    public IntegerProperty genreProperty() { return genre; }
+    public IntegerProperty genreProperty() {
+        return genre;
+    }
 
     public StringProperty commentProperty() {
         return comment;

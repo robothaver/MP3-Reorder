@@ -4,8 +4,10 @@ import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import com.robothaver.mp3reorder.dialog.progress.ProgressState;
-import com.robothaver.mp3reorder.mp3_viewer.song.loader.SongLoaderResult;
-import com.robothaver.mp3reorder.mp3_viewer.song.loader.SongLoader;
+import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.song.loader.SongLoaderTaskProvider;
+import com.robothaver.mp3reorder.mp3_viewer.song.task.SongTaskExecutor;
+import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.ProcessorResult;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssigner;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssignerImpl;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssignerResult;
@@ -41,10 +43,10 @@ public class MP3Controller {
                 progressState
         );
 
-        SongLoader songLoader = new SongLoader(model.getSelectedPath(), progressState);
-        songLoader.setOnSucceeded(event -> {
-            SongLoaderResult result = songLoader.getValue();
-            TrackAssigner trackAssigner = new TrackAssignerImpl(result.getSongs());
+        SongTaskExecutor<Song> songProcessor = new SongTaskExecutor<>(new SongLoaderTaskProvider(model.getSelectedPath()), progressState);
+        songProcessor.setOnSucceeded(event -> {
+            ProcessorResult<Song> result = songProcessor.getValue();
+            TrackAssigner trackAssigner = new TrackAssignerImpl(result.getResults());
             TrackAssignerResult trackAssignerResult = trackAssigner.assignTracks();
             model.getSongs().setAll(trackAssignerResult.getSongs());
             dialogState.getVisible().set(false);
@@ -58,15 +60,15 @@ public class MP3Controller {
                 DialogManagerImpl.getInstance().showErrorListAlert(message);
             }
         });
-        songLoader.setOnFailed(event -> {
-            Throwable ex = songLoader.getException();
+        songProcessor.setOnFailed(event -> {
+            Throwable ex = songProcessor.getException();
             DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR , "Loading songs failed", "Loading songs from " + model.getSelectedPath() + " failed. " + ex);
-            System.err.println("SongLoader failed: " + ex);
+            System.err.println("Song loading failed: " + ex);
             ex.printStackTrace();
             dialogState.getVisible().set(false);
         });
 
-        new Thread(songLoader).start();
+        new Thread(songProcessor).start();
         DialogManagerImpl.getInstance().showProgressDialog(dialogState);
     }
 
