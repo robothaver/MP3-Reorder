@@ -1,9 +1,10 @@
 package com.robothaver.mp3reorder.mp3_viewer;
 
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
+import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import com.robothaver.mp3reorder.dialog.progress.ProgressState;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.song.loader.SongLoaderResult;
 import com.robothaver.mp3reorder.mp3_viewer.song.loader.SongLoader;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssigner;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssignerImpl;
@@ -12,8 +13,6 @@ import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackIssue;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Region;
 import javafx.util.Builder;
-
-import java.util.List;
 
 public class MP3Controller {
     private final MP3Model model;
@@ -44,8 +43,8 @@ public class MP3Controller {
 
         SongLoader songLoader = new SongLoader(model.getSelectedPath(), progressState);
         songLoader.setOnSucceeded(event -> {
-            List<Song> songs = songLoader.getValue();
-            TrackAssigner trackAssigner = new TrackAssignerImpl(songs);
+            SongLoaderResult result = songLoader.getValue();
+            TrackAssigner trackAssigner = new TrackAssignerImpl(result.getSongs());
             TrackAssignerResult trackAssignerResult = trackAssigner.assignTracks();
             model.getSongs().setAll(trackAssignerResult.getSongs());
             dialogState.getVisible().set(false);
@@ -53,6 +52,10 @@ public class MP3Controller {
             if (trackAssignerResult.getTrackIssue() != TrackIssue.NONE) {
                 String message = buildTrackIssueMessage(trackAssignerResult.getTrackIssue());
                 DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION , "Song track issue found!", message);
+            }
+            if (!result.getErrors().isEmpty()) {
+                ErrorListAlertMessage message = new ErrorListAlertMessage("Song loading error", "Some songs have failed to load. See the errors bellow.", result.getErrors());
+                DialogManagerImpl.getInstance().showErrorListAlert(message);
             }
         });
         songLoader.setOnFailed(event -> {

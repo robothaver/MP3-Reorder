@@ -1,5 +1,6 @@
 package com.robothaver.mp3reorder.mp3_viewer.song.loader;
 
+import com.robothaver.mp3reorder.dialog.error.Error;
 import com.robothaver.mp3reorder.dialog.progress.ProgressState;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import javafx.application.Platform;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -20,16 +22,17 @@ import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-public class SongLoader extends Task<List<Song>> {
+public class SongLoader extends Task<SongLoaderResult> {
     private final String selectedPath;
     private final ProgressState songLoadingProgress;
+    private final List<Error> errors = new ArrayList<>();
 
     @Override
-    protected List<Song> call() {
+    protected SongLoaderResult call() {
         System.out.println("Loading songs from " + selectedPath);
 
         Platform.runLater(() -> songLoadingProgress.getDone().setValue(0));
-        return loadSongs();
+        return new SongLoaderResult(loadSongs(), errors);
     }
 
     private List<Song> loadSongs() {
@@ -60,6 +63,7 @@ public class SongLoader extends Task<List<Song>> {
         try {
             return completableFuture.get();
         } catch (InterruptedException | ExecutionException e) {
+            errors.add(new Error("", e.getMessage(), e));
             System.out.println("Failed to retrieve song: " + e);
             return null;
         }
@@ -70,6 +74,7 @@ public class SongLoader extends Task<List<Song>> {
         try {
             song = songTask.call();
         } catch (Exception e) {
+            errors.add(new Error(songTask.getFile().toString(), e.getMessage(), e));
             System.out.println("Failed to load song: " + e);
         }
         IntegerProperty songsLoaded = songLoadingProgress.getDone();

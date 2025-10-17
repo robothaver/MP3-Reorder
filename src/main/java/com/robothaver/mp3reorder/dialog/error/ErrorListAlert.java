@@ -41,7 +41,7 @@ public class ErrorListAlert extends Alert {
         Styles.toggleStyleClass(errorTableView, Styles.BORDERED);
 
         errorTableView.setItems(message.getErrors());
-        TableColumn<Error, String> errorTitleColumn = new TableColumn<>("Title");
+        TableColumn<Error, String> errorTitleColumn = new TableColumn<>("File");
         errorTitleColumn.setCellValueFactory(new PropertyValueFactory<>("file"));
 
         TableColumn<com.robothaver.mp3reorder.dialog.error.Error, String> exceptionColumn = new TableColumn<>("Exception");

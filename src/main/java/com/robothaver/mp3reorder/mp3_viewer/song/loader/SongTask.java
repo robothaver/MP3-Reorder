@@ -2,6 +2,7 @@ package com.robothaver.mp3reorder.mp3_viewer.song.loader;
 
 import com.mpatric.mp3agic.Mp3File;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.nio.file.Path;
@@ -9,6 +10,7 @@ import java.util.concurrent.Callable;
 
 @RequiredArgsConstructor
 public class SongTask implements Callable<Song> {
+    @Getter
     private final Path file;
 
     @Override
