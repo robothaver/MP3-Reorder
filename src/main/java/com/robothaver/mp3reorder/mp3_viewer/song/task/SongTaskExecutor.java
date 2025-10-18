@@ -2,8 +2,8 @@ package com.robothaver.mp3reorder.mp3_viewer.song.task;
 
 import com.robothaver.mp3reorder.dialog.error.Error;
 import com.robothaver.mp3reorder.dialog.progress.ProgressState;
-import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.SongTask;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.ProcessorResult;
+import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.SongTask;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
@@ -11,13 +11,15 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RequiredArgsConstructor
 public class SongTaskExecutor<T> extends Task<ProcessorResult<T>> {
     private final SongTaskProvider<T> songTaskProvider;
     private final ProgressState progressState;
-    private final FutureCollector<T> futureCollector = new DefaultFutureCollector<>();
     private final List<Error> errors = new ArrayList<>();
 
     @Override
@@ -39,7 +41,7 @@ public class SongTaskExecutor<T> extends Task<ProcessorResult<T>> {
 
     private T collectFuture(CompletableFuture<T> future) {
         try {
-            return futureCollector.getFuture(future);
+            return future.get();
         } catch (InterruptedException | ExecutionException e) {
             errors.add(new Error("", e.getMessage(), e));
             return null;

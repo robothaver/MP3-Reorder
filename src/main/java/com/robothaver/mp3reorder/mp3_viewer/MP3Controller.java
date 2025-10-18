@@ -64,7 +64,6 @@ public class MP3Controller {
             Throwable ex = songProcessor.getException();
             DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR , "Loading songs failed", "Loading songs from " + model.getSelectedPath() + " failed. " + ex);
             System.err.println("Song loading failed: " + ex);
-            ex.printStackTrace();
             dialogState.getVisible().set(false);
         });
 

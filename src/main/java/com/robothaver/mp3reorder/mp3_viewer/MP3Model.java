@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public class MP3Model {
     private final ObservableList<Song> songs = FXCollections.observableArrayList();
-    private final StringProperty selectedPath = new SimpleStringProperty("SaveTest2");
+    private final StringProperty selectedPath = new SimpleStringProperty("SaveTest");
     private final IntegerProperty selectedSongIndex = new SimpleIntegerProperty(-1);
     private final SongSearch songSearch = new SongSearch();
     private final BooleanProperty detailsMenuEnabled = new SimpleBooleanProperty(true);
