@@ -2,33 +2,34 @@ package com.robothaver.mp3reorder.mp3_viewer.song.domain;
 
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.nio.file.Path;
 
 public class Song {
-    private final IntegerProperty track;
-    private final StringProperty fileName;
-    private final StringProperty title;
-    private final IntegerProperty genre = new SimpleIntegerProperty(-1);
-    private final StringProperty artist = new SimpleStringProperty("");
-    private final StringProperty album = new SimpleStringProperty("");
-    private final StringProperty year = new SimpleStringProperty("");
-    private final StringProperty genreDescription = new SimpleStringProperty("");
-    private final StringProperty comment = new SimpleStringProperty("");
-    private final StringProperty lyrics = new SimpleStringProperty("");
-    private final StringProperty composer = new SimpleStringProperty("");
-    private final StringProperty publisher = new SimpleStringProperty("");
-    private final StringProperty originalArtist = new SimpleStringProperty("");
-    private final StringProperty albumArtist = new SimpleStringProperty("");
-    private final StringProperty copyright = new SimpleStringProperty("");
-    private final StringProperty url = new SimpleStringProperty("");
-    private final StringProperty encoder = new SimpleStringProperty("");
+    @Getter
+    @Setter
+    private BooleanProperty fileChanged = new SimpleBooleanProperty(false);
+    private final TrackedIntegerProperty track = new TrackedIntegerProperty(fileChanged);
+    private final TrackedStringProperty fileName = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty title = new TrackedStringProperty(fileChanged);
+    private final TrackedIntegerProperty genre = new TrackedIntegerProperty(fileChanged);
+    private final TrackedStringProperty artist = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty album = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty year = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty genreDescription = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty comment = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty lyrics = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty composer = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty publisher = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty originalArtist = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty albumArtist = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty copyright = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty url = new TrackedStringProperty(fileChanged);
+    private final TrackedStringProperty encoder = new TrackedStringProperty(fileChanged);
     @Getter
     @Setter
     private byte[] albumImage;
@@ -41,31 +42,20 @@ public class Song {
     @Getter
     @Setter
     private ID3v2 tag;
-    @Getter
-    @Setter
-    private boolean fileChanged = false;
 
     public Song(Mp3File mp3File, Path path, int track, String title) {
         this.mp3File = mp3File;
         this.path = path;
-        this.title = new SimpleStringProperty(title);
-        this.fileName = new SimpleStringProperty(path.getFileName().toString());
-        this.track = new SimpleIntegerProperty(track);
-    }
-
-    public StringProperty genreDescriptionProperty() {
-        return genreDescription;
+        this.track.set(track);
+        this.title.set(title);
+        this.fileName.set(path.getFileName().toString());
     }
 
     public int getTrack() {
         return track.get();
     }
 
-    public void setTrack(int value) {
-        track.setValue(value);
-    }
-
-    public IntegerProperty trackProperty() {
+    public TrackedIntegerProperty trackProperty() {
         return track;
     }
 
@@ -73,72 +63,76 @@ public class Song {
         return fileName.get();
     }
 
-    public StringProperty fileNameProperty() {
+    public TrackedStringProperty fileNameProperty() {
         return fileName;
     }
 
-    public StringProperty artistProperty() {
-        return artist;
+    public String getTitle() {
+        return title.get();
     }
 
-    public StringProperty titleProperty() {
+    public TrackedStringProperty titleProperty() {
         return title;
     }
 
-    public StringProperty albumProperty() {
-        return album;
-    }
-
-    public StringProperty yearProperty() {
-        return year;
-    }
-
-    public IntegerProperty genreProperty() {
+    public TrackedIntegerProperty genreProperty() {
         return genre;
     }
 
-    public StringProperty commentProperty() {
+    public TrackedStringProperty artistProperty() {
+        return artist;
+    }
+
+    public TrackedStringProperty albumProperty() {
+        return album;
+    }
+
+    public TrackedStringProperty yearProperty() {
+        return year;
+    }
+
+    public TrackedStringProperty genreDescriptionProperty() {
+        return genreDescription;
+    }
+
+    public TrackedStringProperty commentProperty() {
         return comment;
     }
 
-    public StringProperty lyricsProperty() {
+    public TrackedStringProperty lyricsProperty() {
         return lyrics;
     }
 
-    public StringProperty composerProperty() {
+    public TrackedStringProperty composerProperty() {
         return composer;
     }
 
-    public StringProperty publisherProperty() {
+    public TrackedStringProperty publisherProperty() {
         return publisher;
     }
 
-    public StringProperty originalArtistProperty() {
+    public TrackedStringProperty originalArtistProperty() {
         return originalArtist;
     }
 
-    public StringProperty albumArtistProperty() {
+    public TrackedStringProperty albumArtistProperty() {
         return albumArtist;
     }
 
-    public StringProperty copyrightProperty() {
+    public TrackedStringProperty copyrightProperty() {
         return copyright;
     }
 
-    public StringProperty urlProperty() {
+    public TrackedStringProperty urlProperty() {
         return url;
     }
 
-    public StringProperty encoderProperty() {
+    public TrackedStringProperty encoderProperty() {
         return encoder;
     }
 
     @Override
     public String toString() {
-        return "Song{" +
-                "track=" + track.getValue() +
-                ", fileName=" + fileName.getValue() +
-                ", title=" + title.getValue() +
-                '}';
+        return "Song{" + "track=" + track.getValue() + ", fileName=" + fileName.getValue() + ", title=" + title.getValue() + '}';
     }
 }

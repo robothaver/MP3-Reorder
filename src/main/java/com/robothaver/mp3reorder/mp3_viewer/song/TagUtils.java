@@ -37,13 +37,13 @@ public class TagUtils {
     }
 
     public static void writeDataToTag(Song song) {
+        if (!song.getFileChanged().get()) return;
         ID3v2 tag = song.getTag();
         if (tag == null) {
             tag = new ID3v24Tag();
             song.setTag(tag);
             song.getMp3File().setId3v2Tag(tag);
         } else {
-            // The details might have been edited
             tag.setArtist(song.artistProperty().get());
             tag.setAlbum(song.albumProperty().get());
             tag.setYear(song.yearProperty().get());

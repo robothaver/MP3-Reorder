@@ -56,6 +56,7 @@ public class SongSaveTask implements Callable<Void> {
             // The file has a new save path
             mp3File.save(newSavePath.toString());
         }
+        song.getFileChanged().set(false);
         return null;
     }
 

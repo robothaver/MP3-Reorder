@@ -42,7 +42,7 @@ public class MenuBarInteractor {
         List<Song> songs = mp3Model.getSongs();
         songs.sort((o1, o2) -> MP3FileUtils.compareFileNames(o2.getFileName(), o1.getFileName()));
         for (int i = 0; i < songs.size(); i++) {
-            songs.get(i).setTrack(i + 1);
+            songs.get(i).trackProperty().setValue(i + 1);
         }
     }
 
@@ -52,7 +52,7 @@ public class MenuBarInteractor {
             int track = getTrackNumberFromFileName(song.getFileName());
             if (track != -1) {
                 String newFileName = song.getFileName().replace(String.valueOf(track), "").trim();
-                song.fileNameProperty().set(newFileName);
+                song.fileNameProperty().setValue(newFileName);
             }
         }
     }

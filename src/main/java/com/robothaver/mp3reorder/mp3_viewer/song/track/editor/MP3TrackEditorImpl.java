@@ -44,8 +44,8 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         Song song2 = songs.get(index2);
 
         int song1Track = song1.getTrack();
-        song1.setTrack(song2.getTrack());
-        song2.setTrack(song1Track);
+        song1.trackProperty().setValue(song2.getTrack());
+        song2.trackProperty().setValue(song1Track);
 
         songs.set(index1, songs.get(index2));
         songs.set(index2, song1);
@@ -95,12 +95,12 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
             case SWITCH -> switchTracksForSongs(selectedSong, conflictingSong);
             default -> songs
                     .get(model.getSelectedSongIndex())
-                    .setTrack(selectedSongCurrentTrack);
+                    .trackProperty().setValue(selectedSongCurrentTrack);
         }
     }
 
     private void insertSong(Song selectedSong, Song conflictingSong) {
-        selectedSong.setTrack(selectedSongCurrentTrack);
+        selectedSong.trackProperty().setValue(selectedSongCurrentTrack);
         songs.sort(Comparator.comparingInt(Song::getTrack));
         int selectedSongIndex = songs.indexOf(selectedSong);
         int conflictingSongIndex = songs.indexOf(conflictingSong);
@@ -118,12 +118,12 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
                 swapSongsAndTracks(i, i + 1);
             }
         }
-        model.selectedSongIndexProperty().set(conflictingSongIndex);
+        model.selectedSongIndexProperty().setValue(conflictingSongIndex);
     }
 
     private void switchTracksForSongs(Song selectedSong, Song conflictingSong) {
         // Setting track to original value otherwise they would have the same track
-        selectedSong.setTrack(selectedSongCurrentTrack);
+        selectedSong.trackProperty().setValue(selectedSongCurrentTrack);
         int selectedSongIndex = songs.indexOf(selectedSong);
         int conflictingSongIndex = songs.indexOf(conflictingSong);
         swapSongsAndTracks(selectedSongIndex, conflictingSongIndex);

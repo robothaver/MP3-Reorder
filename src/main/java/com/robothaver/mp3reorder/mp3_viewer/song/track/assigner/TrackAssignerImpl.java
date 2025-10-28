@@ -34,7 +34,7 @@ public class TrackAssignerImpl implements TrackAssigner {
                 .sorted(this::compareFileNames)
                 .toList();
         for (int i = 0; i < sorted.size(); i++) {
-            sorted.get(i).setTrack(i + 1);
+            sorted.get(i).trackProperty().setValue(i + 1);
         }
         return sorted;
     }
@@ -42,6 +42,7 @@ public class TrackAssignerImpl implements TrackAssigner {
     private List<Song> assignTracksWithExisting(List<Song> songs) {
         List<Song> sortedSongs = new ArrayList<>();
         songsWithoutTracks.sort(this::compareFileNames);
+        System.out.println(songsWithTracks.size());
 
         for (int i = 0; i < songs.size(); i++) {
             // If there is a song with a track that is equal to the current index
@@ -51,10 +52,14 @@ public class TrackAssignerImpl implements TrackAssigner {
             } else {
                 // Else add the next song without track and update its track
                 Song songWithoutTrack = songsWithoutTracks.getFirst();
-                songWithoutTrack.setTrack(i + 1);
+                songWithoutTrack.trackProperty().setValue(i + 1);
                 sortedSongs.add(songWithoutTrack);
                 songsWithoutTracks.removeFirst();
             }
+        }
+
+        for (Song sortedSong : sortedSongs) {
+            if (sortedSong.getFileChanged().get()) System.out.println(sortedSong);
         }
 
         return sortedSongs;

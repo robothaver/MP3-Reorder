@@ -5,6 +5,7 @@ import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import com.robothaver.mp3reorder.dialog.progress.ProgressState;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
+import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.song.saver.SongSaverTaskProvider;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.SongTaskExecutor;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.ProcessorResult;
@@ -39,6 +40,7 @@ public class MenuBarController {
                     );
 
                     SongSaverTaskProvider taskProvider = new SongSaverTaskProvider(mp3Model.getSongs());
+                    System.out.println("Songs to save: " + taskProvider.getTasks().size() + ", " + taskProvider.getTasks());
                     SongTaskExecutor<Void> taskExecutor = new SongTaskExecutor<>(taskProvider, progressState);
 
                     taskExecutor.setOnSucceeded(event -> {

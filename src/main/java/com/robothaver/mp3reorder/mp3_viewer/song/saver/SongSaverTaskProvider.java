@@ -17,6 +17,7 @@ public class SongSaverTaskProvider implements SongTaskProvider<Void> {
     public List<SongTask<Void>> getTasks() {
         return songs
                 .stream()
+                .filter(song -> song.getFileChanged().get())
                 .map(song -> new SongTask<>(new SongSaveTask(song, savePath), song.getPath()))
                 .toList();
     }
