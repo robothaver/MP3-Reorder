@@ -41,6 +41,7 @@ public class TagUtils {
         if (tag == null) {
             tag = new ID3v24Tag();
             song.setTag(tag);
+            song.getMp3File().setId3v2Tag(tag);
         } else {
             // The details might have been edited
             tag.setArtist(song.artistProperty().get());

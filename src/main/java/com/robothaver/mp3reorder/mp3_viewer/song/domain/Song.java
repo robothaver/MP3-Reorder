@@ -12,13 +12,11 @@ import lombok.Setter;
 import java.nio.file.Path;
 
 public class Song {
-    private final IntegerProperty track = new SimpleIntegerProperty();
-    private final StringProperty fileName = new SimpleStringProperty();
-    @Getter
-    private final Mp3File mp3File;
+    private final IntegerProperty track;
+    private final StringProperty fileName;
+    private final StringProperty title;
     private final IntegerProperty genre = new SimpleIntegerProperty(-1);
     private final StringProperty artist = new SimpleStringProperty("");
-    private final StringProperty title = new SimpleStringProperty("");
     private final StringProperty album = new SimpleStringProperty("");
     private final StringProperty year = new SimpleStringProperty("");
     private final StringProperty genreDescription = new SimpleStringProperty("");
@@ -33,17 +31,26 @@ public class Song {
     private final StringProperty encoder = new SimpleStringProperty("");
     @Getter
     @Setter
+    private byte[] albumImage;
+    @Getter
+    @Setter
+    private Mp3File mp3File;
+    @Getter
+    @Setter
     private Path path;
     @Getter
     @Setter
     private ID3v2 tag;
     @Getter
     @Setter
-    private byte[] albumImage;
+    private boolean fileChanged = false;
 
-    public Song(Mp3File mp3File, Path path) {
+    public Song(Mp3File mp3File, Path path, int track, String title) {
         this.mp3File = mp3File;
         this.path = path;
+        this.title = new SimpleStringProperty(title);
+        this.fileName = new SimpleStringProperty(path.getFileName().toString());
+        this.track = new SimpleIntegerProperty(track);
     }
 
     public StringProperty genreDescriptionProperty() {

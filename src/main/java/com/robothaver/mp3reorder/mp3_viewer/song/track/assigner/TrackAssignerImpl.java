@@ -18,7 +18,7 @@ public class TrackAssignerImpl implements TrackAssigner {
     @Override
     public TrackAssignerResult assignTracks() {
         separateSongsByTrack();
-        TrackIssue trackIssue = detectTrackIssue();
+        TrackIssue trackIssue = getTrackIssue();
         List<Song> processedSongs;
         if (trackIssue == TrackIssue.NONE) {
             processedSongs = assignTracksWithExisting(songs);
@@ -60,7 +60,7 @@ public class TrackAssignerImpl implements TrackAssigner {
         return sortedSongs;
     }
 
-    private TrackIssue detectTrackIssue() {
+    private TrackIssue getTrackIssue() {
         if (!areTracksUnique()) {
             return TrackIssue.DUPLICATE_TRACKS;
         } else if (!areTracksInValidRange()) {
@@ -83,6 +83,7 @@ public class TrackAssignerImpl implements TrackAssigner {
         Set<Integer> tracks = new HashSet<>();
         for (Song songsWithTrack : songsWithTracks) {
             if (!tracks.add(songsWithTrack.getTrack())) {
+                System.out.println("Duplicate track " + songsWithTrack);
                 return false;
             }
         }
