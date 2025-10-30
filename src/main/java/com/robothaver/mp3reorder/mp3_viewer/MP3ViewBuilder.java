@@ -47,7 +47,17 @@ public class MP3ViewBuilder implements Builder<Region> {
 
         VBox tableControls = createTableControls();
         ScrollPane detailsSideMenu = new SongDetailsSideMenuViewBuilder(model).build();
+        SplitPane splitPane = buildMainSplitPane(tableControls, detailsSideMenu);
 
+        StatusBar statusBar = new StatusBar(model);
+        statusBar.visibleProperty().bind(model.getStatusBarEnabled());
+        statusBar.managedProperty().bind(model.getStatusBarEnabled());
+
+        baseContainer.getChildren().addAll(menuBar, splitPane, statusBar);
+        return baseContainer;
+    }
+
+    private SplitPane buildMainSplitPane(VBox tableControls, ScrollPane detailsSideMenu) {
         SplitPane splitPane = createSplitPane();
         splitPane.getItems().add(tableControls);
 
@@ -62,13 +72,7 @@ public class MP3ViewBuilder implements Builder<Region> {
                 splitPane.getItems().remove(detailsSideMenu);
             }
         });
-
-        StatusBar statusBar = new StatusBar(model);
-        statusBar.visibleProperty().bind(model.getStatusBarEnabled());
-        statusBar.managedProperty().bind(model.getStatusBarEnabled());
-
-        baseContainer.getChildren().addAll(menuBar, splitPane, statusBar);
-        return baseContainer;
+        return splitPane;
     }
 
     private SplitPane createSplitPane() {
