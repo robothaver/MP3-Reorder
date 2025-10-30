@@ -3,7 +3,9 @@ package com.robothaver.mp3reorder.mp3_viewer.controls.detailes;
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
-import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.*;
+import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.SongAlbumImageWidget;
+import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.SongIntDataWidget;
+import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.SongTextDataWidget;
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.genre.SongGenreComboBox;
 import com.robothaver.mp3reorder.mp3_viewer.song.TagUtils;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
@@ -11,18 +13,17 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SongDetailsSideMenuViewBuilder implements Builder<Region> {
+public class SongDetailsSideMenuViewBuilder implements Builder<ScrollPane> {
     private final MP3Model model;
 
     @Override
-    public Region build() {
+    public ScrollPane build() {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setPadding(new Insets(10));
         scrollPane.setFitToWidth(true);

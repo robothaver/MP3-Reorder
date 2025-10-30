@@ -49,7 +49,11 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-
+tasks.processResources {
+    filesMatching("application.properties") {
+        expand(project.properties)
+    }
+}
 
 jlink {
     imageZip.set(layout.buildDirectory.file("/distributions/app-${javafx.platform.classifier}.zip"))

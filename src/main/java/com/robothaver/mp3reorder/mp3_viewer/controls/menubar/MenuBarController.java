@@ -5,7 +5,6 @@ import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import com.robothaver.mp3reorder.dialog.progress.ProgressState;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.song.saver.SongSaverTaskProvider;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.SongTaskExecutor;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.ProcessorResult;
@@ -24,6 +23,7 @@ public class MenuBarController {
         viewBuilder = new MenuBarViewBuilder(
                 model,
                 mp3Model.getDetailsMenuEnabled(),
+                mp3Model.getStatusBarEnabled(),
                 interactor::selectTheme,
                 interactor::setSize,
                 () -> interactor.openDirectory(loadSongs),
@@ -56,7 +56,7 @@ public class MenuBarController {
                     });
                     taskExecutor.setOnFailed(event -> {
                         Throwable ex = taskExecutor.getException();
-                        DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR , "Saving songs failed", "Saving songs to " + mp3Model.getSelectedPath() + " failed. " + ex);
+                        DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, "Saving songs failed", "Saving songs to " + mp3Model.getSelectedPath() + " failed. " + ex);
                         System.err.println("Song saving failed: " + ex);
                         ex.printStackTrace();
                         dialogState.getVisible().set(false);

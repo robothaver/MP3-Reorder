@@ -5,6 +5,7 @@ import atlantafx.base.controls.CustomTextField;
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.mp3_viewer.controls.SearchTextField;
+import com.robothaver.mp3reorder.mp3_viewer.controls.StatusBar;
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.SongDetailsSideMenuViewBuilder;
 import com.robothaver.mp3reorder.mp3_viewer.controls.menubar.MenuBarController;
 import com.robothaver.mp3reorder.mp3_viewer.controls.table.MP3TableView;
@@ -45,7 +46,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         MenuBar menuBar = new MenuBarController(model, onLoadSongs).getView();
 
         VBox tableControls = createTableControls();
-        ScrollPane detailsSideMenu = (ScrollPane) new SongDetailsSideMenuViewBuilder(model).build();
+        ScrollPane detailsSideMenu = new SongDetailsSideMenuViewBuilder(model).build();
 
         SplitPane splitPane = createSplitPane();
         splitPane.getItems().add(tableControls);
@@ -62,7 +63,11 @@ public class MP3ViewBuilder implements Builder<Region> {
             }
         });
 
-        baseContainer.getChildren().addAll(menuBar, splitPane);
+        StatusBar statusBar = new StatusBar(model);
+        statusBar.visibleProperty().bind(model.getStatusBarEnabled());
+        statusBar.managedProperty().bind(model.getStatusBarEnabled());
+
+        baseContainer.getChildren().addAll(menuBar, splitPane, statusBar);
         return baseContainer;
     }
 

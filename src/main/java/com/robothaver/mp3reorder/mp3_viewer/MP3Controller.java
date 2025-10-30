@@ -14,7 +14,11 @@ import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackAssignerRes
 import com.robothaver.mp3reorder.mp3_viewer.song.track.assigner.TrackIssue;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Region;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Builder;
+
+import static com.robothaver.mp3reorder.mp3_viewer.utils.ApplicationInfo.APPLICATION_NAME;
 
 public class MP3Controller {
     private final MP3Model model;
@@ -46,6 +50,8 @@ public class MP3Controller {
 
         SongTaskExecutor<Song> songProcessor = new SongTaskExecutor<>(new SongLoaderTaskProvider(model.getSelectedPath()), progressState);
         songProcessor.setOnSucceeded(event -> {
+            Stage stage = (Stage) Window.getWindows().getFirst();
+            stage.setTitle(APPLICATION_NAME + " - " + model.getSelectedPath());
             ProcessorResult<Song> result = songProcessor.getValue();
             TrackAssigner trackAssigner = new TrackAssignerImpl(result.getResults());
             TrackAssignerResult trackAssignerResult = trackAssigner.assignTracks();

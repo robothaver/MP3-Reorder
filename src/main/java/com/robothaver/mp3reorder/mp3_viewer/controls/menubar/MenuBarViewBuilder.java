@@ -21,6 +21,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
     private final MenuBarModel model;
     private final BooleanProperty detailsSideMenuEnabled;
+    private final BooleanProperty statusBarEnabled;
     private final Consumer<Themes> onThemeChanged;
     private final BiConsumer<Parent, Size> onSizeChanged;
     private final Runnable onOpenDirectory;
@@ -46,9 +47,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         MenuItem saveOption = createItem("Save", Feather.SAVE, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         saveOption.setOnAction(event -> onSave.run());
         MenuItem saveAsOption = createItem("Save As", null, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN, KeyCombination.ALT_DOWN));
-        saveAsOption.setOnAction(event -> {
-            System.out.println("Save as option pressed!");
-        });
+        saveAsOption.setOnAction(event -> System.out.println("Save as option pressed!"));
         MenuItem exitOption = createItem("Exit", null, null);
         exitOption.setOnAction(event -> onExit.run());
         fileMenu.getItems().addAll(
@@ -82,6 +81,9 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         CheckMenuItem detailsSideMenuOption = new CheckMenuItem("Details side menu", new FontIcon(Feather.SIDEBAR));
         detailsSideMenuOption.selectedProperty().bindBidirectional(detailsSideMenuEnabled);
 
+        CheckMenuItem statusBarOption = new CheckMenuItem("Status bar", new FontIcon(Feather.INFO));
+        statusBarOption.selectedProperty().bindBidirectional(statusBarEnabled);
+
         Menu themeMenu = new Menu("_Theme", new FontIcon(Feather.SUN));
 
         for (Themes theme : Themes.values()) {
@@ -110,9 +112,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         Menu sizeMenu = new Menu("_Size", new FontIcon(Feather.TYPE));
         for (Size size : Size.values()) {
             CheckMenuItem sizeMenuItem = new CheckMenuItem(size.getDisplayName());
-            sizeMenuItem.setOnAction(event -> {
-                onSizeChanged.accept(menuBar.getScene().getRoot(), size);
-            });
+            sizeMenuItem.setOnAction(event -> onSizeChanged.accept(menuBar.getScene().getRoot(), size));
             if (model.getSelectedSize().get().getFontSize() == size.getFontSize()) {
                 sizeMenuItem.setSelected(true);
             }
@@ -128,6 +128,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
         viewMenu.getItems().addAll(
                 detailsSideMenuOption,
+                statusBarOption,
                 new SeparatorMenuItem(),
                 themeMenu,
                 languageOption,
