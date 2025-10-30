@@ -18,9 +18,10 @@ public class MP3Interactor {
     }
 
     public void onFileRenamed(String oldName, String newName) {
+        Song selectedSong = model.getSongs().get(model.getSelectedSongIndex());
         for (Song song : model.getSongs()) {
-            if (song.getFileName().equals(newName)) {
-                model.getSongs().get(model.getSelectedSongIndex()).fileNameProperty().set(oldName);
+            if (!song.equals(selectedSong) && song.getFileName().equals(newName)) {
+                selectedSong.fileNameProperty().set(oldName);
                 DialogManagerImpl.getInstance().showAlert(Alert.AlertType.WARNING, "Can't rename file", "Can't have files with the same name!");
                 return;
             }

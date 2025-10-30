@@ -52,7 +52,16 @@ public class MenuBarInteractor {
             int track = getTrackNumberFromFileName(song.getFileName());
             if (track != -1) {
                 String newFileName = song.getFileName().replace(String.valueOf(track), "").trim();
-                song.fileNameProperty().setValue(newFileName);
+                boolean duplicate = false;
+                for (Song song1 : songs) {
+                    if (song1.getFileName().equals(newFileName)) {
+                        duplicate = true;
+                        break;
+                    }
+                }
+                if (!duplicate) {
+                    song.fileNameProperty().setValue(newFileName);
+                }
             }
         }
     }
