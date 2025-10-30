@@ -33,6 +33,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private final Consumer<Integer> onMoveActiveSongUp;
     private final Consumer<Integer> onMoveActiveSongDown;
     private final BiConsumer<Integer, Integer> onTrackChanged;
+    private final BiConsumer<String, String> onFileRenamed;
     private final Runnable onSearchQueryChanged;
 
     private TableView<Song> mp3FileTableView;
@@ -77,7 +78,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         VBox tableContainer = new VBox();
         ToolBar toolBar = createToolBar();
 
-        mp3FileTableView = new MP3TableView(model.getSongs(), this::changeTrack).build();
+        mp3FileTableView = new MP3TableView(model.getSongs(), this::changeTrack, onFileRenamed).build();
         mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldValue, newValue) -> {
             int index = (int) newValue;
             if (index != -1) {

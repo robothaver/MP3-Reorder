@@ -1,10 +1,12 @@
 package com.robothaver.mp3reorder.mp3_viewer;
 
+import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.song.domain.SongSearch;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.editor.MP3TrackEditor;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.editor.MP3TrackEditorImpl;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 public class MP3Interactor {
     private final MP3Model model;
@@ -13,6 +15,16 @@ public class MP3Interactor {
     public MP3Interactor(MP3Model model) {
         this.model = model;
         this.mp3TrackEditor = new MP3TrackEditorImpl(model);
+    }
+
+    public void onFileRenamed(String oldName, String newName) {
+        for (Song song : model.getSongs()) {
+            if (song.getFileName().equals(newName)) {
+                model.getSongs().get(model.getSelectedSongIndex()).fileNameProperty().set(oldName);
+                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.WARNING, "Can't rename file", "Can't have files with the same name!");
+                return;
+            }
+        }
     }
 
     public void onSearchQueryChanged() {

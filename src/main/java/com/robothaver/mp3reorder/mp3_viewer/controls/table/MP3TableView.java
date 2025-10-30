@@ -18,6 +18,7 @@ import java.util.function.BiConsumer;
 public class MP3TableView implements Builder<TableView<Song>> {
     private final ObservableList<Song> songs;
     private final BiConsumer<Integer, Integer> onTrackChanged;
+    private final BiConsumer<String, String> onFileRenamed;
 
     @Override
     public TableView<Song> build() {
@@ -36,6 +37,9 @@ public class MP3TableView implements Builder<TableView<Song>> {
         TableColumn<Song, String> fileNameColumn = new TableColumn<>("File name");
         fileNameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
         fileNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        fileNameColumn.setCellFactory(param ->
+                EditableTableCell.forStringTableColumn(onFileRenamed)
+        );
         fileNameColumn.setComparator(MP3FileUtils::compareFileNames);
 
         TableColumn<Song, String> titleColumn = new TableColumn<>("Title");
@@ -57,7 +61,7 @@ public class MP3TableView implements Builder<TableView<Song>> {
         trackColumn.setMinWidth(60);
         trackColumn.setMaxWidth(60);
         trackColumn.setCellFactory(songIntegerTableColumn ->
-            new TrackFieldTableCell(onTrackChanged)
+            new EditableTableCell<>(onTrackChanged, new IntegerStringConverter())
         );
         return trackColumn;
     }
