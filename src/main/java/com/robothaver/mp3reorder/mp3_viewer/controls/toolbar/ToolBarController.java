@@ -17,9 +17,4 @@ public class ToolBarController extends BaseController<ToolBar> {
                 interactor::onSearchQueryChanged
         );
     }
-
-    @Override
-    public ToolBar getView() {
-        return viewBuilder.build();
-    }
 }

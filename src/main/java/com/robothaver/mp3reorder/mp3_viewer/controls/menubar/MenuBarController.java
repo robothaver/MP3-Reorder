@@ -69,9 +69,4 @@ public class MenuBarController extends BaseController<MenuBar> {
         new Thread(taskExecutor).start();
         DialogManagerImpl.getInstance().showProgressDialog(dialogState);
     }
-
-    @Override
-    public MenuBar getView() {
-        return viewBuilder.build();
-    }
 }

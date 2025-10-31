@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.function.BiConsumer;
 
 @RequiredArgsConstructor
-public class MP3TableView implements Builder<TableView<Song>> {
+public class MP3TableViewBuilder implements Builder<TableView<Song>> {
     private final ObservableList<Song> songs;
     private final BiConsumer<Integer, Integer> onTrackChanged;
     private final BiConsumer<String, String> onFileRenamed;

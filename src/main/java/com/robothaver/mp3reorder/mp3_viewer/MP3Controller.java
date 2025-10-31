@@ -25,12 +25,9 @@ public class MP3Controller extends BaseController<Region> {
 
     public MP3Controller() {
         this.model = new MP3Model();
-        MP3Interactor interactor = new MP3Interactor(model);
         viewBuilder = new MP3ViewBuilder(
                 model,
-                this::loadSongs,
-                interactor::onTrackChangedForSong,
-                interactor::onFileRenamed
+                this::loadSongs
         );
     }
 
