@@ -31,11 +31,8 @@ public class MP3Controller {
         this.viewBuilder = new MP3ViewBuilder(
                 model,
                 this::loadSongs,
-                interactor::moveSelectedSongUp,
-                interactor::moveSelectedSongDown,
                 interactor::onTrackChangedForSong,
-                interactor::onFileRenamed,
-                interactor::onSearchQueryChanged
+                interactor::onFileRenamed
         );
     }
 

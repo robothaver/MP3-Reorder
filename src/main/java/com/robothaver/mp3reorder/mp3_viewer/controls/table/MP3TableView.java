@@ -61,7 +61,7 @@ public class MP3TableView implements Builder<TableView<Song>> {
         trackColumn.setMinWidth(60);
         trackColumn.setMaxWidth(60);
         trackColumn.setCellFactory(songIntegerTableColumn ->
-            new EditableTableCell<>(onTrackChanged, new IntegerStringConverter())
+                new EditableTableCell<>(onTrackChanged, new IntegerStringConverter())
         );
         return trackColumn;
     }
