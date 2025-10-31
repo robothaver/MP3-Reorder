@@ -1,5 +1,6 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
+import com.robothaver.mp3reorder.BaseController;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
@@ -10,17 +11,14 @@ import com.robothaver.mp3reorder.mp3_viewer.song.task.SongTaskExecutor;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.ProcessorResult;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
-import javafx.util.Builder;
 
-public class MenuBarController {
-    private final MenuBarModel model;
+public class MenuBarController extends BaseController<MenuBar> {
     private final MP3Model mp3Model;
-    private final Builder<MenuBar> viewBuilder;
     private final MenuBarInteractor interactor;
 
     public MenuBarController(MP3Model mp3Model, Runnable loadSongs) {
-        this.model = new MenuBarModel();
         this.mp3Model = mp3Model;
+        MenuBarModel model = new MenuBarModel();
         interactor = new MenuBarInteractor(model, mp3Model);
         viewBuilder = new MenuBarViewBuilder(
                 model,
@@ -72,6 +70,7 @@ public class MenuBarController {
         DialogManagerImpl.getInstance().showProgressDialog(dialogState);
     }
 
+    @Override
     public MenuBar getView() {
         return viewBuilder.build();
     }

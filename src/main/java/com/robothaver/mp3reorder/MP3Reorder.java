@@ -3,7 +3,6 @@ package com.robothaver.mp3reorder;
 import atlantafx.base.theme.PrimerDark;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Controller;
-import com.robothaver.mp3reorder.mp3_viewer.utils.ApplicationInfo;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

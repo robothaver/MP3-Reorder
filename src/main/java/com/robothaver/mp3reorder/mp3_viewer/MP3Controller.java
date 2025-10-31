@@ -1,5 +1,6 @@
 package com.robothaver.mp3reorder.mp3_viewer;
 
+import com.robothaver.mp3reorder.BaseController;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
@@ -16,24 +17,31 @@ import javafx.scene.control.Alert;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.util.Builder;
 
-import static com.robothaver.mp3reorder.mp3_viewer.utils.ApplicationInfo.APPLICATION_NAME;
+import static com.robothaver.mp3reorder.ApplicationInfo.APPLICATION_NAME;
 
-public class MP3Controller {
+public class MP3Controller extends BaseController<Region> {
     private final MP3Model model;
-    private final Builder<Region> viewBuilder;
-    private final MP3Interactor interactor;
 
     public MP3Controller() {
         this.model = new MP3Model();
-        this.interactor = new MP3Interactor(model);
-        this.viewBuilder = new MP3ViewBuilder(
+        MP3Interactor interactor = new MP3Interactor(model);
+        viewBuilder = new MP3ViewBuilder(
                 model,
                 this::loadSongs,
                 interactor::onTrackChangedForSong,
                 interactor::onFileRenamed
         );
+    }
+
+    private static String buildTrackIssueMessage(TrackIssue issue) {
+        StringBuilder stringBuilder = new StringBuilder("Existing tracks were ignored because some songs have");
+        if (issue == TrackIssue.DUPLICATE_TRACKS) {
+            stringBuilder.append(" duplicate track numbers.");
+        } else if (issue == TrackIssue.TRACKS_IN_INVALID_RANGE) {
+            stringBuilder.append(" track numbers outside the valid range.");
+        }
+        return stringBuilder.toString();
     }
 
     private void loadSongs() {
@@ -57,7 +65,7 @@ public class MP3Controller {
 
             if (trackAssignerResult.getTrackIssue() != TrackIssue.NONE) {
                 String message = buildTrackIssueMessage(trackAssignerResult.getTrackIssue());
-                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION , "Song track issue found!", message);
+                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION, "Song track issue found!", message);
             }
             if (!result.getErrors().isEmpty()) {
                 ErrorListAlertMessage message = new ErrorListAlertMessage("Song loading error", "Some songs have failed to load. See the errors bellow.", result.getErrors());
@@ -66,7 +74,7 @@ public class MP3Controller {
         });
         songProcessor.setOnFailed(event -> {
             Throwable ex = songProcessor.getException();
-            DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR , "Loading songs failed", "Loading songs from " + model.getSelectedPath() + " failed. " + ex);
+            DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, "Loading songs failed", "Loading songs from " + model.getSelectedPath() + " failed. " + ex);
             System.err.println("Song loading failed: " + ex);
             dialogState.getVisible().set(false);
         });
@@ -75,16 +83,7 @@ public class MP3Controller {
         DialogManagerImpl.getInstance().showProgressDialog(dialogState);
     }
 
-    private static String buildTrackIssueMessage(TrackIssue issue) {
-        StringBuilder stringBuilder = new StringBuilder("Existing tracks were ignored because some songs have");
-        if (issue == TrackIssue.DUPLICATE_TRACKS) {
-            stringBuilder.append(" duplicate track numbers.");
-        } else if (issue == TrackIssue.TRACKS_IN_INVALID_RANGE){
-            stringBuilder.append(" track numbers outside the valid range.");
-        }
-        return stringBuilder.toString();
-    }
-
+    @Override
     public Region getView() {
         Region build = viewBuilder.build();
         loadSongs();

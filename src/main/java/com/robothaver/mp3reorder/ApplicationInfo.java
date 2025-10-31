@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3_viewer.utils;
+package com.robothaver.mp3reorder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +10,7 @@ public class ApplicationInfo {
 
     static {
         Properties properties = new Properties();
-        try (InputStream resource = Utils.class.getResourceAsStream("/application.properties")) {
+        try (InputStream resource = ApplicationInfo.class.getResourceAsStream("/application.properties")) {
             properties.load(resource);
             APPLICATION_NAME = properties.getProperty("application.name");
             APPLICATION_VERSION = properties.getProperty("application.version");
