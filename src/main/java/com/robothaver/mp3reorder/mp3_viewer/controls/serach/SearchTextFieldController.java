@@ -10,12 +10,14 @@ public class SearchTextFieldController extends BaseController<CustomTextField> {
     private final SearchTextFieldInteractor interactor;
 
     public SearchTextFieldController(MP3Model mp3Model, Consumer<Integer> onSelectedIndexChanged) {
-        interactor = new SearchTextFieldInteractor(mp3Model, mp3Model.getSongSearch(), onSelectedIndexChanged);
+        SearchTextFieldModel songSearch = mp3Model.getSongSearch();
+        interactor = new SearchTextFieldInteractor(mp3Model, songSearch, onSelectedIndexChanged);
         viewBuilder = new SearchTextFieldViewBuilder(
-                mp3Model.getSongSearch(),
+                songSearch,
                 interactor::selectPrevious,
                 interactor::selectNext,
-                () -> interactor.onSearchQueryChanged(true)
+                () -> interactor.onSearchQueryChanged(true),
+                songSearch::clear
         );
     }
 }

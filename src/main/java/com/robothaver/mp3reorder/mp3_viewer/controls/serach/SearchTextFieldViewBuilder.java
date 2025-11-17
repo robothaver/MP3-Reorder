@@ -25,6 +25,7 @@ public class SearchTextFieldViewBuilder implements Builder<CustomTextField> {
     private final Runnable onSelectPrevious;
     private final Runnable onSelectNext;
     private final Runnable onSearchQueryChanged;
+    private final Runnable onClearSearch;
 
     @Override
     public CustomTextField build() {
@@ -65,7 +66,7 @@ public class SearchTextFieldViewBuilder implements Builder<CustomTextField> {
         nextBtn.setDisable(true);
         nextBtn.getStyleClass().addAll(Styles.BUTTON_CIRCLE, Styles.FLAT);
         nextBtn.setOnAction(event -> onSelectNext.run());
-        Button clearButton = createClearButton(stringProperty);
+        Button clearButton = createClearButton();
 
         stringProperty.addListener((observable, oldValue, newValue) ->
                 root.setVisible(!newValue.isBlank())
@@ -90,10 +91,10 @@ public class SearchTextFieldViewBuilder implements Builder<CustomTextField> {
         return root;
     }
 
-    private Button createClearButton(StringProperty stringProperty) {
+    private Button createClearButton() {
         Button button = new Button(null, new FontIcon(Feather.X));
         button.getStyleClass().addAll(Styles.BUTTON_CIRCLE, Styles.FLAT);
-        button.setOnAction(event -> stringProperty.set(""));
+        button.setOnAction(event -> onClearSearch.run());
         return button;
     }
 }

@@ -14,4 +14,10 @@ public class SearchTextFieldModel {
     private final StringProperty searchQuery = new SimpleStringProperty("");
     private final ObservableList<Song> results = FXCollections.observableArrayList();
     private final IntegerProperty selectedResultIndex = new SimpleIntegerProperty();
+
+    public void clear() {
+        selectedResultIndex.set(-1);
+        searchQuery.set("");
+        results.clear();
+    }
 }

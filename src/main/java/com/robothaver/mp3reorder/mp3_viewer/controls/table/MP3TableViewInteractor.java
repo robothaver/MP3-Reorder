@@ -29,9 +29,7 @@ public class MP3TableViewInteractor {
                 return;
             }
         }
-        model.getSongSearch().getResults().clear();
-        model.getSongSearch().getSelectedResultIndex().set(-1);
-        model.getSongSearch().getSearchQuery().set("");
+        model.getSongSearch().clear();
     }
 
     public void onTrackChangedForSong(int currentTrack, int newTrack) {
