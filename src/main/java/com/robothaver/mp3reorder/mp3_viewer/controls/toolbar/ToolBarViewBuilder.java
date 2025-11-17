@@ -2,12 +2,9 @@ package com.robothaver.mp3reorder.mp3_viewer.controls.toolbar;
 
 import atlantafx.base.controls.CustomTextField;
 import atlantafx.base.controls.Spacer;
-import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
-import com.robothaver.mp3reorder.mp3_viewer.controls.SearchTextField;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.SongSearch;
-import javafx.animation.PauseTransition;
+import com.robothaver.mp3reorder.mp3_viewer.controls.serach.SearchTextFieldController;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
@@ -15,17 +12,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
 import javafx.util.Builder;
-import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
+
+import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class ToolBarViewBuilder implements Builder<ToolBar> {
     private final MP3Model model;
     private final Runnable onMoveSongUp;
     private final Runnable onMoveSongDown;
-    private final Runnable onSearchQueryChanged;
+    private final Consumer<Integer> onSelectedIndexChanged;
 
     @Override
     public ToolBar build() {
@@ -59,19 +57,6 @@ public class ToolBarViewBuilder implements Builder<ToolBar> {
     }
 
     private CustomTextField createSearchTextField() {
-        CustomTextField searchTextField = new SearchTextField().build();
-
-        SongSearch songSearch = model.getSongSearch();
-        searchTextField.textProperty().bindBidirectional(songSearch.getSearchQuery());
-
-        PauseTransition pause = new PauseTransition(Duration.seconds(0.35));
-        songSearch.getSearchQuery().addListener((observable, oldValue, newValue) -> {
-            pause.setOnFinished(event -> onSearchQueryChanged.run());
-            pause.playFromStart();
-        });
-        songSearch.getFound().addListener((observable, oldValue, found) ->
-                searchTextField.pseudoClassStateChanged(Styles.STATE_DANGER, !found)
-        );
-        return searchTextField;
+        return new SearchTextFieldController(model, onSelectedIndexChanged).getView();
     }
 }

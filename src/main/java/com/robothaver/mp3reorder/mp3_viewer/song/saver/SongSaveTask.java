@@ -5,7 +5,7 @@ import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.NotSupportedException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import com.robothaver.mp3reorder.mp3_viewer.song.TagUtils;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;

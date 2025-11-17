@@ -1,7 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.table;
 
 import atlantafx.base.theme.Styles;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;

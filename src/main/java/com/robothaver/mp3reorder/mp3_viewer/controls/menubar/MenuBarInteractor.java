@@ -2,7 +2,7 @@ package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils;
 import javafx.application.Application;
 import javafx.scene.Parent;

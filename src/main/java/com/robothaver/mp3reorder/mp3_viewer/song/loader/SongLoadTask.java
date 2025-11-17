@@ -1,7 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer.song.loader;
 
 import com.mpatric.mp3agic.Mp3File;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

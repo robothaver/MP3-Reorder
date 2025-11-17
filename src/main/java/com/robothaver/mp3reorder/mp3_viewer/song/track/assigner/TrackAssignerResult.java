@@ -1,6 +1,6 @@
 package com.robothaver.mp3reorder.mp3_viewer.song.track.assigner;
 
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import lombok.Data;
 
 import java.util.List;

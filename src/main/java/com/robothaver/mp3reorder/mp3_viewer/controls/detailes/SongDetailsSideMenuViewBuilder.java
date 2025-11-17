@@ -8,7 +8,7 @@ import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.SongIntDa
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.SongTextDataWidget;
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.genre.SongGenreComboBox;
 import com.robothaver.mp3reorder.mp3_viewer.song.TagUtils;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;

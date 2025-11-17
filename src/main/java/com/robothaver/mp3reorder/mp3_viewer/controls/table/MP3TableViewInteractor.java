@@ -2,7 +2,7 @@ package com.robothaver.mp3reorder.mp3_viewer.controls.table;
 
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.editor.MP3TrackEditor;
 import com.robothaver.mp3reorder.mp3_viewer.song.track.editor.MP3TrackEditorImpl;
 import javafx.scene.control.Alert;
@@ -29,6 +29,9 @@ public class MP3TableViewInteractor {
                 return;
             }
         }
+        model.getSongSearch().getResults().clear();
+        model.getSongSearch().getSelectedResultIndex().set(-1);
+        model.getSongSearch().getSearchQuery().set("");
     }
 
     public void onTrackChangedForSong(int currentTrack, int newTrack) {

@@ -2,7 +2,7 @@ package com.robothaver.mp3reorder.mp3_viewer.song.saver;
 
 import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.SongTask;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.SongTaskProvider;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import lombok.RequiredArgsConstructor;
 
 import java.nio.file.Path;

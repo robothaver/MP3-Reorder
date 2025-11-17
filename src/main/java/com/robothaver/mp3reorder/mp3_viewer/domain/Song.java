@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3_viewer.song.domain;
+package com.robothaver.mp3reorder.mp3_viewer.domain;
 
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;

@@ -6,7 +6,7 @@ import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.SongDetailsSideMen
 import com.robothaver.mp3reorder.mp3_viewer.controls.menubar.MenuBarController;
 import com.robothaver.mp3reorder.mp3_viewer.controls.table.MP3TableViewController;
 import com.robothaver.mp3reorder.mp3_viewer.controls.toolbar.ToolBarController;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;

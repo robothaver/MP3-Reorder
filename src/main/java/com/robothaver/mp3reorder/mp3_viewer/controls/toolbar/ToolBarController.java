@@ -14,7 +14,7 @@ public class ToolBarController extends BaseController<ToolBar> {
                 model,
                 interactor::moveSelectedSongUp,
                 interactor::moveSelectedSongDown,
-                interactor::onSearchQueryChanged
+                onSelectedIndexChanged
         );
     }
 }

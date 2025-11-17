@@ -5,7 +5,7 @@ import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import com.robothaver.mp3reorder.dialog.progress.ProgressState;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.song.loader.SongLoaderTaskProvider;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.SongTaskExecutor;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.ProcessorResult;
@@ -29,16 +29,6 @@ public class MP3Controller extends BaseController<Region> {
                 model,
                 this::loadSongs
         );
-    }
-
-    private static String buildTrackIssueMessage(TrackIssue issue) {
-        StringBuilder stringBuilder = new StringBuilder("Existing tracks were ignored because some songs have");
-        if (issue == TrackIssue.DUPLICATE_TRACKS) {
-            stringBuilder.append(" duplicate track numbers.");
-        } else if (issue == TrackIssue.TRACKS_IN_INVALID_RANGE) {
-            stringBuilder.append(" track numbers outside the valid range.");
-        }
-        return stringBuilder.toString();
     }
 
     private void loadSongs() {
@@ -78,6 +68,16 @@ public class MP3Controller extends BaseController<Region> {
 
         new Thread(songProcessor).start();
         DialogManagerImpl.getInstance().showProgressDialog(dialogState);
+    }
+
+    private String buildTrackIssueMessage(TrackIssue issue) {
+        StringBuilder stringBuilder = new StringBuilder("Existing tracks were ignored because some songs have");
+        if (issue == TrackIssue.DUPLICATE_TRACKS) {
+            stringBuilder.append(" duplicate track numbers.");
+        } else if (issue == TrackIssue.TRACKS_IN_INVALID_RANGE) {
+            stringBuilder.append(" track numbers outside the valid range.");
+        }
+        return stringBuilder.toString();
     }
 
     @Override

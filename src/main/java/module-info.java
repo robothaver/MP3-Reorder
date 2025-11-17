@@ -13,10 +13,11 @@ module com.robothaver.mp3reorder {
 
     opens com.robothaver.mp3reorder.mp3_viewer to javafx.base;
     opens com.robothaver.mp3reorder.mp3_viewer.song.loader to javafx.base;
-    opens com.robothaver.mp3reorder.mp3_viewer.song.domain to javafx.base;
+    opens com.robothaver.mp3reorder.mp3_viewer.domain to javafx.base;
     opens com.robothaver.mp3reorder.dialog to javafx.base;
     opens com.robothaver.mp3reorder.mp3_viewer.song.track.assigner to javafx.base;
     opens com.robothaver.mp3reorder.dialog.error to javafx.base;
     opens com.robothaver.mp3reorder.dialog.option to javafx.base;
     opens com.robothaver.mp3reorder.mp3_viewer.song.task.domain to javafx.base;
+    opens com.robothaver.mp3reorder.mp3_viewer.controls.serach to javafx.base;
 }

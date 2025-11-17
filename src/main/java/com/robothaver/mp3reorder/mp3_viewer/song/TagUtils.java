@@ -3,7 +3,7 @@ package com.robothaver.mp3reorder.mp3_viewer.song;
 import com.mpatric.mp3agic.ID3v1Genres;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.ID3v24Tag;
-import com.robothaver.mp3reorder.mp3_viewer.song.domain.Song;
+import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 
 public class TagUtils {
     private TagUtils() {
