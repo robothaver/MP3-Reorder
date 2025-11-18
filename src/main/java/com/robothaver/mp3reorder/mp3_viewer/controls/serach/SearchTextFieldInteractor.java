@@ -14,6 +14,7 @@ public class SearchTextFieldInteractor {
     private final Consumer<Integer> onSelectedIndexChanged;
 
     public void selectPrevious() {
+        if (model.getResults().size() < 2) return;
         int selectedIndex = model.getSelectedResultIndex().get();
         if (selectedIndex == 0) {
             int lastIndex = model.getResults().size() - 1;
@@ -26,6 +27,7 @@ public class SearchTextFieldInteractor {
     }
 
     public void selectNext() {
+        if (model.getResults().size() < 2) return;
         int selectedIndex = model.getSelectedResultIndex().get();
         int lastIndex = model.getResults().size() - 1;
         if (selectedIndex == lastIndex) {

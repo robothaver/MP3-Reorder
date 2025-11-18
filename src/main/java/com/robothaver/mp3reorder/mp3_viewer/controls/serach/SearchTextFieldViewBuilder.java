@@ -75,9 +75,9 @@ public class SearchTextFieldViewBuilder implements Builder<CustomTextField> {
         separator.setPadding(new Insets(4, 0, 4, 0));
 
         searchState.getResults().addListener((ListChangeListener<? super Song>) c -> {
-            boolean hasResults = searchState.getResults().isEmpty();
-            previousBtn.setDisable(hasResults);
-            nextBtn.setDisable(hasResults);
+            boolean hasResults = searchState.getResults().size() > 1;
+            previousBtn.setDisable(!hasResults);
+            nextBtn.setDisable(!hasResults);
             resultsLabel.setText((searchState.getSelectedResultIndex().get() + 1) + "/" + searchState.getResults().size());
         });
 
