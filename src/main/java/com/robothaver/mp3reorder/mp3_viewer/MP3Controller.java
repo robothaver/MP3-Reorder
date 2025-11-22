@@ -49,6 +49,7 @@ public class MP3Controller extends BaseController<Region> {
             TrackAssignerResult trackAssignerResult = trackAssigner.assignTracks();
             model.getSongs().setAll(trackAssignerResult.getSongs());
             dialogState.getVisible().set(false);
+            model.getSongSearch().clear();
 
             if (trackAssignerResult.getTrackIssue() != TrackIssue.NONE) {
                 String message = buildTrackIssueMessage(trackAssignerResult.getTrackIssue());
