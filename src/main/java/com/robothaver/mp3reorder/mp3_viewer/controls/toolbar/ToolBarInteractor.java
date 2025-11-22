@@ -19,12 +19,21 @@ public class ToolBarInteractor {
         this.onSelectedIndexChanged = onSelectedIndexChanged;
     }
 
+    public void moveSelectedSongToTop() {
+        int selectedIndex = model.getSelectedSongIndex();
+
+        if (selectedIndex > 0) {
+            System.out.println(selectedIndex);
+            mp3TrackEditor.insertSong(selectedIndex, 0);
+            setSelectedIndex(0);
+        }
+    }
+
     public void moveSelectedSongUp() {
         int selectedIndex = model.getSelectedSongIndex();
         if (selectedIndex > 0) {
             mp3TrackEditor.swapSongsAndTracks(selectedIndex, selectedIndex - 1);
-            model.selectedSongIndexProperty().set(selectedIndex - 1);
-            onSelectedIndexChanged.accept(selectedIndex - 1);
+            setSelectedIndex(selectedIndex - 1);
         }
     }
 
@@ -33,8 +42,21 @@ public class ToolBarInteractor {
         ObservableList<Song> songs = model.getSongs();
         if (selectedIndex != songs.size() - 1 && selectedIndex != -1) {
             mp3TrackEditor.swapSongsAndTracks(selectedIndex, selectedIndex + 1);
-            model.selectedSongIndexProperty().set(selectedIndex + 1);
-            onSelectedIndexChanged.accept(selectedIndex + 1);
+            setSelectedIndex(selectedIndex + 1);
         }
+    }
+
+    public void moveSelectedSongToBottom() {
+        int selectedIndex = model.getSelectedSongIndex();
+        int lastIndex = model.getSongs().size() - 1;
+        if (selectedIndex != -1 && selectedIndex != lastIndex) {
+            mp3TrackEditor.insertSong(selectedIndex, lastIndex);
+            setSelectedIndex(lastIndex);
+        }
+    }
+
+    private void setSelectedIndex(int index) {
+        model.selectedSongIndexProperty().set(index);
+        onSelectedIndexChanged.accept(index);
     }
 }

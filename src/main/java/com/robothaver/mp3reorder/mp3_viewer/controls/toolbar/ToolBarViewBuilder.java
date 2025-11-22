@@ -3,6 +3,7 @@ package com.robothaver.mp3reorder.mp3_viewer.controls.toolbar;
 import atlantafx.base.controls.CustomTextField;
 import atlantafx.base.controls.Spacer;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
+import com.robothaver.mp3reorder.mp3_viewer.controls.ImageButton;
 import com.robothaver.mp3reorder.mp3_viewer.controls.serach.SearchTextFieldController;
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import javafx.collections.ListChangeListener;
@@ -21,17 +22,25 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class ToolBarViewBuilder implements Builder<ToolBar> {
     private final MP3Model model;
+    private final Runnable onMoveSongToTop;
     private final Runnable onMoveSongUp;
     private final Runnable onMoveSongDown;
+    private final Runnable onMoveSongToBottom;
     private final Consumer<Integer> onSelectedIndexChanged;
 
     @Override
     public ToolBar build() {
-        Button moveSongUpBtn = new Button("Up", new FontIcon(Feather.ARROW_UP));
+        Button moveSongToTop = new ImageButton("Top", "/icons/first_icon.png");
+        moveSongToTop.setOnAction(e -> onMoveSongToTop.run());
+
+        Button moveSongUpBtn = new ImageButton("Up", "/icons/up_icon.png");
         moveSongUpBtn.setOnAction(e -> onMoveSongUp.run());
 
-        Button moveSongDownBtn = new Button("Down", new FontIcon(Feather.ARROW_DOWN));
+        Button moveSongDownBtn = new ImageButton("Down", "/icons/down_icon.png");
         moveSongDownBtn.setOnAction(e -> onMoveSongDown.run());
+
+        Button moveSongToBottom = new ImageButton("Bottom", "/icons/last_icon.png");
+        moveSongToBottom.setOnAction(e -> onMoveSongToBottom.run());
 
         Label numberOfSongs = new Label("Songs", new FontIcon(Feather.MUSIC));
 
@@ -45,8 +54,10 @@ public class ToolBarViewBuilder implements Builder<ToolBar> {
         ToolBar toolBar = new ToolBar();
         toolBar.setOrientation(Orientation.HORIZONTAL);
         toolBar.getItems().addAll(
+                moveSongToTop,
                 moveSongUpBtn,
                 moveSongDownBtn,
+                moveSongToBottom,
                 new Separator(Orientation.VERTICAL),
                 new Spacer(Orientation.HORIZONTAL),
                 numberOfSongs,

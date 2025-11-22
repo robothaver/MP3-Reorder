@@ -12,8 +12,10 @@ public class ToolBarController extends BaseController<ToolBar> {
         ToolBarInteractor interactor = new ToolBarInteractor(model, onSelectedIndexChanged);
         this.viewBuilder = new ToolBarViewBuilder(
                 model,
+                interactor::moveSelectedSongToTop,
                 interactor::moveSelectedSongUp,
                 interactor::moveSelectedSongDown,
+                interactor::moveSelectedSongToBottom,
                 onSelectedIndexChanged
         );
     }

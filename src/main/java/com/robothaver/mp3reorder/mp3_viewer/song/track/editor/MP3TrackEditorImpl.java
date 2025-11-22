@@ -39,6 +39,14 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
     }
 
     @Override
+    public void insertSong(int currentSongIndex, int newSongIndex) {
+        Song selectedSong = songs.get(currentSongIndex);
+        Song nextSong = songs.get(newSongIndex);
+        selectedSongCurrentTrack = selectedSong.getTrack();
+        insertSongInternal(selectedSong, nextSong);
+    }
+
+    @Override
     public void swapSongsAndTracks(int index1, int index2) {
         Song song1 = songs.get(index1);
         Song song2 = songs.get(index2);
@@ -52,10 +60,11 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
     }
 
     private void insertSongInTrackRange(int newTrack , Song selectedSong) {
+        // Keeps the tracks in valid range
         if (newTrack < 1) {
-            insertSong(selectedSong, songs.getFirst());
+            insertSongInternal(selectedSong, songs.getFirst());
         } else if (newTrack > songs.size()) {
-            insertSong(selectedSong, songs.getLast());
+            insertSongInternal(selectedSong, songs.getLast());
         }
     }
 
@@ -91,15 +100,13 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
 
     private void handleTrackConflict(TrackConflictSolutions solution, Song selectedSong, Song conflictingSong) {
         switch (solution) {
-            case INSERT -> insertSong(selectedSong, conflictingSong);
+            case INSERT -> insertSongInternal(selectedSong, conflictingSong);
             case SWITCH -> switchTracksForSongs(selectedSong, conflictingSong);
-            default -> songs
-                    .get(model.getSelectedSongIndex())
-                    .trackProperty().setValue(selectedSongCurrentTrack);
+            default -> selectedSong.trackProperty().setValue(selectedSongCurrentTrack);
         }
     }
 
-    private void insertSong(Song selectedSong, Song conflictingSong) {
+    private void insertSongInternal(Song selectedSong, Song conflictingSong) {
         selectedSong.trackProperty().setValue(selectedSongCurrentTrack);
         songs.sort(Comparator.comparingInt(Song::getTrack));
         int selectedSongIndex = songs.indexOf(selectedSong);
