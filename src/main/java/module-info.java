@@ -20,5 +20,5 @@ module com.robothaver.mp3reorder {
     opens com.robothaver.mp3reorder.dialog.error to javafx.base;
     opens com.robothaver.mp3reorder.dialog.option to javafx.base;
     opens com.robothaver.mp3reorder.mp3_viewer.song.task.domain to javafx.base;
-    opens com.robothaver.mp3reorder.mp3_viewer.controls.serach to javafx.base;
+    opens com.robothaver.mp3reorder.mp3_viewer.controls.search to javafx.base;
 }

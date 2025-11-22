@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3_viewer.controls.serach;
+package com.robothaver.mp3reorder.mp3_viewer.controls.search;
 
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import javafx.beans.property.IntegerProperty;

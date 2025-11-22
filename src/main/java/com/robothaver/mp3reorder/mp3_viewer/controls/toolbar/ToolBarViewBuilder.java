@@ -4,7 +4,7 @@ import atlantafx.base.controls.CustomTextField;
 import atlantafx.base.controls.Spacer;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import com.robothaver.mp3reorder.mp3_viewer.controls.ImageButton;
-import com.robothaver.mp3reorder.mp3_viewer.controls.serach.SearchTextFieldController;
+import com.robothaver.mp3reorder.mp3_viewer.controls.search.SearchTextFieldController;
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Orientation;
