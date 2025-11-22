@@ -1,7 +1,11 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
 import atlantafx.base.theme.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
 public enum Themes {
     CUPERTINO_DARK("Cupertino Dark", new CupertinoDark()),
     CUPERTINO_LIGHT("Cupertino Ligth", new CupertinoLight()),
@@ -11,19 +15,6 @@ public enum Themes {
     PRIMER_LIGHT("Primer Light", new PrimerLight()),
     DRACULA("Dracula", new Dracula());
 
-    private String displayName;
-    private Theme theme;
-
-    Themes(String displayName, Theme theme) {
-        this.displayName = displayName;
-        this.theme = theme;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public Theme getTheme() {
-        return theme;
-    }
+    private final String displayName;
+    private final Theme theme;
 }

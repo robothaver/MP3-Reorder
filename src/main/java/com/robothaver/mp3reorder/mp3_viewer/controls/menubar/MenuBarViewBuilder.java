@@ -104,10 +104,10 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
         Menu languageOption = new Menu("Language", new FontIcon(Feather.GLOBE));
 
-        MenuItem hungaryianOption = new CheckMenuItem("Magyar");
+        MenuItem hungarianOption = new CheckMenuItem("Magyar");
         MenuItem englishOption = new CheckMenuItem("English");
 
-        languageOption.getItems().addAll(hungaryianOption, englishOption);
+        languageOption.getItems().addAll(hungarianOption, englishOption);
 
         Menu sizeMenu = new Menu("_Size", new FontIcon(Feather.TYPE));
         for (Size size : Size.values()) {
