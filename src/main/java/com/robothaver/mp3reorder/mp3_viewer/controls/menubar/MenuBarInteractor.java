@@ -64,5 +64,6 @@ public class MenuBarInteractor {
                 }
             }
         }
+        mp3Model.getSongSearch().clear();
     }
 }
