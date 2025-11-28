@@ -1,5 +1,6 @@
 package com.robothaver.mp3reorder.mp3_viewer.song.loader;
 
+import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import lombok.Getter;
@@ -18,11 +19,12 @@ public class SongLoadTask implements Callable<Song> {
         Mp3File mp3File = new Mp3File(file);
         int trackNumber = -1;
         String title = "";
+        ID3v2 tag = mp3File.getId3v2Tag();
         if (mp3File.hasId3v2Tag()) {
-            title = mp3File.getId3v2Tag().getTitle();
+            title = tag.getTitle();
             trackNumber = getTrackFromTag(mp3File);
         }
-        return new Song(mp3File, file, trackNumber, title);
+        return new Song(mp3File, file, trackNumber, title, tag);
     }
 
     private int getTrackFromTag(Mp3File file) {

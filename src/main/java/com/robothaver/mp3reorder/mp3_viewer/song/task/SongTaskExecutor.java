@@ -54,6 +54,7 @@ public class SongTaskExecutor<T> extends Task<ProcessorResult<T>> {
             Platform.runLater(() -> progressState.doneProperty().set(progressState.getDone() + 1));
             return call;
         } catch (Exception e) {
+            e.printStackTrace();
             errors.add(new Error(songTask.getFile().getFileName().toString(), e.getMessage(), e));
         }
         return null;

@@ -43,12 +43,13 @@ public class Song {
     @Setter
     private ID3v2 tag;
 
-    public Song(Mp3File mp3File, Path path, int track, String title) {
+    public Song(Mp3File mp3File, Path path, int track, String title, ID3v2 tag) {
         this.mp3File = mp3File;
         this.path = path;
         this.track.set(track);
         this.title.set(title);
         this.fileName.set(path.getFileName().toString());
+        this.tag = tag;
     }
 
     public int getTrack() {

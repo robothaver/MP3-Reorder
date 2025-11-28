@@ -1,7 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer;
 
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
-import com.robothaver.mp3reorder.mp3_viewer.controls.serach.SearchTextFieldModel;
+import com.robothaver.mp3reorder.mp3_viewer.controls.search.SearchTextFieldModel;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
