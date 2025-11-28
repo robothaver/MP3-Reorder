@@ -11,31 +11,50 @@ import com.robothaver.mp3reorder.mp3_viewer.song.TagUtils;
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
+import org.kordamp.ikonli.feather.Feather;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 @RequiredArgsConstructor
-public class SongDetailsSideMenuViewBuilder implements Builder<ScrollPane> {
+public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
     private final MP3Model model;
 
     @Override
-    public ScrollPane build() {
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setPadding(new Insets(10));
-        scrollPane.setFitToWidth(true);
-        scrollPane.setMaxWidth(800);
-        VBox sideContainer = new VBox();
-        sideContainer.setSpacing(10);
-        sideContainer.setMaxWidth(Double.MAX_VALUE);
+    public VBox build() {
+        VBox rootContainer = new VBox();
+        rootContainer.setMaxWidth(800);
+        rootContainer.setPadding(new Insets(0));
 
-        Label songDetails = new Label("Song details");
-        songDetails.getStyleClass().add(Styles.TITLE_3);
-        songDetails.setMaxWidth(Double.MAX_VALUE);
-        songDetails.setTextAlignment(TextAlignment.CENTER);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPadding(new Insets(10));
+
+        VBox detailsContainer = new VBox();
+        detailsContainer.setSpacing(10);
+        detailsContainer.setMaxWidth(Double.MAX_VALUE);
+
+        ToolBar toolBar = new ToolBar();
+        toolBar.setMinHeight(50);
+        toolBar.setStyle("""
+                -fx-border-style: hidden hidden solid solid;
+                -fx-border-color: -color-border-muted;
+                """);
+        toolBar.setPadding(new Insets(0, 10, 0, 10));
+
+        Label songDetailsLabel = new Label("Song details");
+        songDetailsLabel.getStyleClass().add(Styles.TITLE_3);
+        songDetailsLabel.setMaxWidth(Double.MAX_VALUE);
+        songDetailsLabel.setTextAlignment(TextAlignment.CENTER);
+
+        Button closeContainerButton = new Button(null, new FontIcon(Feather.X));
+        closeContainerButton.getStyleClass().addAll(Styles.BUTTON_CIRCLE, Styles.FLAT);
+        closeContainerButton.setOnAction(actionEvent -> model.getDetailsMenuEnabled().set(false));
+        toolBar.getItems().addAll(songDetailsLabel, new Spacer(Orientation.HORIZONTAL), closeContainerButton);
+
 
         SongTextDataWidget titleTextField = new SongTextDataWidget("Title");
         SongTextDataWidget artistTextField = new SongTextDataWidget("Artist");
@@ -60,9 +79,7 @@ public class SongDetailsSideMenuViewBuilder implements Builder<ScrollPane> {
         );
 
 
-        sideContainer.getChildren().addAll(
-                songDetails,
-                new Spacer(Orientation.VERTICAL),
+        detailsContainer.getChildren().addAll(
                 songAlbumImageWidget.build(),
                 titleTextField.build(),
                 trackSpinner.build(),
@@ -80,7 +97,9 @@ public class SongDetailsSideMenuViewBuilder implements Builder<ScrollPane> {
                 urlTextField.build(),
                 encoderTextField.build()
         );
-        scrollPane.setContent(sideContainer);
+        scrollPane.setContent(detailsContainer);
+
+        rootContainer.getChildren().addAll(toolBar, scrollPane);
 
         model.selectedSongIndexProperty().addListener((observableValue, oldIndex, currentIndex) -> {
             Integer selectedIndex = (Integer) currentIndex;
@@ -107,6 +126,6 @@ public class SongDetailsSideMenuViewBuilder implements Builder<ScrollPane> {
                 encoderTextField.bind(song.encoderProperty());
             }
         });
-        return scrollPane;
+        return rootContainer;
     }
 }

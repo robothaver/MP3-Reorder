@@ -29,7 +29,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         MenuBar menuBar = new MenuBarController(model, onLoadSongs).getView();
 
         VBox tableControls = createTableControls();
-        ScrollPane detailsSideMenu = new SongDetailsSideMenuViewBuilder(model).build();
+        VBox detailsSideMenu = new SongDetailsSideMenuViewBuilder(model).build();
         SplitPane splitPane = buildMainSplitPane(tableControls, detailsSideMenu);
 
         StatusBar statusBar = new StatusBar(model);
@@ -40,7 +40,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         return baseContainer;
     }
 
-    private SplitPane buildMainSplitPane(VBox tableControls, ScrollPane detailsSideMenu) {
+    private SplitPane buildMainSplitPane(VBox tableControls, VBox detailsSideMenu) {
         SplitPane splitPane = createSplitPane();
         splitPane.getItems().add(tableControls);
 
@@ -69,6 +69,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private VBox createTableControls() {
         VBox tableContainer = new VBox();
         ToolBar toolBar = new ToolBarController(model, this::selectIndex).getView();
+        toolBar.setPrefHeight(50);
 
         mp3FileTableView = new MP3TableViewController(model, this::selectIndex).getView();
         mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldValue, newValue) -> {
