@@ -6,12 +6,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 
 @RequiredArgsConstructor
 public class SongTextDataWidget implements Builder<Region> {
     private final String title;
     private Property<String> activeBinding;
+    @Getter
+    @Setter
+    private boolean editable = true;
+    @Getter
     private TextField textField;
 
     public void bind(Property<String> newBinding) {
@@ -34,6 +41,7 @@ public class SongTextDataWidget implements Builder<Region> {
         textField = new TextField();
         textField.setPromptText(title);
         textField.setMaxWidth(Double.MAX_VALUE);
+        textField.setEditable(editable);
 
         Label titleLabel = new Label(title);
         vBox.getChildren().addAll(titleLabel, textField);
