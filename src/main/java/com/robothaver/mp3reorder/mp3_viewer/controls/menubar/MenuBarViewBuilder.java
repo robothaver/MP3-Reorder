@@ -1,5 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
+import com.robothaver.mp3reorder.LanguageController;
+import com.robothaver.mp3reorder.mp3_viewer.ViewLocalization;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -18,7 +20,6 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final MenuBar menuBar = new MenuBar();
-
     private final MenuBarModel model;
     private final BooleanProperty detailsSideMenuEnabled;
     private final BooleanProperty statusBarEnabled;
@@ -29,6 +30,8 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final Runnable onSetTracksByFileName;
     private final Runnable onRemoveIndexFromFileName;
     private final Runnable onSave;
+
+    private final ViewLocalization localization = new ViewLocalization("language.menubar", LanguageController.getSelectedLocale());
 
     @Override
     public MenuBar build() {
@@ -41,14 +44,20 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     }
 
     private Menu createFileMenu() {
-        Menu fileMenu = new Menu("_File");
+        Menu fileMenu = new Menu();
+        fileMenu.textProperty().bind(localization.bindString("file"));
+
         MenuItem openOption = createItem("Open", Feather.FOLDER, new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+        openOption.textProperty().bind(localization.bindString("fileOpen"));
         openOption.setOnAction(event -> onOpenDirectory.run());
         MenuItem saveOption = createItem("Save", Feather.SAVE, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
+        saveOption.textProperty().bind(localization.bindString("fileSave"));
         saveOption.setOnAction(event -> onSave.run());
         MenuItem saveAsOption = createItem("Save As", null, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN, KeyCombination.ALT_DOWN));
+        saveAsOption.textProperty().bind(localization.bindString("fileSaveAs"));
         saveAsOption.setOnAction(event -> System.out.println("Save as option pressed!"));
         MenuItem exitOption = createItem("Exit", null, null);
+        exitOption.textProperty().bind(localization.bindString("exit"));
         exitOption.setOnAction(event -> onExit.run());
         fileMenu.getItems().addAll(
                 openOption,
@@ -63,10 +72,12 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
     private Menu createEditMenu() {
         Menu editMenu = new Menu("_Edit");
-
+        editMenu.textProperty().bind(localization.bindString("edit"));
         MenuItem tracksByFilenameOption = createItem("Set tracks by filename", null, null);
+        tracksByFilenameOption.textProperty().bind(localization.bindString("setTracksByFileName"));
         tracksByFilenameOption.setOnAction(event -> onSetTracksByFileName.run());
         MenuItem removeIndexFromNameOption = createItem("Remove index from name", null, null);
+        removeIndexFromNameOption.textProperty().bind(localization.bindString("removeIndexFromName"));
         removeIndexFromNameOption.setOnAction(event -> onRemoveIndexFromFileName.run());
         editMenu.getItems().addAll(
                 tracksByFilenameOption,
@@ -77,15 +88,18 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
     private Menu createViewMenu() {
         Menu viewMenu = new Menu("_View");
+        viewMenu.textProperty().bind(localization.bindString("view"));
 
         CheckMenuItem detailsSideMenuOption = new CheckMenuItem("Details side menu", new FontIcon(Feather.SIDEBAR));
         detailsSideMenuOption.selectedProperty().bindBidirectional(detailsSideMenuEnabled);
+        detailsSideMenuOption.textProperty().bind(localization.bindString("detailsSideMenu"));
 
         CheckMenuItem statusBarOption = new CheckMenuItem("Status bar", new FontIcon(Feather.INFO));
+        statusBarOption.textProperty().bind(localization.bindString("statusBar"));
         statusBarOption.selectedProperty().bindBidirectional(statusBarEnabled);
 
         Menu themeMenu = new Menu("_Theme", new FontIcon(Feather.SUN));
-
+        themeMenu.textProperty().bind(localization.bindString("theme"));
         for (Themes theme : Themes.values()) {
             CheckMenuItem themeMenuItem = new CheckMenuItem(theme.getDisplayName());
             themeMenuItem.setOnAction(event -> onThemeChanged.accept(theme));
@@ -103,13 +117,17 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         });
 
         Menu languageOption = new Menu("Language", new FontIcon(Feather.GLOBE));
+        languageOption.textProperty().bind(localization.bindString("language"));
 
-        MenuItem hungarianOption = new CheckMenuItem("Magyar");
-        MenuItem englishOption = new CheckMenuItem("English");
+        MenuItem hungarianOption = new MenuItem("Magyar");
+        hungarianOption.setOnAction(event -> LanguageController.changeSelectedLocale("hu"));
+        MenuItem englishOption = new MenuItem("English");
+        englishOption.setOnAction(event -> LanguageController.changeSelectedLocale("en"));
 
         languageOption.getItems().addAll(hungarianOption, englishOption);
 
         Menu sizeMenu = new Menu("_Size", new FontIcon(Feather.TYPE));
+        sizeMenu.textProperty().bind(localization.bindString("size"));
         for (Size size : Size.values()) {
             CheckMenuItem sizeMenuItem = new CheckMenuItem(size.getDisplayName());
             sizeMenuItem.setOnAction(event -> onSizeChanged.accept(menuBar.getScene().getRoot(), size));

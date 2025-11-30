@@ -16,6 +16,7 @@ public class MP3Reorder extends Application {
     public void start(Stage stage) {
         DialogManagerImpl.init(stage);
         Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        LanguageController.changeSelectedLocale("hu");
         stage.setTitle(ApplicationInfo.APPLICATION_NAME);
         stage.setScene(new Scene(new MP3Controller().getView()));
         stage.setWidth(800);
