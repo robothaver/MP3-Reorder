@@ -1,22 +1,27 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls;
 
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 
-@RequiredArgsConstructor
 public class SongTextDataWidget implements Builder<Region> {
-    private final String title;
+    @Getter
+    private final StringProperty titleProperty = new SimpleStringProperty();
     private Property<String> activeBinding;
     @Getter
     private TextField textField;
     private boolean editable;
+
+    public SongTextDataWidget(String titleString) {
+        titleProperty.set(titleString);
+    }
 
     public void bind(Property<String> newBinding) {
         if (textField == null) return;
@@ -36,11 +41,12 @@ public class SongTextDataWidget implements Builder<Region> {
         vBox.setSpacing(3);
 
         textField = new TextField();
-        textField.setPromptText(title);
+        textField.promptTextProperty().bind(titleProperty);
         textField.setMaxWidth(Double.MAX_VALUE);
         textField.setEditable(editable);
 
-        Label titleLabel = new Label(title);
+        Label titleLabel = new Label();
+        titleLabel.textProperty().bind(titleProperty);
         vBox.getChildren().addAll(titleLabel, textField);
 
         return vBox;

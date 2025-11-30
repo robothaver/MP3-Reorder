@@ -2,7 +2,9 @@ package com.robothaver.mp3reorder.mp3_viewer.controls.detailes;
 
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
+import com.robothaver.mp3reorder.LanguageController;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
+import com.robothaver.mp3reorder.mp3_viewer.ViewLocalization;
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.SongAlbumImageWidget;
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.SongTextDataWidget;
 import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.genre.SongGenreComboBox;
@@ -24,6 +26,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 @RequiredArgsConstructor
 public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
     private final MP3Model model;
+    private final ViewLocalization localization = new ViewLocalization("language.detailsmenu", LanguageController.getSelectedLocale());
 
     @Override
     public VBox build() {
@@ -52,20 +55,35 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
 
     private void createContent(ScrollPane scrollPane, VBox detailsContainer) {
         SongTextDataWidget titleTextField = new SongTextDataWidget("Title");
+        titleTextField.getTitleProperty().bind(localization.bindString("title"));
         SongTextDataWidget artistTextField = new SongTextDataWidget("Artist");
+        artistTextField.getTitleProperty().bind(localization.bindString("artist"));
         SongTextDataWidget albumTextField = new SongTextDataWidget("Album");
+        albumTextField.getTitleProperty().bind(localization.bindString("album"));
         SongTextDataWidget yearTextField = new SongTextDataWidget("Year");
+        yearTextField.getTitleProperty().bind(localization.bindString("year"));
         SongGenreComboBox songGenreComboBox = new SongGenreComboBox("Genre");
+        songGenreComboBox.getTitleProperty().bind(localization.bindString("genre"));
         SongTextDataWidget commentTextField = new SongTextDataWidget("Comment");
+        commentTextField.getTitleProperty().bind(localization.bindString("comment"));
         SongTextDataWidget lyricsTextField = new SongTextDataWidget("Lyrics");
+        lyricsTextField.getTitleProperty().bind(localization.bindString("lyrics"));
         SongTextDataWidget composerTextField = new SongTextDataWidget("Composer");
+        composerTextField.getTitleProperty().bind(localization.bindString("composer"));
         SongTextDataWidget publisherTextField = new SongTextDataWidget("Publisher");
+        publisherTextField.getTitleProperty().bind(localization.bindString("publisher"));
         SongTextDataWidget originalArtistTextField = new SongTextDataWidget("Original artist");
+        originalArtistTextField.getTitleProperty().bind(localization.bindString("original.artist"));
         SongTextDataWidget albumArtistTextField = new SongTextDataWidget("Album artist");
+        albumArtistTextField.getTitleProperty().bind(localization.bindString("album.artist"));
         SongTextDataWidget copyrightTextField = new SongTextDataWidget("Copyright");
+        copyrightTextField.getTitleProperty().bind(localization.bindString("copyright"));
         SongTextDataWidget urlTextField = new SongTextDataWidget("Url");
+        urlTextField.getTitleProperty().bind(localization.bindString("url"));
         SongTextDataWidget encoderTextField = new SongTextDataWidget("Encoder");
+        encoderTextField.getTitleProperty().bind(localization.bindString("encoder"));
         SongTextDataWidget trackTextField = new SongTextDataWidget("Track");
+        trackTextField.getTitleProperty().bind(localization.bindString("track"));
         trackTextField.setEditable(false);
         SongAlbumImageWidget songAlbumImageWidget = new SongAlbumImageWidget();
 
@@ -131,7 +149,8 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
                 """);
         toolBar.setPadding(new Insets(0, 10, 0, 10));
 
-        Label songDetailsLabel = new Label("Song details");
+        Label songDetailsLabel = new Label();
+        songDetailsLabel.textProperty().bind(localization.bindString("label"));
         songDetailsLabel.getStyleClass().add(Styles.TITLE_3);
         songDetailsLabel.setMaxWidth(Double.MAX_VALUE);
         songDetailsLabel.setTextAlignment(TextAlignment.CENTER);

@@ -1,5 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -10,12 +12,12 @@ import lombok.Getter;
 
 public class SongComboBoxWidget<T> implements Builder<Region> {
     @Getter
-    private final String title;
+    private final StringProperty titleProperty = new SimpleStringProperty();
     @Getter
     private final ComboBox<T> comboBox;
 
     public SongComboBoxWidget(String title) {
-        this.title = title;
+        this.titleProperty.set(title);
         this.comboBox = new ComboBox<>();
         comboBox.setButtonCell(getButtonCell());
     }
@@ -27,7 +29,8 @@ public class SongComboBoxWidget<T> implements Builder<Region> {
         root.setSpacing(3);
         comboBox.setMaxWidth(Double.MAX_VALUE);
 
-        Label titleLabel = new Label(title);
+        Label titleLabel = new Label();
+        titleLabel.textProperty().bind(titleProperty);
         root.getChildren().addAll(titleLabel, comboBox);
         return root;
     }
