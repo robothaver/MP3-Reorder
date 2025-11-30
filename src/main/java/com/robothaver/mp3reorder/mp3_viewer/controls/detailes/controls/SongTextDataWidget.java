@@ -8,7 +8,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 
 @RequiredArgsConstructor
@@ -16,10 +15,8 @@ public class SongTextDataWidget implements Builder<Region> {
     private final String title;
     private Property<String> activeBinding;
     @Getter
-    @Setter
-    private boolean editable = true;
-    @Getter
     private TextField textField;
+    private boolean editable;
 
     public void bind(Property<String> newBinding) {
         if (textField == null) return;
@@ -47,5 +44,12 @@ public class SongTextDataWidget implements Builder<Region> {
         vBox.getChildren().addAll(titleLabel, textField);
 
         return vBox;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+        if (textField != null) {
+            textField.setEditable(editable);
+        }
     }
 }
