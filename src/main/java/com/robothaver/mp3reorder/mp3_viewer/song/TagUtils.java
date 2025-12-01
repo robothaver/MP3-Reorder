@@ -8,8 +8,7 @@ public class TagUtils {
     }
 
     public static void readDataFromTag(Song song) {
-        if (song.getTag() == null) return;
-
+        if (song.getTag() == null || song.isReadDataFromTag()) return;
         ID3v2 tag = song.getTag();
         song.artistProperty().set(tag.getArtist());
         song.albumProperty().set(tag.getAlbum());
@@ -29,7 +28,7 @@ public class TagUtils {
         if (imageData != null) {
             song.setAlbumImage(imageData);
         }
-        song.setTag(tag);
+        song.setReadDataFromTag(true);
     }
 
     public static void writeDataToTag(Song song) {

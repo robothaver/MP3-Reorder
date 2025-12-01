@@ -42,6 +42,9 @@ public class Song {
     @Getter
     @Setter
     private ID3v2 tag;
+    @Getter
+    @Setter
+    private boolean readDataFromTag = false;
 
     public Song(Mp3File mp3File, Path path, int track, String title, ID3v2 tag) {
         this.mp3File = mp3File;

@@ -1,9 +1,8 @@
-package com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.genre;
+package com.robothaver.mp3reorder.mp3_viewer.controls.details.controls.genre;
 
 import com.mpatric.mp3agic.ID3v1Genres;
-import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.SongComboBoxWidget;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.StringProperty;
+import com.robothaver.mp3reorder.mp3_viewer.controls.details.controls.SongComboBoxWidget;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

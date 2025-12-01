@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls;
+package com.robothaver.mp3reorder.mp3_viewer.controls.details.controls;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;

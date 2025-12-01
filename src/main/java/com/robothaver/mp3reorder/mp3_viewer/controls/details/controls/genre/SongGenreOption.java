@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.genre;
+package com.robothaver.mp3reorder.mp3_viewer.controls.details.controls.genre;
 
 import com.mpatric.mp3agic.ID3v1Genres;
 import lombok.Data;

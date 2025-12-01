@@ -2,7 +2,7 @@ package com.robothaver.mp3reorder.mp3_viewer;
 
 
 import com.robothaver.mp3reorder.mp3_viewer.controls.StatusBar;
-import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.SongDetailsSideMenuViewBuilder;
+import com.robothaver.mp3reorder.mp3_viewer.controls.details.SongDetailsSideMenuViewBuilder;
 import com.robothaver.mp3reorder.mp3_viewer.controls.menubar.MenuBarController;
 import com.robothaver.mp3reorder.mp3_viewer.controls.table.MP3TableViewController;
 import com.robothaver.mp3reorder.mp3_viewer.controls.toolbar.ToolBarController;

@@ -1,13 +1,13 @@
-package com.robothaver.mp3reorder.mp3_viewer.controls.detailes;
+package com.robothaver.mp3reorder.mp3_viewer.controls.details;
 
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
-import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.SongAlbumImageWidget;
-import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.SongTextDataWidget;
-import com.robothaver.mp3reorder.mp3_viewer.controls.detailes.controls.genre.SongGenreComboBox;
+import com.robothaver.mp3reorder.mp3_viewer.controls.details.controls.SongAlbumImageWidget;
+import com.robothaver.mp3reorder.mp3_viewer.controls.details.controls.SongTextDataWidget;
+import com.robothaver.mp3reorder.mp3_viewer.controls.details.controls.genre.SongGenreComboBox;
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.song.TagUtils;
 import javafx.geometry.Insets;
