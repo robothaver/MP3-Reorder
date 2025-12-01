@@ -4,6 +4,10 @@ import java.text.Collator;
 import java.util.Locale;
 
 public class MP3FileUtils {
+    private MP3FileUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static int compareFileNames(String source, String target) {
         int firstTrackNumber = getTrackNumberFromFileName(source);
         int secondTrackNumber = getTrackNumberFromFileName(target);
