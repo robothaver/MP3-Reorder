@@ -2,7 +2,9 @@ package com.robothaver.mp3reorder.mp3_viewer.controls.toolbar;
 
 import atlantafx.base.controls.CustomTextField;
 import atlantafx.base.controls.Spacer;
+import com.robothaver.mp3reorder.LanguageController;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
+import com.robothaver.mp3reorder.mp3_viewer.ViewLocalization;
 import com.robothaver.mp3reorder.mp3_viewer.controls.ImageButton;
 import com.robothaver.mp3reorder.mp3_viewer.controls.search.SearchTextFieldController;
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
@@ -27,28 +29,37 @@ public class ToolBarViewBuilder implements Builder<ToolBar> {
     private final Runnable onMoveSongDown;
     private final Runnable onMoveSongToBottom;
     private final Consumer<Integer> onSelectedIndexChanged;
+    private final ViewLocalization localization = new ViewLocalization("language.toolbar", LanguageController.getSelectedLocale());
 
     @Override
     public ToolBar build() {
         Button moveSongToTop = new ImageButton("Top", "/icons/first_icon.png");
+        moveSongToTop.textProperty().bind(localization.bindString("top"));
         moveSongToTop.setOnAction(e -> onMoveSongToTop.run());
 
         Button moveSongUpBtn = new ImageButton("Up", "/icons/up_icon.png");
+        moveSongUpBtn.textProperty().bind(localization.bindString("up"));
         moveSongUpBtn.setOnAction(e -> onMoveSongUp.run());
 
         Button moveSongDownBtn = new ImageButton("Down", "/icons/down_icon.png");
+        moveSongDownBtn.textProperty().bind(localization.bindString("down"));
         moveSongDownBtn.setOnAction(e -> onMoveSongDown.run());
 
         Button moveSongToBottom = new ImageButton("Bottom", "/icons/last_icon.png");
+        moveSongToBottom.textProperty().bind(localization.bindString("bottom"));
         moveSongToBottom.setOnAction(e -> onMoveSongToBottom.run());
 
-        Label numberOfSongs = new Label("Songs", new FontIcon(Feather.MUSIC));
+        Label numberOfSongsLabel = new Label("Songs", new FontIcon(Feather.MUSIC));
+        numberOfSongsLabel.textProperty().bind(localization.bindString("songs"));
+
+        Label songsNumberLabel = new Label("0");
 
         model.getSongs().addListener((ListChangeListener<Song>) c ->
-                numberOfSongs.setText("Songs: " + model.getSongs().size())
+                songsNumberLabel.setText(String.valueOf(model.getSongs().size()))
         );
 
         CustomTextField searchTextField = createSearchTextField();
+        searchTextField.promptTextProperty().bind(localization.bindString("search"));
         searchTextField.setPrefWidth(300);
 
         ToolBar toolBar = new ToolBar();
@@ -60,7 +71,8 @@ public class ToolBarViewBuilder implements Builder<ToolBar> {
                 moveSongToBottom,
                 new Separator(Orientation.VERTICAL),
                 new Spacer(Orientation.HORIZONTAL),
-                numberOfSongs,
+                numberOfSongsLabel,
+                songsNumberLabel,
                 new Spacer(10),
                 searchTextField
         );
