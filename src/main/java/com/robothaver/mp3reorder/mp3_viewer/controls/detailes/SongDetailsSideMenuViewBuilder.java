@@ -84,7 +84,6 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
         encoderTextField.getTitleProperty().bind(localization.bindString("encoder"));
         SongTextDataWidget trackTextField = new SongTextDataWidget("Track");
         trackTextField.getTitleProperty().bind(localization.bindString("track"));
-        trackTextField.setEditable(false);
         SongAlbumImageWidget songAlbumImageWidget = new SongAlbumImageWidget();
 
         scrollPane.widthProperty().addListener((observable, oldValue, newValue) ->
@@ -109,6 +108,7 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
                 urlTextField.build(),
                 encoderTextField.build()
         );
+        trackTextField.setEditable(false);
 
         model.selectedSongIndexProperty().addListener((observableValue, oldIndex, currentIndex) -> {
             int selectedIndex = (int) currentIndex;

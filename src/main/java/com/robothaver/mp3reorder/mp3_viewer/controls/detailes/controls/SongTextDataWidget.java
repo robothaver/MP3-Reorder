@@ -17,7 +17,6 @@ public class SongTextDataWidget implements Builder<Region> {
     private Property<String> activeBinding;
     @Getter
     private TextField textField;
-    private boolean editable;
 
     public SongTextDataWidget(String titleString) {
         titleProperty.set(titleString);
@@ -43,7 +42,6 @@ public class SongTextDataWidget implements Builder<Region> {
         textField = new TextField();
         textField.promptTextProperty().bind(titleProperty);
         textField.setMaxWidth(Double.MAX_VALUE);
-        textField.setEditable(editable);
 
         Label titleLabel = new Label();
         titleLabel.textProperty().bind(titleProperty);
@@ -53,7 +51,6 @@ public class SongTextDataWidget implements Builder<Region> {
     }
 
     public void setEditable(boolean editable) {
-        this.editable = editable;
         if (textField != null) {
             textField.setEditable(editable);
         }
