@@ -1,7 +1,9 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
+import com.robothaver.mp3reorder.LanguageController;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
+import com.robothaver.mp3reorder.mp3_viewer.ViewLocalization;
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils;
 import javafx.application.Application;
@@ -17,6 +19,7 @@ import static com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils.getTrackNu
 public class MenuBarInteractor {
     private final MenuBarModel model;
     private final MP3Model mp3Model;
+    private final ViewLocalization localization = new ViewLocalization("language.menubar", LanguageController.getSelectedLocale());
 
     public void selectTheme(Themes theme) {
         model.getSelectedTheme().set(theme);
@@ -30,7 +33,7 @@ public class MenuBarInteractor {
 
     public void openDirectory(Runnable onLoadSongs) {
         File selectedDirectory = DialogManagerImpl.getInstance()
-                .showDirectoryChooserDialog("Choose the Folder Containing Your Songs", new File("."));
+                .showDirectoryChooserDialog(localization.getForKey("fileOpenDialogTitle"), new File("."));
 
         if (selectedDirectory != null) {
             mp3Model.selectedPathProperty().setValue(selectedDirectory.getAbsolutePath());
