@@ -1,11 +1,13 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
 import com.robothaver.mp3reorder.BaseController;
+import com.robothaver.mp3reorder.LanguageController;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import com.robothaver.mp3reorder.dialog.progress.ProgressState;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
+import com.robothaver.mp3reorder.mp3_viewer.ViewLocalization;
 import com.robothaver.mp3reorder.mp3_viewer.song.saver.SongSaverTaskProvider;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.SongTaskExecutor;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.ProcessorResult;
@@ -15,6 +17,7 @@ import javafx.scene.control.MenuBar;
 public class MenuBarController extends BaseController<MenuBar> {
     private final MP3Model mp3Model;
     private final MenuBarInteractor interactor;
+    private final ViewLocalization localization = new ViewLocalization("language.song_saver", LanguageController.getSelectedLocale());
 
     public MenuBarController(MP3Model mp3Model, Runnable loadSongs) {
         this.mp3Model = mp3Model;
@@ -37,9 +40,9 @@ public class MenuBarController extends BaseController<MenuBar> {
     private void onSave() {
         ProgressState progressState = new ProgressState();
         ProgressDialogState dialogState = new ProgressDialogState(
-                "Saving songs",
-                "Songs saved: ",
-                "Saving songs...",
+                localization.getForKey("saving.progress.dialog.title"),
+                localization.getForKey("saving.progress.dialog.message.prefix"),
+                localization.getForKey("saving.progress.dialog.message"),
                 progressState
         );
 
@@ -52,15 +55,15 @@ public class MenuBarController extends BaseController<MenuBar> {
             dialogState.getVisible().set(false);
 
             if (!result.getErrors().isEmpty()) {
-                ErrorListAlertMessage message = new ErrorListAlertMessage("Song saving error", "Some songs have failed to save. See the errors bellow.", result.getErrors());
+                ErrorListAlertMessage message = new ErrorListAlertMessage(localization.getForKey("saving.error.title"), localization.getForKey("saving.error.message"), result.getErrors());
                 DialogManagerImpl.getInstance().showErrorListAlert(message);
             } else {
-                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION, "Saving songs finished", "All songs have been saved successfully!");
+                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION, localization.getForKey("saving.finished.title"), localization.getForKey("saving.finished.message"));
             }
         });
         taskExecutor.setOnFailed(event -> {
             Throwable ex = taskExecutor.getException();
-            DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, "Saving songs failed", "Saving songs to " + mp3Model.getSelectedPath() + " failed. " + ex);
+            DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, localization.getForKey("saving.failed.title"),  localization.getForKey("saving.failed.message").formatted(mp3Model.getSelectedPath(), ex));
             System.err.println("Song saving failed: " + ex);
             ex.printStackTrace();
             dialogState.getVisible().set(false);

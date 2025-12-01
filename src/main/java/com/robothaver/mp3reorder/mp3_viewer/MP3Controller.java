@@ -37,9 +37,9 @@ public class MP3Controller extends BaseController<Region> {
     private void loadSongs() {
         ProgressState progressState = new ProgressState();
         ProgressDialogState dialogState = new ProgressDialogState(
-                songLoaderLocalization.getForKey("progress.dialog.title"),
-                songLoaderLocalization.getForKey("progress.dialog.message.prefix"),
-                songLoaderLocalization.getForKey("progress.dialog.message"),
+                songLoaderLocalization.getForKey("loading.progress.dialog.title"),
+                songLoaderLocalization.getForKey("loading.progress.dialog.message.prefix"),
+                songLoaderLocalization.getForKey("loading.progress.dialog.message"),
                 progressState
         );
 
@@ -65,7 +65,7 @@ public class MP3Controller extends BaseController<Region> {
         });
         songProcessor.setOnFailed(event -> {
             Throwable ex = songProcessor.getException();
-            DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, songLoaderLocalization.getForKey("song.loading.failed.title"),  songLoaderLocalization.getForKey("song.loading.failed.message").formatted(model.getSelectedPath()) + ex);
+            DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, songLoaderLocalization.getForKey("song.loading.failed.title"),  songLoaderLocalization.getForKey("song.loading.failed.message").formatted(model.getSelectedPath(), ex));
             System.err.println("Song loading failed: " + ex);
             dialogState.getVisible().set(false);
         });
