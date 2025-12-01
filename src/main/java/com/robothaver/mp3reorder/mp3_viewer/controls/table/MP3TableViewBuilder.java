@@ -1,9 +1,12 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.table;
 
 import atlantafx.base.theme.Styles;
+import com.robothaver.mp3reorder.LanguageController;
+import com.robothaver.mp3reorder.mp3_viewer.ViewLocalization;
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,6 +22,7 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
     private final ObservableList<Song> songs;
     private final BiConsumer<Integer, Integer> onTrackChanged;
     private final BiConsumer<String, String> onFileRenamed;
+    private final ViewLocalization localization = new ViewLocalization("language.table", LanguageController.getSelectedLocale());
 
     @Override
     public TableView<Song> build() {
@@ -27,6 +31,9 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
 
     private TableView<Song> createTable() {
         TableView<Song> mp3FileTableView = new TableView<>();
+        Label placeHolderLabel = new Label();
+        placeHolderLabel.textProperty().bind(localization.bindString("placeholder"));
+        mp3FileTableView.setPlaceholder(placeHolderLabel);
         mp3FileTableView.setItems(songs);
         mp3FileTableView.setEditable(true);
         mp3FileTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_NEXT_COLUMN);
@@ -35,6 +42,7 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         TableColumn<Song, Integer> trackColumn = getSongTrackTableColumn();
 
         TableColumn<Song, String> fileNameColumn = new TableColumn<>("File name");
+        fileNameColumn.textProperty().bind(localization.bindString("file.name"));
         fileNameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
         fileNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         fileNameColumn.setCellFactory(param ->
@@ -43,6 +51,7 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         fileNameColumn.setComparator(MP3FileUtils::compareFileNames);
 
         TableColumn<Song, String> titleColumn = new TableColumn<>("Title");
+        titleColumn.textProperty().bind(localization.bindString("title"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
 
         mp3FileTableView.getColumns().add(trackColumn);
