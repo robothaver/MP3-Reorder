@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 public class SongGenreComboBox extends SongComboBoxWidget<SongGenreOption> {
     private IntegerProperty genreIndex;
     private StringProperty genreDescription;
+    private boolean bindingChanged;
 
     public SongGenreComboBox(String title) {
         super(title);
@@ -19,6 +20,7 @@ public class SongGenreComboBox extends SongComboBoxWidget<SongGenreOption> {
     public void bindToProperties(IntegerProperty genreIndexProperty, StringProperty genreDescriptionProperty) {
         genreIndex = genreIndexProperty;
         genreDescription = genreDescriptionProperty;
+        bindingChanged = true;
         getComboBox().setValue(new SongGenreOption(genreIndexProperty.get(), genreDescriptionProperty.get()));
     }
 
@@ -32,9 +34,11 @@ public class SongGenreComboBox extends SongComboBoxWidget<SongGenreOption> {
 
     private void setOnSelectionChanged() {
         getComboBox().valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && !newValue.toString().equals(SongGenreOption.DEFAULT_NAME)) {
-                genreIndex.set(newValue.getGenre());
-                genreDescription.set(newValue.getGenreDescription());
+            if (!bindingChanged && newValue != null && !newValue.toString().equals(SongGenreOption.DEFAULT_NAME)) {
+                genreIndex.setValue(newValue.getGenre());
+                genreDescription.setValue(newValue.getGenreDescription());
+            } else {
+                bindingChanged = false;
             }
         });
     }
