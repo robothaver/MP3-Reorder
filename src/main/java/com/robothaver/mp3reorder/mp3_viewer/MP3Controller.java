@@ -1,6 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer;
 
 import com.robothaver.mp3reorder.BaseController;
+import com.robothaver.mp3reorder.LanguageController;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
@@ -22,6 +23,8 @@ import static com.robothaver.mp3reorder.ApplicationInfo.APPLICATION_NAME;
 
 public class MP3Controller extends BaseController<Region> {
     private final MP3Model model;
+    private final ViewLocalization songLoaderLocalization = new ViewLocalization("language.song_loader", LanguageController.getSelectedLocale());
+    private final ViewLocalization trackAssignerLocalization = new ViewLocalization("language.song_track_assigner", LanguageController.getSelectedLocale());
 
     public MP3Controller() {
         this.model = new MP3Model();
@@ -34,9 +37,9 @@ public class MP3Controller extends BaseController<Region> {
     private void loadSongs() {
         ProgressState progressState = new ProgressState();
         ProgressDialogState dialogState = new ProgressDialogState(
-                "Loading songs",
-                "Songs loaded: ",
-                "Loading songs...",
+                songLoaderLocalization.getForKey("progress.dialog.title"),
+                songLoaderLocalization.getForKey("progress.dialog.message.prefix"),
+                songLoaderLocalization.getForKey("progress.dialog.message"),
                 progressState
         );
 
@@ -53,16 +56,16 @@ public class MP3Controller extends BaseController<Region> {
 
             if (trackAssignerResult.getTrackIssue() != TrackIssue.NONE) {
                 String message = buildTrackIssueMessage(trackAssignerResult.getTrackIssue());
-                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION, "Song track issue found!", message);
+                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION, trackAssignerLocalization.getForKey("song.track.issue.title"), message);
             }
             if (!result.getErrors().isEmpty()) {
-                ErrorListAlertMessage message = new ErrorListAlertMessage("Song loading error", "Some songs have failed to load. See the errors bellow.", result.getErrors());
+                ErrorListAlertMessage message = new ErrorListAlertMessage(songLoaderLocalization.getForKey("song.loading.error.title"), songLoaderLocalization.getForKey("song.loading.error.message"), result.getErrors());
                 DialogManagerImpl.getInstance().showErrorListAlert(message);
             }
         });
         songProcessor.setOnFailed(event -> {
             Throwable ex = songProcessor.getException();
-            DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, "Loading songs failed", "Loading songs from " + model.getSelectedPath() + " failed. " + ex);
+            DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, songLoaderLocalization.getForKey("song.loading.failed.title"),  songLoaderLocalization.getForKey("song.loading.failed.message").formatted(model.getSelectedPath()) + ex);
             System.err.println("Song loading failed: " + ex);
             dialogState.getVisible().set(false);
         });
@@ -72,11 +75,11 @@ public class MP3Controller extends BaseController<Region> {
     }
 
     private String buildTrackIssueMessage(TrackIssue issue) {
-        StringBuilder stringBuilder = new StringBuilder("Existing tracks were ignored because some songs have");
+        StringBuilder stringBuilder = new StringBuilder(trackAssignerLocalization.getForKey("error.base.message") + " ");
         if (issue == TrackIssue.DUPLICATE_TRACKS) {
-            stringBuilder.append(" duplicate track numbers.");
+            stringBuilder.append(trackAssignerLocalization.getForKey("error.duplicate.tracks"));
         } else if (issue == TrackIssue.TRACKS_IN_INVALID_RANGE) {
-            stringBuilder.append(" track numbers outside the valid range.");
+            stringBuilder.append(trackAssignerLocalization.getForKey("error.outside.range"));
         }
         return stringBuilder.toString();
     }
