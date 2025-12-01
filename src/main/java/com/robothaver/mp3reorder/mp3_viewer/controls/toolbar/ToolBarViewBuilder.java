@@ -6,18 +6,15 @@ import com.robothaver.mp3reorder.LanguageController;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import com.robothaver.mp3reorder.mp3_viewer.ViewLocalization;
 import com.robothaver.mp3reorder.mp3_viewer.controls.ImageButton;
+import com.robothaver.mp3reorder.mp3_viewer.controls.NumberOfSongsViewBuilder;
 import com.robothaver.mp3reorder.mp3_viewer.controls.search.SearchTextFieldController;
-import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
-import javafx.collections.ListChangeListener;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.HBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
-import org.kordamp.ikonli.feather.Feather;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.function.Consumer;
 
@@ -49,14 +46,8 @@ public class ToolBarViewBuilder implements Builder<ToolBar> {
         moveSongToBottom.textProperty().bind(localization.bindString("bottom"));
         moveSongToBottom.setOnAction(e -> onMoveSongToBottom.run());
 
-        Label numberOfSongsLabel = new Label("Songs", new FontIcon(Feather.MUSIC));
-        numberOfSongsLabel.textProperty().bind(localization.bindString("songs"));
-
-        Label songsNumberLabel = new Label("0");
-
-        model.getSongs().addListener((ListChangeListener<Song>) c ->
-                songsNumberLabel.setText(String.valueOf(model.getSongs().size()))
-        );
+        NumberOfSongsViewBuilder songsViewBuilder = new NumberOfSongsViewBuilder(model.getSongs());
+        HBox numberOfSongs = songsViewBuilder.build();
 
         CustomTextField searchTextField = createSearchTextField();
         searchTextField.promptTextProperty().bind(localization.bindString("search"));
@@ -71,8 +62,7 @@ public class ToolBarViewBuilder implements Builder<ToolBar> {
                 moveSongToBottom,
                 new Separator(Orientation.VERTICAL),
                 new Spacer(Orientation.HORIZONTAL),
-                numberOfSongsLabel,
-                songsNumberLabel,
+                numberOfSongs,
                 new Spacer(10),
                 searchTextField
         );

@@ -1,14 +1,13 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls;
 
 import atlantafx.base.controls.Spacer;
-import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
-import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import com.robothaver.mp3reorder.ApplicationInfo;
-import javafx.collections.ListChangeListener;
+import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.HBox;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -25,19 +24,15 @@ public class StatusBar extends ToolBar {
         currentDirLabel.textProperty().bind(model.selectedPathProperty());
         FontIcon folderIcon = new FontIcon(Feather.FOLDER);
 
-        FontIcon songIcon = new FontIcon(Feather.MUSIC);
-        Label songCountLabel = new Label();
-        model.getSongs().addListener((ListChangeListener<Song>) c ->
-                songCountLabel.setText("Songs: " + model.getSongs().size())
-        );
+        NumberOfSongsViewBuilder songsViewBuilder = new NumberOfSongsViewBuilder(model.getSongs());
+        HBox numberOfSongs = songsViewBuilder.build();
 
         Label appVersionText = new Label("v" + ApplicationInfo.APPLICATION_VERSION);
         getItems().addAll(
                 folderIcon,
                 currentDirLabel,
                 new Separator(Orientation.VERTICAL),
-                songIcon,
-                songCountLabel,
+                numberOfSongs,
                 new Spacer(Orientation.HORIZONTAL),
                 appVersionText
         );
