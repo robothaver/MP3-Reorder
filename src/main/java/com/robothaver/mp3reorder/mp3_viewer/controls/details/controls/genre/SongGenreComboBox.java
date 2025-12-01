@@ -34,7 +34,7 @@ public class SongGenreComboBox extends SongComboBoxWidget<SongGenreOption> {
 
     private void setOnSelectionChanged() {
         getComboBox().valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (!bindingChanged && newValue != null && !newValue.toString().equals(SongGenreOption.DEFAULT_NAME)) {
+            if (!bindingChanged && newValue != null) {
                 genreIndex.setValue(newValue.getGenre());
                 genreDescription.setValue(newValue.getGenreDescription());
             } else {
