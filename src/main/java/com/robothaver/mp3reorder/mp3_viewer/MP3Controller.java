@@ -1,7 +1,8 @@
 package com.robothaver.mp3reorder.mp3_viewer;
 
-import com.robothaver.mp3reorder.BaseController;
-import com.robothaver.mp3reorder.LanguageController;
+import com.robothaver.mp3reorder.core.BaseController;
+import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
@@ -19,7 +20,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import static com.robothaver.mp3reorder.ApplicationInfo.APPLICATION_NAME;
+import static com.robothaver.mp3reorder.core.ApplicationInfo.APPLICATION_NAME;
 
 public class MP3Controller extends BaseController<Region> {
     private final MP3Model model;

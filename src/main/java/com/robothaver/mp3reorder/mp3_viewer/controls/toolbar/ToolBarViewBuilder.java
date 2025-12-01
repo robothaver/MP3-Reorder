@@ -2,9 +2,9 @@ package com.robothaver.mp3reorder.mp3_viewer.controls.toolbar;
 
 import atlantafx.base.controls.CustomTextField;
 import atlantafx.base.controls.Spacer;
-import com.robothaver.mp3reorder.LanguageController;
+import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
-import com.robothaver.mp3reorder.mp3_viewer.ViewLocalization;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.mp3_viewer.controls.ImageButton;
 import com.robothaver.mp3reorder.mp3_viewer.controls.NumberOfSongsViewBuilder;
 import com.robothaver.mp3reorder.mp3_viewer.controls.search.SearchTextFieldController;

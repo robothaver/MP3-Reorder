@@ -1,7 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.search;
 
 import atlantafx.base.controls.CustomTextField;
-import com.robothaver.mp3reorder.BaseController;
+import com.robothaver.mp3reorder.core.BaseController;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 
 import java.util.function.Consumer;

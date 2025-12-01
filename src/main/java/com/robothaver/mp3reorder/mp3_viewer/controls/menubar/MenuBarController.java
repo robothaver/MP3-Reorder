@@ -1,13 +1,13 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
-import com.robothaver.mp3reorder.BaseController;
-import com.robothaver.mp3reorder.LanguageController;
+import com.robothaver.mp3reorder.core.BaseController;
+import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import com.robothaver.mp3reorder.dialog.progress.ProgressState;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
-import com.robothaver.mp3reorder.mp3_viewer.ViewLocalization;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.mp3_viewer.song.saver.SongSaverTaskProvider;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.SongTaskExecutor;
 import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.ProcessorResult;

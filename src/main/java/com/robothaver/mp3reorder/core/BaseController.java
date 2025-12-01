@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder;
+package com.robothaver.mp3reorder.core;
 
 import javafx.util.Builder;
 

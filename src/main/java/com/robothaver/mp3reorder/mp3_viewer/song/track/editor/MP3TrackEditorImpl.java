@@ -1,5 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer.song.track.editor;
 
+import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.option.OptionDialogMessage;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
@@ -10,11 +12,10 @@ import javafx.scene.control.ButtonType;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.robothaver.mp3reorder.mp3_viewer.utils.Utils.TRACK_CONFLICT_MESSAGE;
-
 public class MP3TrackEditorImpl implements MP3TrackEditor {
     private final MP3Model model;
     private final List<Song> songs;
+    private final ViewLocalization localization = new ViewLocalization("language.track_editor", LanguageController.getSelectedLocale());
     private Integer selectedSongCurrentTrack;
 
     public MP3TrackEditorImpl(MP3Model model) {
@@ -59,7 +60,7 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         songs.set(index2, song1);
     }
 
-    private void insertSongInTrackRange(int newTrack , Song selectedSong) {
+    private void insertSongInTrackRange(int newTrack, Song selectedSong) {
         // Keeps the tracks in valid range
         if (newTrack < 1) {
             insertSongInternal(selectedSong, songs.getFirst());
@@ -78,24 +79,24 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
     }
 
     private TrackConflictSolutions getTrackConflictSolution() {
-        ButtonType insertButton = new ButtonType(TrackConflictSolutions.INSERT.getDisplayName(), ButtonBar.ButtonData.RIGHT);
-        ButtonType putButton = new ButtonType(TrackConflictSolutions.SWITCH.getDisplayName(), ButtonBar.ButtonData.RIGHT);
-        ButtonType cancelButton = new ButtonType(TrackConflictSolutions.CANCEL.getDisplayName(), ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType insertButton = new ButtonType(localization.getForKey("insert"), ButtonBar.ButtonData.RIGHT);
+        ButtonType switchButton = new ButtonType(localization.getForKey("switch"), ButtonBar.ButtonData.RIGHT);
+        ButtonType cancelButton = new ButtonType(localization.getForKey("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
 
         OptionDialogMessage trackConflictDetected = OptionDialogMessage.builder()
-                .title("Track Conflict Detected")
-                .message(TRACK_CONFLICT_MESSAGE)
-                .options(List.of(cancelButton, putButton, insertButton))
+                .title(localization.getForKey("title"))
+                .message(localization.getForKey("message"))
+                .options(List.of(cancelButton, switchButton, insertButton))
                 .build();
 
         ButtonType result = DialogManagerImpl.getInstance()
                 .showOptionDialog(trackConflictDetected)
                 .orElse(null);
-        if (result == null) {
-            return TrackConflictSolutions.CANCEL;
-        } else {
-            return TrackConflictSolutions.fromDisplayName(result.getText());
-        }
+
+        if (result == null) return TrackConflictSolutions.CANCEL;
+        else if (result.equals(insertButton)) return TrackConflictSolutions.INSERT;
+        else if (result.equals(switchButton)) return TrackConflictSolutions.SWITCH;
+        else return TrackConflictSolutions.CANCEL;
     }
 
     private void handleTrackConflict(TrackConflictSolutions solution, Song selectedSong, Song conflictingSong) {

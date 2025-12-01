@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3_viewer;
+package com.robothaver.mp3reorder.core.language;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;

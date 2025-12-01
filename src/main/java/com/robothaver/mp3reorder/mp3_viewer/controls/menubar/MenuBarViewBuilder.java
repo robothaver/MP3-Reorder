@@ -1,7 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
-import com.robothaver.mp3reorder.LanguageController;
-import com.robothaver.mp3reorder.mp3_viewer.ViewLocalization;
+import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.Parent;
 import javafx.scene.control.*;

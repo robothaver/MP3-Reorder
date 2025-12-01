@@ -1,6 +1,6 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.table;
 
-import com.robothaver.mp3reorder.BaseController;
+import com.robothaver.mp3reorder.core.BaseController;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import javafx.scene.control.TableView;

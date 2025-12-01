@@ -1,7 +1,7 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls;
 
 import atlantafx.base.controls.Spacer;
-import com.robothaver.mp3reorder.ApplicationInfo;
+import com.robothaver.mp3reorder.core.ApplicationInfo;
 import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;

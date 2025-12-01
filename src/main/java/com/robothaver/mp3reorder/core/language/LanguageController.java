@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder;
+package com.robothaver.mp3reorder.core.language;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
