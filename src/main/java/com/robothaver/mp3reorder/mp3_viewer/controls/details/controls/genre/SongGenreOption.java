@@ -11,6 +11,7 @@ public class SongGenreOption {
 
     @Override
     public String toString() {
+        System.out.println("Getting new description for " + genreDescription);
         if (genreDescription != null && !genreDescription.equalsIgnoreCase("null") && !genreDescription.isBlank()) {
             if (genre != -1) {
                 return genre + " " + genreDescription;

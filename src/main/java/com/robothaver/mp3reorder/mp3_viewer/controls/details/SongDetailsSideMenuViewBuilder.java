@@ -3,19 +3,23 @@ package com.robothaver.mp3reorder.mp3_viewer.controls.details;
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.core.language.LanguageController;
-import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
+import com.robothaver.mp3reorder.mp3_viewer.MP3Model;
 import com.robothaver.mp3reorder.mp3_viewer.controls.details.controls.SongAlbumImageWidget;
 import com.robothaver.mp3reorder.mp3_viewer.controls.details.controls.SongTextDataWidget;
 import com.robothaver.mp3reorder.mp3_viewer.controls.details.controls.genre.SongGenreComboBox;
 import com.robothaver.mp3reorder.mp3_viewer.domain.Song;
 import com.robothaver.mp3reorder.mp3_viewer.song.TagUtils;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Builder;
@@ -27,6 +31,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
     private final MP3Model model;
     private final ViewLocalization localization = new ViewLocalization("language.detailsmenu", LanguageController.getSelectedLocale());
+    private SongAlbumImageWidget songAlbumImageWidget;
 
     @Override
     public VBox build() {
@@ -34,20 +39,19 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
         rootContainer.setMaxWidth(800);
         rootContainer.setPadding(new Insets(0));
 
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPadding(new Insets(10));
-
         VBox detailsContainer = new VBox();
         detailsContainer.setSpacing(10);
         detailsContainer.setMaxWidth(Double.MAX_VALUE);
-        createContent(scrollPane, detailsContainer);
 
+        ScrollPane scrollPane = createScrollPane();
         scrollPane.setContent(detailsContainer);
+
+        createContent(scrollPane, detailsContainer);
 
         rootContainer.getChildren().addAll(
                 createToolBar(),
-                scrollPane
+                scrollPane,
+                createEmptyContainer()
         );
 
         return rootContainer;
@@ -84,8 +88,7 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
         encoderTextField.getTitleProperty().bind(localization.bindString("encoder"));
         SongTextDataWidget trackTextField = new SongTextDataWidget("Track");
         trackTextField.getTitleProperty().bind(localization.bindString("track"));
-        SongAlbumImageWidget songAlbumImageWidget = new SongAlbumImageWidget();
-
+        songAlbumImageWidget = new SongAlbumImageWidget();
         scrollPane.widthProperty().addListener((observable, oldValue, newValue) ->
                 songAlbumImageWidget.resizeImage((double) newValue)
         );
@@ -160,5 +163,34 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
         closeContainerButton.setOnAction(actionEvent -> model.getDetailsMenuEnabled().set(false));
         toolBar.getItems().addAll(songDetailsLabel, new Spacer(Orientation.HORIZONTAL), closeContainerButton);
         return toolBar;
+    }
+
+    private ScrollPane createScrollPane() {
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPadding(new Insets(10));
+        scrollPane.hbarPolicyProperty().set(ScrollPane.ScrollBarPolicy.NEVER);
+
+        BooleanBinding scrollPaneVisible = Bindings.createBooleanBinding(() -> model.getSelectedSongIndex() != -1, model.selectedSongIndexProperty());
+        scrollPane.managedProperty().bind(scrollPaneVisible);
+        scrollPane.visibleProperty().bind(scrollPaneVisible);
+        return scrollPane;
+    }
+
+    private VBox createEmptyContainer() {
+        VBox emptyContainer = new VBox();
+        VBox.setVgrow(emptyContainer, Priority.ALWAYS);
+        emptyContainer.setMaxWidth(Double.MAX_VALUE);
+        emptyContainer.setAlignment(Pos.CENTER);
+
+        Label noSongSelectedLabel = new Label();
+        noSongSelectedLabel.getStyleClass().add(Styles.TITLE_4);
+        noSongSelectedLabel.textProperty().bind(localization.bindString("emptyText"));
+        emptyContainer.getChildren().add(noSongSelectedLabel);
+
+        BooleanBinding emptyContainerVisible = Bindings.createBooleanBinding(() -> model.getSelectedSongIndex() == -1, model.selectedSongIndexProperty());
+        emptyContainer.managedProperty().bind(emptyContainerVisible);
+        emptyContainer.visibleProperty().bind(emptyContainerVisible);
+        return emptyContainer;
     }
 }

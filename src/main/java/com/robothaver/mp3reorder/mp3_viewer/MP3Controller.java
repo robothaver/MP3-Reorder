@@ -55,6 +55,11 @@ public class MP3Controller extends BaseController<Region> {
             dialogState.getVisible().set(false);
             model.getSongSearch().clear();
 
+            if (!model.getSongs().isEmpty()) {
+                ((MP3ViewBuilder) viewBuilder).selectIndex(0);
+            }
+            else model.selectedSongIndexProperty().set(-1);
+
             if (trackAssignerResult.getTrackIssue() != TrackIssue.NONE) {
                 String message = buildTrackIssueMessage(trackAssignerResult.getTrackIssue());
                 DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION, trackAssignerLocalization.getForKey("song.track.issue.title"), message);
