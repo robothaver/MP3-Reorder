@@ -39,7 +39,7 @@ public class SearchTextFieldInteractor {
         }
     }
 
-    public void onSearchQueryChanged(boolean selectFirst) {
+    public void onSearchQueryChanged() {
         String searchQuery = model.getSearchQuery().get().trim();
         ObservableList<Song> results = model.getResults();
         results.clear();
@@ -54,7 +54,6 @@ public class SearchTextFieldInteractor {
             int firstIndex = mp3Model.getSongs().indexOf(results.getFirst());
             model.getSelectedResultIndex().set(0);
             mp3Model.selectedSongIndexProperty().set(firstIndex);
-            if (selectFirst) onSelectedIndexChanged.accept(firstIndex);
         } else {
             model.getSelectedResultIndex().set(-1);
         }
