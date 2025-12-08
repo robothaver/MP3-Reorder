@@ -1,5 +1,6 @@
 package com.robothaver.mp3reorder.mp3_viewer.controls.menubar;
 
+import com.robothaver.mp3reorder.core.ApplicationInfo;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import javafx.beans.property.BooleanProperty;
@@ -14,6 +15,7 @@ import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.util.Locale;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -119,12 +121,19 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         Menu languageOption = new Menu("Language", new FontIcon(Feather.GLOBE));
         languageOption.textProperty().bind(localization.bindString("language"));
 
-        MenuItem hungarianOption = new MenuItem("Magyar");
-        hungarianOption.setOnAction(event -> LanguageController.changeSelectedLocale("hu"));
-        MenuItem englishOption = new MenuItem("English");
-        englishOption.setOnAction(event -> LanguageController.changeSelectedLocale("en"));
+        for (Locale supportedLocale : ApplicationInfo.SUPPORTED_LOCALES) {
+            CheckMenuItem localeOption = new CheckMenuItem(supportedLocale.getDisplayName());
+            localeOption.setSelected(model.getSelectedLocale().get().equals(supportedLocale));
+            model.getSelectedLocale().addListener((obs, oldVal, newVal) ->
+                    localeOption.setSelected(newVal.equals(supportedLocale))
+            );
 
-        languageOption.getItems().addAll(hungarianOption, englishOption);
+            localeOption.setOnAction(event -> {
+                LanguageController.changeSelectedLocale(supportedLocale);
+                model.getSelectedLocale().set(supportedLocale);
+            });
+            languageOption.getItems().add(localeOption);
+        }
 
         Menu sizeMenu = new Menu("_Size", new FontIcon(Feather.TYPE));
         sizeMenu.textProperty().bind(localization.bindString("size"));

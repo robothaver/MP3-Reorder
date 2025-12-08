@@ -14,7 +14,7 @@ public class LanguageController {
         throw new IllegalStateException("Static class");
     }
 
-    public static void changeSelectedLocale(String languageTag) {
-        selectedLocale.setValue(Locale.forLanguageTag(languageTag));
+    public static void changeSelectedLocale(Locale locale) {
+        selectedLocale.setValue(locale);
     }
 }
