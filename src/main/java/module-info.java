@@ -12,15 +12,15 @@ module com.robothaver.mp3reorder {
     opens com.robothaver.mp3reorder to javafx.fxml;
     exports com.robothaver.mp3reorder;
 
-    opens com.robothaver.mp3reorder.mp3_viewer to javafx.base;
-    opens com.robothaver.mp3reorder.mp3_viewer.song.loader to javafx.base;
-    opens com.robothaver.mp3reorder.mp3_viewer.domain to javafx.base;
+    opens com.robothaver.mp3reorder.mp3 to javafx.base;
+    opens com.robothaver.mp3reorder.mp3.song.loader to javafx.base;
+    opens com.robothaver.mp3reorder.mp3.domain to javafx.base;
     opens com.robothaver.mp3reorder.dialog to javafx.base;
-    opens com.robothaver.mp3reorder.mp3_viewer.song.track.assigner to javafx.base;
+    opens com.robothaver.mp3reorder.mp3.song.track.assigner to javafx.base;
     opens com.robothaver.mp3reorder.dialog.error to javafx.base;
     opens com.robothaver.mp3reorder.dialog.option to javafx.base;
-    opens com.robothaver.mp3reorder.mp3_viewer.song.task.domain to javafx.base;
-    opens com.robothaver.mp3reorder.mp3_viewer.controls.search to javafx.base;
+    opens com.robothaver.mp3reorder.mp3.song.task.domain to javafx.base;
+    opens com.robothaver.mp3reorder.mp3.controls.search to javafx.base;
     exports com.robothaver.mp3reorder.core.language;
     opens com.robothaver.mp3reorder.core.language to javafx.base, javafx.fxml;
     exports com.robothaver.mp3reorder.core;

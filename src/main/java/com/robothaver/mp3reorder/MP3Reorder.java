@@ -4,7 +4,7 @@ import atlantafx.base.theme.PrimerDark;
 import com.robothaver.mp3reorder.core.ApplicationInfo;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
-import com.robothaver.mp3reorder.mp3_viewer.MP3Controller;
+import com.robothaver.mp3reorder.mp3.MP3Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
