@@ -14,6 +14,8 @@ import com.robothaver.mp3reorder.mp3_viewer.song.task.domain.ProcessorResult;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 
+import java.nio.file.Path;
+
 public class MenuBarController extends BaseController<MenuBar> {
     private final MP3Model mp3Model;
     private final MenuBarInteractor interactor;
@@ -33,11 +35,25 @@ public class MenuBarController extends BaseController<MenuBar> {
                 () -> System.exit(0),
                 interactor::setTracksForSongsByFileName,
                 interactor::removeIndexFromFileNames,
-                this::onSave
+                this::onSave,
+                this::onSaveAs
         );
     }
 
     private void onSave() {
+        SongSaverTaskProvider taskProvider = new SongSaverTaskProvider(mp3Model.getSongs());
+        saveSongs(taskProvider);
+    }
+
+    private void onSaveAs() {
+        Path saveLocation = interactor.getSaveLocation();
+        if (saveLocation != null) {
+            SongSaverTaskProvider taskProvider = new SongSaverTaskProvider(mp3Model.getSongs(), saveLocation);
+            saveSongs(taskProvider);
+        }
+    }
+
+    private void saveSongs(SongSaverTaskProvider taskProvider) {
         ProgressState progressState = new ProgressState();
         ProgressDialogState dialogState = new ProgressDialogState(
                 localization.getForKey("saving.progress.dialog.title"),
@@ -46,8 +62,6 @@ public class MenuBarController extends BaseController<MenuBar> {
                 progressState
         );
 
-        SongSaverTaskProvider taskProvider = new SongSaverTaskProvider(mp3Model.getSongs());
-        System.out.println("Songs to save: " + taskProvider.getTasks().size() + ", " + taskProvider.getTasks());
         SongTaskExecutor<Void> taskExecutor = new SongTaskExecutor<>(taskProvider, progressState);
 
         taskExecutor.setOnSucceeded(event -> {

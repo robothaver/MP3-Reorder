@@ -11,6 +11,8 @@ import javafx.scene.Parent;
 import lombok.RequiredArgsConstructor;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static com.robothaver.mp3reorder.mp3_viewer.utils.MP3FileUtils.getTrackNumberFromFileName;
@@ -20,6 +22,15 @@ public class MenuBarInteractor {
     private final MenuBarModel model;
     private final MP3Model mp3Model;
     private final ViewLocalization localization = new ViewLocalization("language.menubar", LanguageController.getSelectedLocale());
+
+    public Path getSaveLocation() {
+        File selectedDirectory = DialogManagerImpl.getInstance()
+                .showDirectoryChooserDialog(localization.getForKey("fileOpenDialogTitle"), new File("."));
+        if (selectedDirectory != null) {
+            return Paths.get(selectedDirectory.getAbsolutePath());
+        }
+        return null;
+    }
 
     public void selectTheme(Themes theme) {
         model.getSelectedTheme().set(theme);

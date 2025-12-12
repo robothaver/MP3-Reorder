@@ -23,10 +23,16 @@ public class SongSaverTaskProvider implements SongTaskProvider<Void> {
 
     @Override
     public List<SongTask<Void>> getTasks() {
+        if (savePath == null) {
+            return songs
+                    .stream()
+                    .filter(song -> song.getFileChanged().get())
+                    .map(song -> new SongTask<>(new SongSaveTask(song), song.getPath()))
+                    .toList();
+        }
         return songs
                 .stream()
-                .filter(song -> song.getFileChanged().get())
-                .map(song -> new SongTask<>(new SongSaveTask(song, savePath), song.getPath()))
+                .map(song -> new SongTask<>(new SongSaveAsTask(song, savePath), song.getPath()))
                 .toList();
     }
 }

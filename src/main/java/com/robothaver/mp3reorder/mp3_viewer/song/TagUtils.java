@@ -32,7 +32,6 @@ public class TagUtils {
     }
 
     public static void writeDataToTag(Song song) {
-        if (!song.getFileChanged().get()) return;
         ID3v2 tag = getOrCreateTag(song);
         tag.setArtist(song.artistProperty().get());
         tag.setAlbum(song.albumProperty().get());

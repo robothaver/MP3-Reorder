@@ -32,6 +32,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final Runnable onSetTracksByFileName;
     private final Runnable onRemoveIndexFromFileName;
     private final Runnable onSave;
+    private final Runnable onSaveAs;
 
     private final ViewLocalization localization = new ViewLocalization("language.menubar", LanguageController.getSelectedLocale());
 
@@ -57,7 +58,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         saveOption.setOnAction(event -> onSave.run());
         MenuItem saveAsOption = createItem("Save As", null, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN, KeyCombination.ALT_DOWN));
         saveAsOption.textProperty().bind(localization.bindString("fileSaveAs"));
-        saveAsOption.setOnAction(event -> System.out.println("Save as option pressed!"));
+        saveAsOption.setOnAction(event -> onSaveAs.run());
         MenuItem exitOption = createItem("Exit", null, null);
         exitOption.textProperty().bind(localization.bindString("exit"));
         exitOption.setOnAction(event -> onExit.run());
