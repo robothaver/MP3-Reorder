@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class MenuBarController extends BaseController<MenuBar> {
     private final MP3Model mp3Model;
@@ -47,7 +48,9 @@ public class MenuBarController extends BaseController<MenuBar> {
 
     private void onSaveAs() {
         Path saveLocation = interactor.getSaveLocation();
-        if (saveLocation != null) {
+        if (saveLocation != null && saveLocation.equals(Paths.get(mp3Model.getSelectedPath()))) {
+            onSave();
+        } else if (saveLocation != null) {
             SongSaverTaskProvider taskProvider = new SongSaverTaskProvider(mp3Model.getSongs(), saveLocation);
             saveSongs(taskProvider);
         }
