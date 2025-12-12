@@ -51,13 +51,13 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         fileMenu.textProperty().bind(localization.bindString("file"));
 
         MenuItem openOption = createItem("Open", Feather.FOLDER, new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
-        openOption.textProperty().bind(localization.bindString("fileOpen"));
+        openOption.textProperty().bind(localization.bindString("file.open"));
         openOption.setOnAction(event -> onOpenDirectory.run());
         MenuItem saveOption = createItem("Save", Feather.SAVE, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
-        saveOption.textProperty().bind(localization.bindString("fileSave"));
+        saveOption.textProperty().bind(localization.bindString("file.save"));
         saveOption.setOnAction(event -> onSave.run());
         MenuItem saveAsOption = createItem("Save As", null, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN, KeyCombination.ALT_DOWN));
-        saveAsOption.textProperty().bind(localization.bindString("fileSaveAs"));
+        saveAsOption.textProperty().bind(localization.bindString("file.saveAs"));
         saveAsOption.setOnAction(event -> onSaveAs.run());
         MenuItem exitOption = createItem("Exit", null, null);
         exitOption.textProperty().bind(localization.bindString("exit"));

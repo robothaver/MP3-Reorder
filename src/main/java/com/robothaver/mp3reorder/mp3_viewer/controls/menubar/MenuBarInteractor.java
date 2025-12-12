@@ -25,7 +25,7 @@ public class MenuBarInteractor {
 
     public Path getSaveLocation() {
         File selectedDirectory = DialogManagerImpl.getInstance()
-                .showDirectoryChooserDialog(localization.getForKey("fileOpenDialogTitle"), new File("."));
+                .showDirectoryChooserDialog(localization.getForKey("file.saveAsDialogTitle"), new File("."));
         if (selectedDirectory != null) {
             return Paths.get(selectedDirectory.getAbsolutePath());
         }
@@ -44,7 +44,7 @@ public class MenuBarInteractor {
 
     public void openDirectory(Runnable onLoadSongs) {
         File selectedDirectory = DialogManagerImpl.getInstance()
-                .showDirectoryChooserDialog(localization.getForKey("fileOpenDialogTitle"), new File("."));
+                .showDirectoryChooserDialog(localization.getForKey("file.openDialogTitle"), new File("."));
 
         if (selectedDirectory != null) {
             mp3Model.selectedPathProperty().setValue(selectedDirectory.getAbsolutePath());
