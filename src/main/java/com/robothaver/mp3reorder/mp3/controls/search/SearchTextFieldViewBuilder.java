@@ -9,6 +9,7 @@ import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
@@ -47,6 +48,7 @@ public class SearchTextFieldViewBuilder implements Builder<CustomTextField> {
 
     private HBox createRightControls(StringProperty stringProperty) {
         HBox root = new HBox();
+        root.setCursor(Cursor.DEFAULT);
         root.setMinWidth(200);
         root.setSpacing(10);
         root.setVisible(false);
