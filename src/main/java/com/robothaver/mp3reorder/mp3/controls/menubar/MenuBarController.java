@@ -2,12 +2,13 @@ package com.robothaver.mp3reorder.mp3.controls.menubar;
 
 import com.robothaver.mp3reorder.core.BaseController;
 import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
+import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import com.robothaver.mp3reorder.dialog.progress.ProgressState;
 import com.robothaver.mp3reorder.mp3.MP3Model;
-import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.mp3.song.saver.SongSaverTaskProvider;
 import com.robothaver.mp3reorder.mp3.song.task.SongTaskExecutor;
 import com.robothaver.mp3reorder.mp3.song.task.domain.ProcessorResult;
@@ -25,12 +26,14 @@ public class MenuBarController extends BaseController<MenuBar> {
     public MenuBarController(MP3Model mp3Model, Runnable loadSongs) {
         this.mp3Model = mp3Model;
         MenuBarModel model = new MenuBarModel();
+        model.getSelectedLocale().set(PreferenceStoreImpl.getInstance().getPreferences().getSelectedLocale());
         interactor = new MenuBarInteractor(model, mp3Model);
         viewBuilder = new MenuBarViewBuilder(
                 model,
                 mp3Model.getDetailsMenuEnabled(),
                 mp3Model.getStatusBarEnabled(),
                 interactor::selectTheme,
+                interactor::setSelectedLocale,
                 interactor::setSize,
                 () -> interactor.openDirectory(loadSongs),
                 () -> System.exit(0),
@@ -80,7 +83,7 @@ public class MenuBarController extends BaseController<MenuBar> {
         });
         taskExecutor.setOnFailed(event -> {
             Throwable ex = taskExecutor.getException();
-            DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, localization.getForKey("saving.failed.title"),  localization.getForKey("saving.failed.message").formatted(mp3Model.getSelectedPath(), ex));
+            DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, localization.getForKey("saving.failed.title"), localization.getForKey("saving.failed.message").formatted(mp3Model.getSelectedPath(), ex));
             System.err.println("Song saving failed: " + ex);
             ex.printStackTrace();
             dialogState.getVisible().set(false);

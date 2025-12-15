@@ -11,5 +11,5 @@ import java.util.Locale;
 public class MenuBarModel {
     private final ObjectProperty<Themes> selectedTheme = new SimpleObjectProperty<>(Themes.PRIMER_DARK);
     private final ObjectProperty<Size> selectedSize = new SimpleObjectProperty<>(Size.AUTO);
-    private final ObjectProperty<Locale> selectedLocale = new SimpleObjectProperty<>(ApplicationInfo.DEFAULT_LOCALE);
+    private final ObjectProperty<Locale> selectedLocale = new SimpleObjectProperty<>();
 }

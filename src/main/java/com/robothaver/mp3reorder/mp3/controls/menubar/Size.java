@@ -13,4 +13,14 @@ public enum Size {
 
     private final int fontSize;
     private final String displayName;
+
+    public static Size getByName(String name) {
+        return switch (name) {
+            case "AUTO" -> AUTO;
+            case "SMALL" -> SMALL;
+            case "NORMAL" -> NORMAL;
+            case "LARGE" -> LARGE;
+            default -> throw new IllegalStateException("Unexpected value: " + name);
+        };
+    }
 }

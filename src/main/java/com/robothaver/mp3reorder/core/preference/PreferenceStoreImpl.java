@@ -1,0 +1,86 @@
+package com.robothaver.mp3reorder.core.preference;
+
+import com.robothaver.mp3reorder.mp3.controls.menubar.Size;
+import com.robothaver.mp3reorder.mp3.controls.menubar.Themes;
+
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Locale;
+import java.util.Properties;
+
+public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
+    private static final PreferencesStore<Preferences> instance = new PreferenceStoreImpl();
+    private static final String PREFERENCES_FILE_NAME = "preferences.properties";
+    private static final Path PREFERENCES_PATH = Paths.get(PREFERENCES_FILE_NAME);
+
+    private static Preferences preferences;
+
+    @Override
+    public Preferences getPreferences() {
+        return preferences;
+    }
+
+    @Override
+    public void savePreferences() {
+        Properties properties = new Properties();
+        writeToProperties(properties, preferences);
+        saveProperties(properties);
+    }
+
+    public static PreferencesStore<Preferences> getInstance() {
+        if (preferences == null) loadPreferences();
+        return instance;
+    }
+
+    private static void loadPreferences() {
+        Properties properties = new Properties();
+        try {
+            if (Files.exists(PREFERENCES_PATH)) {
+                preferences = new Preferences();
+                try (FileInputStream inputStream = new FileInputStream(PREFERENCES_FILE_NAME)) {
+                    properties.load(inputStream);
+                }
+                loadFromProperties(properties, preferences);
+            } else {
+                Preferences defaultPreferences = PreferencesUtils.getDefaultPreferences();
+                writeToProperties(properties, defaultPreferences);
+                saveProperties(properties);
+                preferences = defaultPreferences;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void saveProperties(Properties properties) {
+        try (FileWriter fileWriter = new FileWriter(PREFERENCES_PATH.toFile())) {
+            properties.store(fileWriter, "App preferences");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void loadFromProperties(Properties properties, Preferences preferences) {
+        try {
+            preferences.setSelectedTheme(Themes.getByName(properties.getProperty("theme")));
+            preferences.setSelectedSize(Size.getByName(properties.getProperty("size")));
+            preferences.setSelectedLocale(Locale.forLanguageTag(properties.getProperty("locale")));
+            preferences.setSideMenuEnabled(Boolean.parseBoolean(properties.getProperty("sideMenuEnabled")));
+            preferences.setStatusBarEnabled(Boolean.parseBoolean(properties.getProperty("statusBarEnabled")));
+        } catch (NullPointerException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void writeToProperties(Properties properties, Preferences preferences) {
+        properties.setProperty("theme", preferences.getSelectedTheme().toString());
+        properties.setProperty("size", preferences.getSelectedSize().toString());
+        properties.setProperty("locale", preferences.getSelectedLocale().toLanguageTag());
+        properties.setProperty("sideMenuEnabled", String.valueOf(preferences.isSideMenuEnabled()));
+        properties.setProperty("statusBarEnabled", String.valueOf(preferences.isStatusBarEnabled()));
+    }
+}

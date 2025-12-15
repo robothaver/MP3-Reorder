@@ -3,6 +3,7 @@ package com.robothaver.mp3reorder;
 import atlantafx.base.theme.PrimerDark;
 import com.robothaver.mp3reorder.core.ApplicationInfo;
 import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3.MP3Controller;
 import javafx.application.Application;
@@ -18,7 +19,7 @@ public class MP3Reorder extends Application {
     public void start(Stage stage) {
         DialogManagerImpl.init(stage);
         Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
-        LanguageController.changeSelectedLocale(ApplicationInfo.DEFAULT_LOCALE);
+        LanguageController.changeSelectedLocale(PreferenceStoreImpl.getInstance().getPreferences().getSelectedLocale());
         stage.setTitle(ApplicationInfo.APPLICATION_NAME);
         stage.setScene(new Scene(new MP3Controller().getView()));
         stage.setWidth(800);
