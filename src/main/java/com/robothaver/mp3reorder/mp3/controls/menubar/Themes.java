@@ -17,4 +17,17 @@ public enum Themes {
 
     private final String displayName;
     private final Theme theme;
+
+    public static Themes getByName(String name) {
+        return switch (name) {
+            case "CUPERTINO_DARK" -> CUPERTINO_DARK;
+            case "CUPERTINO_LIGHT" -> CUPERTINO_LIGHT;
+            case "NORD_DARK" -> NORD_DARK;
+            case "NORD_LIGHT" -> NORD_LIGHT;
+            case "PRIMER_DARK" -> PRIMER_DARK;
+            case "PRIMER_LIGHT" -> PRIMER_LIGHT;
+            case "DRACULA" -> DRACULA;
+            default -> throw new IllegalStateException("Unexpected value: " + name);
+        };
+    }
 }

@@ -1,6 +1,9 @@
 package com.robothaver.mp3reorder.mp3.controls.menubar;
 
 import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
+import com.robothaver.mp3reorder.core.preference.Preferences;
+import com.robothaver.mp3reorder.core.preference.PreferencesStore;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3.MP3Model;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
@@ -14,6 +17,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 
 import static com.robothaver.mp3reorder.mp3.utils.MP3FileUtils.getTrackNumberFromFileName;
 
@@ -40,6 +44,14 @@ public class MenuBarInteractor {
     public void setSize(Parent root, Size size) {
         model.getSelectedSize().set(size);
         root.setStyle("-fx-font-size: %dpx".formatted(size.getFontSize()));
+    }
+
+    public void setSelectedLocale(Locale locale) {
+        LanguageController.changeSelectedLocale(locale);
+        model.getSelectedLocale().set(locale);
+        PreferencesStore<Preferences> preferencesStore = PreferenceStoreImpl.getInstance();
+        preferencesStore.getPreferences().setSelectedLocale(locale);
+        preferencesStore.savePreferences();
     }
 
     public void openDirectory(Runnable onLoadSongs) {

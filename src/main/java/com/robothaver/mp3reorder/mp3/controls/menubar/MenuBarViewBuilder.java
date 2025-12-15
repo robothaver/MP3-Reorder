@@ -26,6 +26,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final BooleanProperty detailsSideMenuEnabled;
     private final BooleanProperty statusBarEnabled;
     private final Consumer<Themes> onThemeChanged;
+    private final Consumer<Locale> onLocaleChanged;
     private final BiConsumer<Parent, Size> onSizeChanged;
     private final Runnable onOpenDirectory;
     private final Runnable onExit;
@@ -130,8 +131,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
             );
 
             localeOption.setOnAction(event -> {
-                LanguageController.changeSelectedLocale(supportedLocale);
-                model.getSelectedLocale().set(supportedLocale);
+                onLocaleChanged.accept(supportedLocale);
             });
             languageOption.getItems().add(localeOption);
         }
