@@ -22,7 +22,7 @@ public class DialogManagerImpl implements DialogManager {
         this.primaryStage = primaryStage;
     }
 
-    public static void init(Stage stage) {
+    public static void initialize(Stage stage) {
         instance = new DialogManagerImpl(stage);
     }
 

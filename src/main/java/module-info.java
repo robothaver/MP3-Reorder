@@ -25,4 +25,6 @@ module com.robothaver.mp3reorder {
     opens com.robothaver.mp3reorder.core.language to javafx.base, javafx.fxml;
     exports com.robothaver.mp3reorder.core;
     opens com.robothaver.mp3reorder.core to javafx.fxml;
+    exports com.robothaver.mp3reorder.core.font;
+    opens com.robothaver.mp3reorder.core.font to javafx.fxml;
 }

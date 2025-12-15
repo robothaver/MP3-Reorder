@@ -1,6 +1,6 @@
 package com.robothaver.mp3reorder.core.preference;
 
-import com.robothaver.mp3reorder.mp3.controls.menubar.Size;
+import com.robothaver.mp3reorder.core.font.Size;
 import com.robothaver.mp3reorder.mp3.controls.menubar.Themes;
 import lombok.AllArgsConstructor;
 import lombok.Data;

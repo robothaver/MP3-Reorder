@@ -1,6 +1,6 @@
 package com.robothaver.mp3reorder.core.preference;
 
-import com.robothaver.mp3reorder.mp3.controls.menubar.Size;
+import com.robothaver.mp3reorder.core.font.Size;
 import com.robothaver.mp3reorder.mp3.controls.menubar.Themes;
 
 import java.io.FileInputStream;
@@ -52,7 +52,7 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
                 preferences = defaultPreferences;
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
@@ -60,19 +60,19 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
         try (FileWriter fileWriter = new FileWriter(PREFERENCES_PATH.toFile())) {
             properties.store(fileWriter, "App preferences");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
     private static void loadFromProperties(Properties properties, Preferences preferences) {
         try {
-            preferences.setSelectedTheme(Themes.getByName(properties.getProperty("theme")));
-            preferences.setSelectedSize(Size.getByName(properties.getProperty("size")));
+            preferences.setSelectedTheme(Themes.fromString(properties.getProperty("theme")));
+            preferences.setSelectedSize(Size.fromString(properties.getProperty("size")));
             preferences.setSelectedLocale(Locale.forLanguageTag(properties.getProperty("locale")));
             preferences.setSideMenuEnabled(Boolean.parseBoolean(properties.getProperty("sideMenuEnabled")));
             preferences.setStatusBarEnabled(Boolean.parseBoolean(properties.getProperty("statusBarEnabled")));
         } catch (NullPointerException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.robothaver.mp3reorder.mp3.controls.menubar;
 
+import com.robothaver.mp3reorder.core.font.FontSizeControllerImpl;
+import com.robothaver.mp3reorder.core.font.Size;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
 import com.robothaver.mp3reorder.core.preference.Preferences;
@@ -10,7 +12,6 @@ import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import com.robothaver.mp3reorder.mp3.utils.MP3FileUtils;
 import javafx.application.Application;
-import javafx.scene.Parent;
 import lombok.RequiredArgsConstructor;
 
 import java.io.File;
@@ -26,6 +27,7 @@ public class MenuBarInteractor {
     private final MenuBarModel model;
     private final MP3Model mp3Model;
     private final ViewLocalization localization = new ViewLocalization("language.menubar", LanguageController.getSelectedLocale());
+    private PreferencesStore<Preferences> preferencesStore = PreferenceStoreImpl.getInstance();
 
     public Path getSaveLocation() {
         File selectedDirectory = DialogManagerImpl.getInstance()
@@ -39,17 +41,20 @@ public class MenuBarInteractor {
     public void selectTheme(Themes theme) {
         model.getSelectedTheme().set(theme);
         Application.setUserAgentStylesheet(theme.getTheme().getUserAgentStylesheet());
+        preferencesStore.getPreferences().setSelectedTheme(theme);
+        preferencesStore.savePreferences();
     }
 
-    public void setSize(Parent root, Size size) {
+    public void setSize(Size size) {
         model.getSelectedSize().set(size);
-        root.setStyle("-fx-font-size: %dpx".formatted(size.getFontSize()));
+        FontSizeControllerImpl.getInstance().setFontSize(size);
+        preferencesStore.getPreferences().setSelectedSize(size);
+        preferencesStore.savePreferences();
     }
 
     public void setSelectedLocale(Locale locale) {
         LanguageController.changeSelectedLocale(locale);
         model.getSelectedLocale().set(locale);
-        PreferencesStore<Preferences> preferencesStore = PreferenceStoreImpl.getInstance();
         preferencesStore.getPreferences().setSelectedLocale(locale);
         preferencesStore.savePreferences();
     }

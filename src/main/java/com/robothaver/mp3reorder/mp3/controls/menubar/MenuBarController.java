@@ -4,6 +4,7 @@ import com.robothaver.mp3reorder.core.BaseController;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
+import com.robothaver.mp3reorder.core.preference.Preferences;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
@@ -22,11 +23,11 @@ public class MenuBarController extends BaseController<MenuBar> {
     private final MP3Model mp3Model;
     private final MenuBarInteractor interactor;
     private final ViewLocalization localization = new ViewLocalization("language.song_saver", LanguageController.getSelectedLocale());
+    private final MenuBarModel model;
 
     public MenuBarController(MP3Model mp3Model, Runnable loadSongs) {
         this.mp3Model = mp3Model;
-        MenuBarModel model = new MenuBarModel();
-        model.getSelectedLocale().set(PreferenceStoreImpl.getInstance().getPreferences().getSelectedLocale());
+        model = new MenuBarModel();
         interactor = new MenuBarInteractor(model, mp3Model);
         viewBuilder = new MenuBarViewBuilder(
                 model,
@@ -42,6 +43,7 @@ public class MenuBarController extends BaseController<MenuBar> {
                 this::onSave,
                 this::onSaveAs
         );
+        setupModel();
     }
 
     private void onSave() {
@@ -91,5 +93,12 @@ public class MenuBarController extends BaseController<MenuBar> {
 
         new Thread(taskExecutor).start();
         DialogManagerImpl.getInstance().showProgressDialog(dialogState);
+    }
+
+    private void setupModel() {
+        Preferences preferences = PreferenceStoreImpl.getInstance().getPreferences();
+        model.getSelectedLocale().set(preferences.getSelectedLocale());
+        model.getSelectedTheme().set(preferences.getSelectedTheme());
+        model.getSelectedSize().set(preferences.getSelectedSize());
     }
 }

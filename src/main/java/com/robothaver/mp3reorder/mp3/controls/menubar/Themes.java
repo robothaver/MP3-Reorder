@@ -18,7 +18,7 @@ public enum Themes {
     private final String displayName;
     private final Theme theme;
 
-    public static Themes getByName(String name) {
+    public static Themes fromString(String name) {
         return switch (name) {
             case "CUPERTINO_DARK" -> CUPERTINO_DARK;
             case "CUPERTINO_LIGHT" -> CUPERTINO_LIGHT;

@@ -1,10 +1,10 @@
 package com.robothaver.mp3reorder.mp3.controls.menubar;
 
 import com.robothaver.mp3reorder.core.ApplicationInfo;
+import com.robothaver.mp3reorder.core.font.Size;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import javafx.beans.property.BooleanProperty;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -16,7 +16,6 @@ import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.Locale;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
@@ -27,7 +26,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final BooleanProperty statusBarEnabled;
     private final Consumer<Themes> onThemeChanged;
     private final Consumer<Locale> onLocaleChanged;
-    private final BiConsumer<Parent, Size> onSizeChanged;
+    private final Consumer<Size> onSizeChanged;
     private final Runnable onOpenDirectory;
     private final Runnable onExit;
     private final Runnable onSetTracksByFileName;
@@ -53,16 +52,16 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
         MenuItem openOption = createItem("Open", Feather.FOLDER, new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
         openOption.textProperty().bind(localization.bindString("file.open"));
-        openOption.setOnAction(event -> onOpenDirectory.run());
+        openOption.setOnAction(_ -> onOpenDirectory.run());
         MenuItem saveOption = createItem("Save", Feather.SAVE, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         saveOption.textProperty().bind(localization.bindString("file.save"));
-        saveOption.setOnAction(event -> onSave.run());
+        saveOption.setOnAction(_ -> onSave.run());
         MenuItem saveAsOption = createItem("Save As", null, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN, KeyCombination.ALT_DOWN));
         saveAsOption.textProperty().bind(localization.bindString("file.saveAs"));
-        saveAsOption.setOnAction(event -> onSaveAs.run());
+        saveAsOption.setOnAction(_ -> onSaveAs.run());
         MenuItem exitOption = createItem("Exit", null, null);
         exitOption.textProperty().bind(localization.bindString("exit"));
-        exitOption.setOnAction(event -> onExit.run());
+        exitOption.setOnAction(_ -> onExit.run());
         fileMenu.getItems().addAll(
                 openOption,
                 new SeparatorMenuItem(),
@@ -79,10 +78,10 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         editMenu.textProperty().bind(localization.bindString("edit"));
         MenuItem tracksByFilenameOption = createItem("Set tracks by filename", null, null);
         tracksByFilenameOption.textProperty().bind(localization.bindString("setTracksByFileName"));
-        tracksByFilenameOption.setOnAction(event -> onSetTracksByFileName.run());
+        tracksByFilenameOption.setOnAction(_ -> onSetTracksByFileName.run());
         MenuItem removeIndexFromNameOption = createItem("Remove index from name", null, null);
         removeIndexFromNameOption.textProperty().bind(localization.bindString("removeIndexFromName"));
-        removeIndexFromNameOption.setOnAction(event -> onRemoveIndexFromFileName.run());
+        removeIndexFromNameOption.setOnAction(_ -> onRemoveIndexFromFileName.run());
         editMenu.getItems().addAll(
                 tracksByFilenameOption,
                 removeIndexFromNameOption
@@ -106,14 +105,14 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         themeMenu.textProperty().bind(localization.bindString("theme"));
         for (Themes theme : Themes.values()) {
             CheckMenuItem themeMenuItem = new CheckMenuItem(theme.getDisplayName());
-            themeMenuItem.setOnAction(event -> onThemeChanged.accept(theme));
+            themeMenuItem.setOnAction(_ -> onThemeChanged.accept(theme));
             themeMenu.getItems().add(themeMenuItem);
             if (model.getSelectedTheme().get().getTheme().equals(theme.getTheme())) {
                 themeMenuItem.setSelected(true);
             }
         }
 
-        model.getSelectedTheme().addListener((observable, oldValue, newValue) -> {
+        model.getSelectedTheme().addListener((_, _, newValue) -> {
             for (MenuItem item : themeMenu.getItems()) {
                 boolean selectedOption = item.getText().equals(newValue.getDisplayName());
                 ((CheckMenuItem) item).setSelected(selectedOption);
@@ -126,30 +125,28 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         for (Locale supportedLocale : ApplicationInfo.SUPPORTED_LOCALES) {
             CheckMenuItem localeOption = new CheckMenuItem(supportedLocale.getDisplayName());
             localeOption.setSelected(model.getSelectedLocale().get().equals(supportedLocale));
-            model.getSelectedLocale().addListener((obs, oldVal, newVal) ->
+            model.getSelectedLocale().addListener((_, _, newVal) ->
                     localeOption.setSelected(newVal.equals(supportedLocale))
             );
 
-            localeOption.setOnAction(event -> {
-                onLocaleChanged.accept(supportedLocale);
-            });
+            localeOption.setOnAction(_ -> onLocaleChanged.accept(supportedLocale));
             languageOption.getItems().add(localeOption);
         }
 
         Menu sizeMenu = new Menu("_Size", new FontIcon(Feather.TYPE));
         sizeMenu.textProperty().bind(localization.bindString("size"));
         for (Size size : Size.values()) {
-            CheckMenuItem sizeMenuItem = new CheckMenuItem(size.getDisplayName());
-            sizeMenuItem.setOnAction(event -> onSizeChanged.accept(menuBar.getScene().getRoot(), size));
+            CheckMenuItem sizeMenuItem = new CheckMenuItem(size.toString());
+            sizeMenuItem.setOnAction(_ -> onSizeChanged.accept(size));
             if (model.getSelectedSize().get().getFontSize() == size.getFontSize()) {
                 sizeMenuItem.setSelected(true);
             }
             sizeMenu.getItems().add(sizeMenuItem);
         }
 
-        model.getSelectedSize().addListener((observable, oldValue, newValue) -> {
+        model.getSelectedSize().addListener((_, _, newValue) -> {
             for (MenuItem item : sizeMenu.getItems()) {
-                boolean selectedOption = item.getText().equals(newValue.getDisplayName());
+                boolean selectedOption = item.getText().equals(newValue.toString());
                 ((CheckMenuItem) item).setSelected(selectedOption);
             }
         });
