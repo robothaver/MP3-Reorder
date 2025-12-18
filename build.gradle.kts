@@ -1,5 +1,3 @@
-import sun.jvmstat.monitor.MonitoredVmUtil.jvmArgs
-
 plugins {
     java
     application
@@ -20,7 +18,7 @@ val junitVersion = "5.10.2"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
@@ -63,8 +61,9 @@ tasks.run {
 
 jlink {
     imageZip.set(layout.buildDirectory.file("/distributions/app-${javafx.platform.classifier}.zip"))
-    options.set(listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"))
+    options.set(listOf("--strip-debug", "--compress", "zip-9", "--no-header-files", "--no-man-pages"))
     launcher {
         name = "app"
+        jvmArgs = listOf("--enable-native-access=javafx.graphics")
     }
 }
