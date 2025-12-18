@@ -21,22 +21,22 @@ import java.nio.file.Paths;
 
 public class MenuBarController extends BaseController<MenuBar> {
     private final MP3Model mp3Model;
+    private final MenuBarModel menuBarModel;
     private final MenuBarInteractor interactor;
     private final ViewLocalization localization = new ViewLocalization("language.song_saver", LanguageController.getSelectedLocale());
-    private final MenuBarModel model;
 
     public MenuBarController(MP3Model mp3Model, Runnable loadSongs) {
         this.mp3Model = mp3Model;
-        model = new MenuBarModel();
-        interactor = new MenuBarInteractor(model, mp3Model);
+        menuBarModel = mp3Model.getMenuBarModel();
+        interactor = new MenuBarInteractor(mp3Model);
         viewBuilder = new MenuBarViewBuilder(
-                model,
-                mp3Model.getDetailsMenuEnabled(),
-                mp3Model.getStatusBarEnabled(),
+                menuBarModel,
                 interactor::selectTheme,
                 interactor::setSelectedLocale,
                 interactor::setSize,
                 () -> interactor.openDirectory(loadSongs),
+                interactor::changeDetailsSideMenuEnabled,
+                interactor::changeStatusBarEnabled,
                 () -> System.exit(0),
                 interactor::setTracksForSongsByFileName,
                 interactor::removeIndexFromFileNames,
@@ -97,8 +97,10 @@ public class MenuBarController extends BaseController<MenuBar> {
 
     private void setupModel() {
         Preferences preferences = PreferenceStoreImpl.getInstance().getPreferences();
-        model.getSelectedLocale().set(preferences.getSelectedLocale());
-        model.getSelectedTheme().set(preferences.getSelectedTheme());
-        model.getSelectedSize().set(preferences.getSelectedSize());
+        menuBarModel.getSelectedLocale().set(preferences.getSelectedLocale());
+        menuBarModel.getSelectedTheme().set(preferences.getSelectedTheme());
+        menuBarModel.getSelectedSize().set(preferences.getSelectedSize());
+        menuBarModel.getDetailsMenuEnabled().set(preferences.isSideMenuEnabled());
+        menuBarModel.getStatusBarEnabled().set(preferences.isStatusBarEnabled());
     }
 }

@@ -4,7 +4,6 @@ import com.robothaver.mp3reorder.core.ApplicationInfo;
 import com.robothaver.mp3reorder.core.font.Size;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
-import javafx.beans.property.BooleanProperty;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -20,19 +19,21 @@ import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class MenuBarViewBuilder implements Builder<MenuBar> {
-    private final MenuBar menuBar = new MenuBar();
     private final MenuBarModel model;
-    private final BooleanProperty detailsSideMenuEnabled;
-    private final BooleanProperty statusBarEnabled;
     private final Consumer<Themes> onThemeChanged;
     private final Consumer<Locale> onLocaleChanged;
     private final Consumer<Size> onSizeChanged;
     private final Runnable onOpenDirectory;
+    private final Runnable onDetailsMenuStateChanged;
+    private final Runnable onStatusBarStateChanged;
     private final Runnable onExit;
     private final Runnable onSetTracksByFileName;
     private final Runnable onRemoveIndexFromFileName;
     private final Runnable onSave;
     private final Runnable onSaveAs;
+
+    private final MenuBar menuBar = new MenuBar();
+
 
     private final ViewLocalization localization = new ViewLocalization("language.menubar", LanguageController.getSelectedLocale());
 
@@ -94,12 +95,14 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         viewMenu.textProperty().bind(localization.bindString("view"));
 
         CheckMenuItem detailsSideMenuOption = new CheckMenuItem("Details side menu", new FontIcon(Feather.SIDEBAR));
-        detailsSideMenuOption.selectedProperty().bindBidirectional(detailsSideMenuEnabled);
+        detailsSideMenuOption.selectedProperty().bindBidirectional(model.getDetailsMenuEnabled());
+        detailsSideMenuOption.onActionProperty().set(_ -> onDetailsMenuStateChanged.run());
         detailsSideMenuOption.textProperty().bind(localization.bindString("detailsSideMenu"));
 
         CheckMenuItem statusBarOption = new CheckMenuItem("Status bar", new FontIcon(Feather.INFO));
+        statusBarOption.selectedProperty().bindBidirectional(model.getStatusBarEnabled());
+        statusBarOption.onActionProperty().set(_ -> onStatusBarStateChanged.run());
         statusBarOption.textProperty().bind(localization.bindString("statusBar"));
-        statusBarOption.selectedProperty().bindBidirectional(statusBarEnabled);
 
         Menu themeMenu = new Menu("_Theme", new FontIcon(Feather.SUN));
         themeMenu.textProperty().bind(localization.bindString("theme"));

@@ -12,7 +12,6 @@ import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import com.robothaver.mp3reorder.mp3.utils.MP3FileUtils;
 import javafx.application.Application;
-import lombok.RequiredArgsConstructor;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -22,12 +21,16 @@ import java.util.Locale;
 
 import static com.robothaver.mp3reorder.mp3.utils.MP3FileUtils.getTrackNumberFromFileName;
 
-@RequiredArgsConstructor
 public class MenuBarInteractor {
-    private final MenuBarModel model;
     private final MP3Model mp3Model;
+    private final MenuBarModel menuBarModel;
     private final ViewLocalization localization = new ViewLocalization("language.menubar", LanguageController.getSelectedLocale());
-    private PreferencesStore<Preferences> preferencesStore = PreferenceStoreImpl.getInstance();
+    private final PreferencesStore<Preferences> preferencesStore = PreferenceStoreImpl.getInstance();
+
+    public MenuBarInteractor(MP3Model mp3Model) {
+        this.mp3Model = mp3Model;
+        this.menuBarModel = mp3Model.getMenuBarModel();
+    }
 
     public Path getSaveLocation() {
         File selectedDirectory = DialogManagerImpl.getInstance()
@@ -39,22 +42,36 @@ public class MenuBarInteractor {
     }
 
     public void selectTheme(Themes theme) {
-        model.getSelectedTheme().set(theme);
+        menuBarModel.getSelectedTheme().set(theme);
         Application.setUserAgentStylesheet(theme.getTheme().getUserAgentStylesheet());
         preferencesStore.getPreferences().setSelectedTheme(theme);
         preferencesStore.savePreferences();
     }
 
     public void setSize(Size size) {
-        model.getSelectedSize().set(size);
+        menuBarModel.getSelectedSize().set(size);
         FontSizeControllerImpl.getInstance().setFontSize(size);
         preferencesStore.getPreferences().setSelectedSize(size);
         preferencesStore.savePreferences();
     }
 
+    public void changeDetailsSideMenuEnabled() {
+        boolean enabled = menuBarModel.getDetailsMenuEnabled().get();
+        Preferences preferences = preferencesStore.getPreferences();
+        preferences.setSideMenuEnabled(enabled);
+        preferencesStore.savePreferences();
+    }
+
+    public void changeStatusBarEnabled() {
+        boolean enabled = menuBarModel.getStatusBarEnabled().get();
+        Preferences preferences = preferencesStore.getPreferences();
+        preferences.setStatusBarEnabled(enabled);
+        preferencesStore.savePreferences();
+    }
+
     public void setSelectedLocale(Locale locale) {
         LanguageController.changeSelectedLocale(locale);
-        model.getSelectedLocale().set(locale);
+        menuBarModel.getSelectedLocale().set(locale);
         preferencesStore.getPreferences().setSelectedLocale(locale);
         preferencesStore.savePreferences();
     }

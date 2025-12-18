@@ -7,6 +7,7 @@ import com.robothaver.mp3reorder.mp3.controls.menubar.MenuBarController;
 import com.robothaver.mp3reorder.mp3.controls.table.MP3TableViewController;
 import com.robothaver.mp3reorder.mp3.controls.toolbar.ToolBarController;
 import com.robothaver.mp3reorder.mp3.domain.Song;
+import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
@@ -33,8 +34,10 @@ public class MP3ViewBuilder implements Builder<Region> {
         SplitPane splitPane = buildMainSplitPane(tableControls, detailsSideMenu);
 
         StatusBar statusBar = new StatusBar(model);
-        statusBar.visibleProperty().bind(model.getStatusBarEnabled());
-        statusBar.managedProperty().bind(model.getStatusBarEnabled());
+        BooleanProperty statusBarEnabled = model.getMenuBarModel().getStatusBarEnabled();
+        statusBarEnabled.addListener((_, _, t1) -> System.out.println(t1));
+        statusBar.visibleProperty().bind(statusBarEnabled);
+        statusBar.managedProperty().bind(statusBarEnabled);
 
         baseContainer.getChildren().addAll(menuBar, splitPane, statusBar);
         return baseContainer;
@@ -43,12 +46,12 @@ public class MP3ViewBuilder implements Builder<Region> {
     private SplitPane buildMainSplitPane(VBox tableControls, VBox detailsSideMenu) {
         SplitPane splitPane = createSplitPane();
         splitPane.getItems().add(tableControls);
-
-        if (model.getDetailsMenuEnabled().get()) {
+        BooleanProperty detailsMenuEnabled = model.getMenuBarModel().getDetailsMenuEnabled();
+        if (detailsMenuEnabled.get()) {
             splitPane.getItems().add(detailsSideMenu);
         }
 
-        model.getDetailsMenuEnabled().addListener((observable, oldValue, enabled) -> {
+        detailsMenuEnabled.addListener((_, _, enabled) -> {
             if (enabled) {
                 splitPane.getItems().add(detailsSideMenu);
             } else {
@@ -72,7 +75,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         toolBar.setPrefHeight(50);
 
         mp3FileTableView = new MP3TableViewController(model, this::selectIndex).getView();
-        mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((observableValue, oldValue, newValue) -> {
+        mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((_, _, newValue) -> {
             int index = (int) newValue;
             if (index != -1) {
                 model.selectedSongIndexProperty().setValue(newValue);
