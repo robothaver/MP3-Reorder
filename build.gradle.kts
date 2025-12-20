@@ -63,7 +63,7 @@ jlink {
     imageZip.set(layout.buildDirectory.file("/distributions/app-${javafx.platform.classifier}.zip"))
     options.set(listOf("--strip-debug", "--compress", "zip-9", "--no-header-files", "--no-man-pages"))
     launcher {
-        name = "app"
+        name = "MP3 Reorder"
         jvmArgs = listOf("--enable-native-access=javafx.graphics")
     }
 }
