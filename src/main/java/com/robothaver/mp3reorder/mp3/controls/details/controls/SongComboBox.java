@@ -10,13 +10,13 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.Getter;
 
-public class SongComboBoxWidget<T> implements Builder<Region> {
+public class SongComboBox<T> implements Builder<Region> {
     @Getter
     private final StringProperty titleProperty = new SimpleStringProperty();
     @Getter
     private final ComboBox<T> comboBox;
 
-    public SongComboBoxWidget(String title) {
+    public SongComboBox(String title) {
         this.titleProperty.set(title);
         this.comboBox = new ComboBox<>();
         comboBox.setButtonCell(getButtonCell());
