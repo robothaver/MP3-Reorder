@@ -54,6 +54,7 @@ public class SearchTextFieldInteractor {
             int firstIndex = mp3Model.getSongs().indexOf(results.getFirst());
             model.getSelectedResultIndex().set(0);
             mp3Model.selectedSongIndexProperty().set(firstIndex);
+            onSelectedIndexChanged.accept(firstIndex);
         } else {
             model.getSelectedResultIndex().set(-1);
         }
