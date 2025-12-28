@@ -10,21 +10,20 @@ public class TagUtils {
     public static void readDataFromTag(Song song) {
         if (song.getTag() == null || song.isReadDataFromTag()) return;
         ID3v2 tag = song.getTag();
-        // TODO: Trim strings
-        song.artistProperty().set(tag.getArtist());
-        song.albumProperty().set(tag.getAlbum());
-        song.yearProperty().set(tag.getYear());
+        song.artistProperty().set(formatString(tag.getArtist()));
+        song.albumProperty().set(formatString(tag.getAlbum()));
+        song.yearProperty().set(formatString(tag.getYear()));
         song.genreProperty().set(tag.getGenre());
         song.genreDescriptionProperty().set(String.valueOf(tag.getGenreDescription()));
-        song.commentProperty().set(tag.getComment());
-        song.lyricsProperty().set(tag.getLyrics());
-        song.composerProperty().set(tag.getComposer());
-        song.publisherProperty().set(tag.getPublisher());
-        song.originalArtistProperty().set(tag.getOriginalArtist());
-        song.albumArtistProperty().set(tag.getAlbumArtist());
-        song.copyrightProperty().set(tag.getCopyright());
-        song.urlProperty().set(tag.getUrl());
-        song.encoderProperty().set(tag.getEncoder());
+        song.commentProperty().set(formatString(tag.getComment()));
+        song.lyricsProperty().set(formatString(tag.getLyrics()));
+        song.composerProperty().set(formatString(tag.getComposer()));
+        song.publisherProperty().set(formatString(tag.getPublisher()));
+        song.originalArtistProperty().set(formatString(tag.getOriginalArtist()));
+        song.albumArtistProperty().set(formatString(tag.getAlbumArtist()));
+        song.copyrightProperty().set(formatString(tag.getCopyright()));
+        song.urlProperty().set(formatString(tag.getUrl()));
+        song.encoderProperty().set(formatString(tag.getEncoder()));
         byte[] imageData = tag.getAlbumImage();
         if (imageData != null) {
             song.setAlbumImage(imageData);
@@ -65,5 +64,11 @@ public class TagUtils {
             song.getMp3File().setId3v2Tag(tag);
         }
         return tag;
+    }
+
+    private static String formatString(String string) {
+        if (string == null) return "";
+        if (string.isBlank()) return "";
+        return string.trim();
     }
 }
