@@ -46,7 +46,15 @@ public class Song {
     @Setter
     private boolean readDataFromTag = false;
 
-    public Song(Mp3File mp3File, Path path, int track, String title, ID3v2 tag) {
+    public Song(Mp3File mp3File, Path path, int track, ID3v2 tag) {
+        this(mp3File, path, track, tag.getTitle(), tag);
+    }
+
+    public Song(Mp3File mp3File, Path path) {
+        this(mp3File, path, -1, "", null);
+    }
+
+    private Song(Mp3File mp3File, Path path, int track, String title, ID3v2 tag) {
         this.mp3File = mp3File;
         this.path = path;
         this.track.set(track);
@@ -69,10 +77,6 @@ public class Song {
 
     public TrackedStringProperty fileNameProperty() {
         return fileName;
-    }
-
-    public String getTitle() {
-        return title.get();
     }
 
     public TrackedStringProperty titleProperty() {
