@@ -1,8 +1,11 @@
 package com.robothaver.mp3reorder.core.preference;
 
 import com.robothaver.mp3reorder.core.font.Size;
+import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3.controls.menubar.Themes;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Alert;
 import lombok.extern.log4j.Log4j2;
 
@@ -15,12 +18,14 @@ import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Properties;
 
+import static com.robothaver.mp3reorder.core.preference.PreferencesUtils.DEFAULT_PREFERENCES;
+
 @Log4j2
 public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
     private static final PreferencesStore<Preferences> instance = new PreferenceStoreImpl();
     private static final String PREFERENCES_FILE_NAME = "preferences.properties";
     private static final Path PREFERENCES_PATH = Paths.get(PREFERENCES_FILE_NAME);
-
+    private static final ViewLocalization localization = new ViewLocalization("language.preferences", new SimpleObjectProperty<>(DEFAULT_PREFERENCES.getSelectedLocale()));
     private static Preferences preferences;
 
     @Override
@@ -49,10 +54,11 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
                 loadFromProperties(properties, preferences);
             } catch (Exception e) {
                 log.error("Failed to load preferences, reverting to default configuration", e);
-                preferences = PreferencesUtils.DEFAULT_PREFERENCES;
+                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, localization.getForKey("loading.error.dialog.title"), localization.getForKey("loading.error.dialog.message"));
+                preferences = DEFAULT_PREFERENCES;
             }
         } else {
-            Preferences defaultPreferences = PreferencesUtils.DEFAULT_PREFERENCES;
+            Preferences defaultPreferences = DEFAULT_PREFERENCES;
             writeToProperties(properties, defaultPreferences);
             saveProperties(properties);
             preferences = defaultPreferences;
