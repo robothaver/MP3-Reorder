@@ -21,8 +21,6 @@ public class MP3Controller extends BaseController<Region> {
 
     @Override
     public Region getView() {
-        Region build = viewBuilder.build();
-        songLoader.loadSongs();
-        return build;
+        return viewBuilder.build();
     }
 }

@@ -9,8 +9,11 @@ import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3.MP3Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import lombok.extern.log4j.Log4j2;
+
+import java.util.Objects;
 
 @Log4j2
 public class MP3Reorder extends Application {
@@ -24,6 +27,7 @@ public class MP3Reorder extends Application {
         Preferences preferences = PreferenceStoreImpl.getInstance().getPreferences();
         Application.setUserAgentStylesheet(preferences.getSelectedTheme().getTheme().getUserAgentStylesheet());
         LanguageController.changeSelectedLocale(preferences.getSelectedLocale());
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo.png"))));
         stage.sceneProperty().addListener((_, _, newScene) -> {
             FontSizeControllerImpl.initialize(newScene.getRoot());
             FontSizeControllerImpl.getInstance().setFontSize(preferences.getSelectedSize());
