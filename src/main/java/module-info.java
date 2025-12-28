@@ -8,6 +8,10 @@ module com.robothaver.mp3reorder {
     requires java.desktop;
     requires static lombok;
     requires jdk.compiler;
+    requires org.apache.logging.log4j;
+    requires org.apache.logging.log4j.core;
+    requires java.management;
+    requires java.naming;
 
     opens com.robothaver.mp3reorder to javafx.fxml;
     exports com.robothaver.mp3reorder;

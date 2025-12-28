@@ -25,7 +25,6 @@ public class TrackAssignerImpl implements TrackAssigner {
         } else {
             processedSongs = assignNewTracks(songs);
         }
-        System.out.println("Used existing tracks: " + trackIssue);
         return new TrackAssignerResult(processedSongs, trackIssue);
     }
 
@@ -42,7 +41,6 @@ public class TrackAssignerImpl implements TrackAssigner {
     private List<Song> assignTracksWithExisting(List<Song> songs) {
         List<Song> sortedSongs = new ArrayList<>();
         songsWithoutTracks.sort(this::compareFileNames);
-        System.out.println(songsWithTracks.size());
 
         for (int i = 0; i < songs.size(); i++) {
             // If there is a song with a track that is equal to the current index
@@ -56,10 +54,6 @@ public class TrackAssignerImpl implements TrackAssigner {
                 sortedSongs.add(songWithoutTrack);
                 songsWithoutTracks.removeFirst();
             }
-        }
-
-        for (Song sortedSong : sortedSongs) {
-            if (sortedSong.getFileChanged().get()) System.out.println(sortedSong);
         }
 
         return sortedSongs;
@@ -88,7 +82,6 @@ public class TrackAssignerImpl implements TrackAssigner {
         Set<Integer> tracks = new HashSet<>();
         for (Song songsWithTrack : songsWithTracks) {
             if (!tracks.add(songsWithTrack.getTrack())) {
-                System.out.println("Duplicate track " + songsWithTrack);
                 return false;
             }
         }
@@ -97,8 +90,8 @@ public class TrackAssignerImpl implements TrackAssigner {
 
     private void separateSongsByTrack() {
         for (Song song : songs) {
-            // Has track read from the file
             if (song.getTrack() != -1) {
+                // Has track read from the file
                 songsWithTracks.add(song);
             } else {
                 songsWithoutTracks.add(song);

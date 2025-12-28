@@ -23,7 +23,6 @@ public class ToolBarInteractor {
         int selectedIndex = model.getSelectedSongIndex();
 
         if (selectedIndex > 0) {
-            System.out.println(selectedIndex);
             mp3TrackEditor.insertSong(selectedIndex, 0);
             setSelectedIndex(0);
         }

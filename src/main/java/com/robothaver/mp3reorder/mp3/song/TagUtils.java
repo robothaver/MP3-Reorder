@@ -10,6 +10,7 @@ public class TagUtils {
     public static void readDataFromTag(Song song) {
         if (song.getTag() == null || song.isReadDataFromTag()) return;
         ID3v2 tag = song.getTag();
+        // TODO: Trim strings
         song.artistProperty().set(tag.getArtist());
         song.albumProperty().set(tag.getAlbum());
         song.yearProperty().set(tag.getYear());

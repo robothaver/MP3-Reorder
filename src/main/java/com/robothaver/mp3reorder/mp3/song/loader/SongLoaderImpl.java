@@ -22,11 +22,13 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 
 import static com.robothaver.mp3reorder.core.ApplicationInfo.APPLICATION_NAME;
 
+@Log4j2
 @RequiredArgsConstructor
 public class SongLoaderImpl implements SongLoader {
     private final MP3Model model;
@@ -36,12 +38,13 @@ public class SongLoaderImpl implements SongLoader {
 
     @Override
     public void loadSongs() {
+        log.info("Loading songs from {}", model.getSelectedPath());
         ProgressState progressState = new ProgressState();
         ProgressDialogState dialogState = createProgressDialogState(progressState);
 
         SongTaskExecutor<Song> songProcessor = new SongTaskExecutor<>(new SongLoaderTaskProvider(model.getSelectedPath()), progressState);
-        songProcessor.setOnSucceeded(e -> onLoadingSuccess(songProcessor, dialogState));
-        songProcessor.setOnFailed(e -> onLoadingFailed(songProcessor, dialogState));
+        songProcessor.setOnSucceeded(_ -> onLoadingSuccess(songProcessor, dialogState));
+        songProcessor.setOnFailed(_ -> onLoadingFailed(songProcessor, dialogState));
 
         model.selectedSongIndexProperty().set(-1);
         DialogManagerImpl.getInstance().showProgressDialog(dialogState);
@@ -54,6 +57,7 @@ public class SongLoaderImpl implements SongLoader {
 
         // Process result
         ProcessorResult<Song> result = songProcessor.getValue();
+        log.info("Successfully loaded {} songs", result.getResults().size());
         TrackAssigner trackAssigner = new TrackAssignerImpl(result.getResults());
         TrackAssignerResult trackAssignerResult = trackAssigner.assignTracks();
         model.getSongs().setAll(trackAssignerResult.getSongs());
@@ -73,7 +77,7 @@ public class SongLoaderImpl implements SongLoader {
     private void onLoadingFailed(SongTaskExecutor<Song> songProcessor, ProgressDialogState dialogState) {
         Throwable ex = songProcessor.getException();
         DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, songLoaderLocalization.getForKey("song.loading.failed.title"), songLoaderLocalization.getForKey("song.loading.failed.message").formatted(model.getSelectedPath(), ex));
-        System.err.println("Song loading failed: " + ex);
+        log.error("Song loading failed", ex);
         dialogState.getVisible().set(false);
     }
 
@@ -95,8 +99,11 @@ public class SongLoaderImpl implements SongLoader {
 
     private void showTrackIssueDialog(TrackIssue trackIssue) {
         if (trackIssue != TrackIssue.NONE) {
+            log.warn("Existing tracks ignored because {}", trackIssue);
             String message = buildTrackIssueMessage(trackIssue);
             DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION, trackAssignerLocalization.getForKey("song.track.issue.title"), message);
+        } else {
+            log.info("No track issues found");
         }
     }
 

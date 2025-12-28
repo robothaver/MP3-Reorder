@@ -10,7 +10,9 @@ import com.robothaver.mp3reorder.mp3.MP3Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class MP3Reorder extends Application {
     public static void main(String[] args) {
         launch(args);

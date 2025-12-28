@@ -34,7 +34,7 @@ public class SongLoadTask implements Callable<Song> {
         } else {
             try {
                 return Integer.parseInt(track);
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException _) {
                 return -1;
             }
         }

@@ -1,8 +1,8 @@
 package com.robothaver.mp3reorder.mp3.song.saver;
 
-import com.robothaver.mp3reorder.mp3.song.task.domain.SongTask;
-import com.robothaver.mp3reorder.mp3.song.task.SongTaskProvider;
 import com.robothaver.mp3reorder.mp3.domain.Song;
+import com.robothaver.mp3reorder.mp3.song.task.SongTaskProvider;
+import com.robothaver.mp3reorder.mp3.song.task.domain.SongTask;
 
 import java.nio.file.Path;
 import java.util.List;

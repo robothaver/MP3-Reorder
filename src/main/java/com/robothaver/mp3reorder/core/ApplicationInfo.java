@@ -23,7 +23,7 @@ public class ApplicationInfo {
                     .map(Locale::forLanguageTag)
                     .toList();
             DEFAULT_LOCALE = Locale.forLanguageTag(properties.getProperty("application.default.locale"));
-        } catch (IOException e) {
+        } catch (IOException _) {
             throw new IllegalStateException("No properties file found!");
         }
     }

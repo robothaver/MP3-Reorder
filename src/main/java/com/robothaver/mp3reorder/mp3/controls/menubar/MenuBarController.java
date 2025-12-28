@@ -15,10 +15,12 @@ import com.robothaver.mp3reorder.mp3.song.task.SongTaskExecutor;
 import com.robothaver.mp3reorder.mp3.song.task.domain.ProcessorResult;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
+import lombok.extern.log4j.Log4j2;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@Log4j2
 public class MenuBarController extends BaseController<MenuBar> {
     private final MP3Model mp3Model;
     private final MenuBarModel menuBarModel;
@@ -53,11 +55,14 @@ public class MenuBarController extends BaseController<MenuBar> {
 
     private void onSaveAs() {
         Path saveLocation = interactor.getSaveLocation();
-        if (saveLocation != null && saveLocation.equals(Paths.get(mp3Model.getSelectedPath()))) {
-            onSave();
-        } else if (saveLocation != null) {
+        if (saveLocation == null) return;
+
+        if (!saveLocation.equals(Paths.get(mp3Model.getSelectedPath()))) {
             SongSaverTaskProvider taskProvider = new SongSaverTaskProvider(mp3Model.getSongs(), saveLocation);
             saveSongs(taskProvider);
+        } else {
+            // The currently open directory was selected
+            onSave();
         }
     }
 
@@ -72,7 +77,7 @@ public class MenuBarController extends BaseController<MenuBar> {
 
         SongTaskExecutor<Void> taskExecutor = new SongTaskExecutor<>(taskProvider, progressState);
 
-        taskExecutor.setOnSucceeded(event -> {
+        taskExecutor.setOnSucceeded(_ -> {
             ProcessorResult<Void> result = taskExecutor.getValue();
             dialogState.getVisible().set(false);
 
@@ -83,11 +88,10 @@ public class MenuBarController extends BaseController<MenuBar> {
                 DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION, localization.getForKey("saving.finished.title"), localization.getForKey("saving.finished.message"));
             }
         });
-        taskExecutor.setOnFailed(event -> {
+        taskExecutor.setOnFailed(_ -> {
             Throwable ex = taskExecutor.getException();
             DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, localization.getForKey("saving.failed.title"), localization.getForKey("saving.failed.message").formatted(mp3Model.getSelectedPath(), ex));
-            System.err.println("Song saving failed: " + ex);
-            ex.printStackTrace();
+            log.error("Song saving failed: {}", String.valueOf(ex));
             dialogState.getVisible().set(false);
         });
 

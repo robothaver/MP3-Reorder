@@ -7,6 +7,7 @@ import com.robothaver.mp3reorder.mp3.song.task.domain.SongTask;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Log4j2
 @RequiredArgsConstructor
 public class SongTaskExecutor<T> extends Task<ProcessorResult<T>> {
     private final SongTaskProvider<T> songTaskProvider;
@@ -43,7 +45,9 @@ public class SongTaskExecutor<T> extends Task<ProcessorResult<T>> {
         try {
             return future.get();
         } catch (InterruptedException | ExecutionException e) {
+            log.error("Interrupted!", e);
             errors.add(new Error("", e.getMessage(), e));
+            Thread.currentThread().interrupt();
             return null;
         }
     }
@@ -54,7 +58,7 @@ public class SongTaskExecutor<T> extends Task<ProcessorResult<T>> {
             Platform.runLater(() -> progressState.doneProperty().set(progressState.getDone() + 1));
             return call;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("{} failed for {}", songTask.getCallable().getClass().getSimpleName(), songTask.getFile().getFileName().toString(), e);
             errors.add(new Error(songTask.getFile().getFileName().toString(), e.getMessage(), e));
         }
         return null;

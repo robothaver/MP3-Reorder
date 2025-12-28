@@ -1,7 +1,10 @@
 package com.robothaver.mp3reorder.core.preference;
 
 import com.robothaver.mp3reorder.core.font.Size;
+import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3.controls.menubar.Themes;
+import javafx.scene.control.Alert;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -12,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Properties;
 
+@Log4j2
 public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
     private static final PreferencesStore<Preferences> instance = new PreferenceStoreImpl();
     private static final String PREFERENCES_FILE_NAME = "preferences.properties";
@@ -38,21 +42,20 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
 
     private static void loadPreferences() {
         Properties properties = new Properties();
-        try {
-            if (Files.exists(PREFERENCES_PATH)) {
-                preferences = new Preferences();
-                try (FileInputStream inputStream = new FileInputStream(PREFERENCES_FILE_NAME)) {
-                    properties.load(inputStream);
-                }
+        if (Files.exists(PREFERENCES_PATH)) {
+            preferences = new Preferences();
+            try (FileInputStream inputStream = new FileInputStream(PREFERENCES_FILE_NAME)) {
+                properties.load(inputStream);
                 loadFromProperties(properties, preferences);
-            } else {
-                Preferences defaultPreferences = PreferencesUtils.getDefaultPreferences();
-                writeToProperties(properties, defaultPreferences);
-                saveProperties(properties);
-                preferences = defaultPreferences;
+            } catch (Exception e) {
+                log.error("Failed to load preferences, reverting to default configuration", e);
+                preferences = PreferencesUtils.DEFAULT_PREFERENCES;
             }
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+        } else {
+            Preferences defaultPreferences = PreferencesUtils.DEFAULT_PREFERENCES;
+            writeToProperties(properties, defaultPreferences);
+            saveProperties(properties);
+            preferences = defaultPreferences;
         }
     }
 
@@ -65,15 +68,11 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
     }
 
     private static void loadFromProperties(Properties properties, Preferences preferences) {
-        try {
-            preferences.setSelectedTheme(Themes.fromString(properties.getProperty("theme")));
-            preferences.setSelectedSize(Size.fromString(properties.getProperty("size")));
-            preferences.setSelectedLocale(Locale.forLanguageTag(properties.getProperty("locale")));
-            preferences.setSideMenuEnabled(Boolean.parseBoolean(properties.getProperty("sideMenuEnabled")));
-            preferences.setStatusBarEnabled(Boolean.parseBoolean(properties.getProperty("statusBarEnabled")));
-        } catch (NullPointerException e) {
-            throw new IllegalStateException(e);
-        }
+        preferences.setSelectedTheme(Themes.fromString(properties.getProperty("theme")));
+        preferences.setSelectedSize(Size.fromString(properties.getProperty("size")));
+        preferences.setSelectedLocale(Locale.forLanguageTag(properties.getProperty("locale")));
+        preferences.setSideMenuEnabled(Boolean.parseBoolean(properties.getProperty("sideMenuEnabled")));
+        preferences.setStatusBarEnabled(Boolean.parseBoolean(properties.getProperty("statusBarEnabled")));
     }
 
     private static void writeToProperties(Properties properties, Preferences preferences) {

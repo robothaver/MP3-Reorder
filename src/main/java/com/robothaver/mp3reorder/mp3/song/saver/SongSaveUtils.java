@@ -11,7 +11,7 @@ public class SongSaveUtils {
     public static String buildSongName(Song song) {
         String newSongName = song.getFileName().trim();
         if (!newSongName.toLowerCase().endsWith(".mp3")) {
-            newSongName = newSongName + ".mp3";
+            newSongName += ".mp3";
         }
         return newSongName;
     }

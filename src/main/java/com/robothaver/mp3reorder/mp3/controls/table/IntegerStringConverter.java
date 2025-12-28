@@ -17,7 +17,7 @@ public class IntegerStringConverter extends StringConverter<Integer> {
             int parsed = Integer.parseInt(s);
             currentValue = parsed;
             return parsed;
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException _) {
             return currentValue;
         }
     }

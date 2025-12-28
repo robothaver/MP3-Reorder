@@ -35,7 +35,6 @@ public class MP3ViewBuilder implements Builder<Region> {
 
         StatusBar statusBar = new StatusBar(model);
         BooleanProperty statusBarEnabled = model.getMenuBarModel().getStatusBarEnabled();
-        statusBarEnabled.addListener((_, _, t1) -> System.out.println(t1));
         statusBar.visibleProperty().bind(statusBarEnabled);
         statusBar.managedProperty().bind(statusBarEnabled);
 

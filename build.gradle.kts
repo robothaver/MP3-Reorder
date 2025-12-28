@@ -40,6 +40,10 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     implementation("com.mpatric:mp3agic:0.9.1")
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
+    implementation("org.apache.logging.log4j:log4j-api:2.25.3")
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+    implementation("org.apache.logging.log4j:log4j-core:2.25.3")
     implementation("io.github.mkpaz:atlantafx-base:2.1.0")
     implementation("org.kordamp.ikonli:ikonli-feather-pack:12.4.0")
     implementation("org.kordamp.ikonli:ikonli-javafx:12.4.0")
