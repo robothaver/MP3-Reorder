@@ -38,6 +38,7 @@ public class SongSaverImpl implements SongSaver {
     }
 
     private void saveSongs(SongSaverTaskProvider taskProvider) {
+        log.info("Saving {} songs to {}", songs.size(), savePath);
         ProgressState progressState = new ProgressState();
         ProgressDialogState dialogState = new ProgressDialogState(
                 localization.getForKey("saving.progress.dialog.title"),
@@ -53,9 +54,11 @@ public class SongSaverImpl implements SongSaver {
             dialogState.getVisible().set(false);
 
             if (!result.getErrors().isEmpty()) {
+                log.error("Failed to save {} songs", result.getErrors().size());
                 ErrorListAlertMessage message = new ErrorListAlertMessage(localization.getForKey("saving.error.title"), localization.getForKey("saving.error.message"), result.getErrors());
                 DialogManagerImpl.getInstance().showErrorListAlert(message);
             } else {
+                log.info("All songs saved successfully");
                 DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION, localization.getForKey("saving.finished.title"), localization.getForKey("saving.finished.message"));
             }
         });
