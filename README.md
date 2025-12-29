@@ -12,7 +12,7 @@ An app designed to reorder MP3 files using their track field. The app includes u
 The app can also change other MP3 fields, such as title, artist, genre, and more.
 
 ## Images
-![Start screen](Readme/Start%20screen.png)
+![Start screen](Readme/StartScreen.png)
 ![App](Readme/App.png)
 
 ## Libraries used
