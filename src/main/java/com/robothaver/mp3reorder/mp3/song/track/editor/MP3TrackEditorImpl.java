@@ -56,7 +56,7 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         song1.trackProperty().setValue(song2.getTrack());
         song2.trackProperty().setValue(song1Track);
 
-        songs.set(index1, songs.get(index2));
+        songs.set(index1, song2);
         songs.set(index2, song1);
     }
 

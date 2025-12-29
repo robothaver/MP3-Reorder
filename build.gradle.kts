@@ -71,6 +71,6 @@ jlink {
         jvmArgs = listOf("--enable-native-access=javafx.graphics")
     }
     jpackage {
-        imageOptions = listOf("--icon", "src/main/resources/images/logo.png", "--resource-dir", "src/main/resources/images/logo.png")
+        imageOptions = listOf("--icon", "src/main/resources/images/logo.ico", "--resource-dir", "src/main/resources/images/logo.ico")
     }
 }
