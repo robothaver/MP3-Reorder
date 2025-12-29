@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3.song.loader;
+package com.robothaver.mp3reorder.mp3.song.load.task;
 
 import com.robothaver.mp3reorder.mp3.song.task.domain.SongTask;
 import com.robothaver.mp3reorder.mp3.song.task.SongTaskProvider;

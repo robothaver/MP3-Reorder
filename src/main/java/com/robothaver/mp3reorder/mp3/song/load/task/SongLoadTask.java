@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3.song.loader;
+package com.robothaver.mp3reorder.mp3.song.load.task;
 
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;

@@ -1,8 +1,8 @@
 package com.robothaver.mp3reorder.mp3;
 
 import com.robothaver.mp3reorder.core.BaseController;
-import com.robothaver.mp3reorder.mp3.song.loader.SongLoader;
-import com.robothaver.mp3reorder.mp3.song.loader.SongLoaderImpl;
+import com.robothaver.mp3reorder.mp3.song.load.SongLoader;
+import com.robothaver.mp3reorder.mp3.song.load.SongLoaderImpl;
 import javafx.scene.layout.Region;
 
 

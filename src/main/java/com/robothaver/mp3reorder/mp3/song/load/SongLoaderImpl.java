@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3.song.loader;
+package com.robothaver.mp3reorder.mp3.song.load;
 
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
@@ -10,6 +10,7 @@ import com.robothaver.mp3reorder.dialog.progress.ProgressState;
 import com.robothaver.mp3reorder.mp3.MP3Model;
 import com.robothaver.mp3reorder.mp3.MP3ViewBuilder;
 import com.robothaver.mp3reorder.mp3.domain.Song;
+import com.robothaver.mp3reorder.mp3.song.load.task.SongLoaderTaskProvider;
 import com.robothaver.mp3reorder.mp3.song.task.SongTaskExecutor;
 import com.robothaver.mp3reorder.mp3.song.task.domain.ProcessorResult;
 import com.robothaver.mp3reorder.mp3.song.track.assigner.TrackAssigner;

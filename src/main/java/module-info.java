@@ -17,7 +17,7 @@ module com.robothaver.mp3reorder {
     exports com.robothaver.mp3reorder;
 
     opens com.robothaver.mp3reorder.mp3 to javafx.base;
-    opens com.robothaver.mp3reorder.mp3.song.loader to javafx.base;
+    opens com.robothaver.mp3reorder.mp3.song.load to javafx.base;
     opens com.robothaver.mp3reorder.mp3.domain to javafx.base;
     opens com.robothaver.mp3reorder.dialog to javafx.base;
     opens com.robothaver.mp3reorder.mp3.song.track.assigner to javafx.base;
@@ -31,4 +31,5 @@ module com.robothaver.mp3reorder {
     opens com.robothaver.mp3reorder.core to javafx.fxml;
     exports com.robothaver.mp3reorder.core.font;
     opens com.robothaver.mp3reorder.core.font to javafx.fxml;
+    opens com.robothaver.mp3reorder.mp3.song.load.task to javafx.base;
 }

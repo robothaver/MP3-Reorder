@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3.song.saver;
+package com.robothaver.mp3reorder.mp3.song.save;
 
 import com.robothaver.mp3reorder.mp3.domain.Song;
 
