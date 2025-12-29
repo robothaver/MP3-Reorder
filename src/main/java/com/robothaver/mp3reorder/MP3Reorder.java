@@ -6,7 +6,7 @@ import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
 import com.robothaver.mp3reorder.core.preference.Preferences;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
-import com.robothaver.mp3reorder.mp3.MP3Controller;
+import com.robothaver.mp3reorder.start.StartController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -17,7 +17,7 @@ import java.util.Objects;
 
 @Log4j2
 public class MP3Reorder extends Application {
-    public static void main(String[] args) {
+    static void main(String[] args) {
         launch(args);
     }
 
@@ -33,7 +33,7 @@ public class MP3Reorder extends Application {
             FontSizeControllerImpl.getInstance().setFontSize(preferences.getSelectedSize());
         });
         stage.setTitle(ApplicationInfo.APPLICATION_NAME);
-        stage.setScene(new Scene(new MP3Controller().getView()));
+        stage.setScene(new Scene(new StartController().getView()));
         stage.setWidth(800);
         stage.setHeight(600);
         stage.show();

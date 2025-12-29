@@ -1,5 +1,10 @@
 package com.robothaver.mp3reorder.mp3.utils;
 
+import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
+import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
+
+import java.io.File;
 import java.text.Collator;
 import java.util.Locale;
 
@@ -7,6 +12,8 @@ public class MP3FileUtils {
     private MP3FileUtils() {
         throw new IllegalStateException("Utility class");
     }
+
+    private static final ViewLocalization localization = new ViewLocalization("language.dialog", LanguageController.getSelectedLocale());
 
     public static int compareFileNames(String source, String target) {
         int firstTrackNumber = getTrackNumberFromFileName(source);
@@ -40,5 +47,10 @@ public class MP3FileUtils {
         } else {
             return -1;
         }
+    }
+
+    public static File chooseSongDirectory() {
+        return DialogManagerImpl.getInstance()
+                .showDirectoryChooserDialog(localization.getForKey("openSongDirDialogTitle"), new File("."));
     }
 }

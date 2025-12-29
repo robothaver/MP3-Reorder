@@ -77,9 +77,7 @@ public class MenuBarInteractor {
     }
 
     public void openDirectory(Runnable onLoadSongs) {
-        File selectedDirectory = DialogManagerImpl.getInstance()
-                .showDirectoryChooserDialog(localization.getForKey("file.openDialogTitle"), new File("."));
-
+        File selectedDirectory = MP3FileUtils.chooseSongDirectory();
         if (selectedDirectory != null) {
             mp3Model.selectedPathProperty().setValue(selectedDirectory.getAbsolutePath());
             onLoadSongs.run();
