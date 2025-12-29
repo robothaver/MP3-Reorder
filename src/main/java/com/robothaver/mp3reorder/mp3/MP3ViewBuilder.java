@@ -87,6 +87,7 @@ public class MP3ViewBuilder implements Builder<Region> {
 
     public void selectIndex(int index) {
         mp3FileTableView.getSelectionModel().select(index);
-        mp3FileTableView.scrollTo(index - 5);
+        mp3FileTableView.scrollTo(index );
+
     }
 }

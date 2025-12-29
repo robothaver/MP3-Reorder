@@ -18,17 +18,12 @@ public class MP3Controller extends BaseController<Region> {
         songLoader = new SongLoaderImpl(model, viewBuilder);
     }
 
-    private void onLoadSongs() {
-        songLoader.loadSongs();
-    }
-
     public void loadSongs(Path selectedDir) {
         model.selectedPathProperty().set(selectedDir.toString());
         songLoader.loadSongs();
     }
 
-    @Override
-    public Region getView() {
-        return viewBuilder.build();
+    private void onLoadSongs() {
+        songLoader.loadSongs();
     }
 }
