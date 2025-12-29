@@ -10,6 +10,7 @@ import com.robothaver.mp3reorder.mp3.domain.Song;
 import com.robothaver.mp3reorder.mp3.song.save.task.SongSaverTaskProvider;
 import com.robothaver.mp3reorder.mp3.song.task.SongTaskExecutor;
 import com.robothaver.mp3reorder.mp3.song.task.domain.ProcessorResult;
+import com.robothaver.mp3reorder.mp3.song.task.domain.SongTask;
 import javafx.scene.control.Alert;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -38,7 +39,7 @@ public class SongSaverImpl implements SongSaver {
     }
 
     private void saveSongs(SongSaverTaskProvider taskProvider) {
-        log.info("Saving {} songs to {}", songs.size(), savePath);
+        log.info("Saving {} songs to {}", taskProvider.getTasks().size(), savePath);
         ProgressState progressState = new ProgressState();
         ProgressDialogState dialogState = new ProgressDialogState(
                 localization.getForKey("saving.progress.dialog.title"),
