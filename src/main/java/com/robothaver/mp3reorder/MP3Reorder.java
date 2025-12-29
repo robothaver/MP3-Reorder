@@ -25,6 +25,9 @@ public class MP3Reorder extends Application {
     public void start(Stage stage) {
         DialogManagerImpl.initialize(stage);
         Preferences preferences = PreferenceStoreImpl.getInstance().getPreferences();
+        if (preferences.isLaunchMaximized()) {
+            stage.setMaximized(true);
+        }
         Application.setUserAgentStylesheet(preferences.getSelectedTheme().getTheme().getUserAgentStylesheet());
         LanguageController.changeSelectedLocale(preferences.getSelectedLocale());
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/logo.png"))));

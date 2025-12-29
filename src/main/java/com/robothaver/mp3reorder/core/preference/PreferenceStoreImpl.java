@@ -79,6 +79,7 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
         preferences.setSelectedLocale(Locale.forLanguageTag(properties.getProperty("locale")));
         preferences.setSideMenuEnabled(Boolean.parseBoolean(properties.getProperty("sideMenuEnabled")));
         preferences.setStatusBarEnabled(Boolean.parseBoolean(properties.getProperty("statusBarEnabled")));
+        preferences.setLaunchMaximized(Boolean.parseBoolean(properties.getProperty("launchMaximized")));
     }
 
     private static void writeToProperties(Properties properties, Preferences preferences) {
@@ -87,5 +88,6 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
         properties.setProperty("locale", preferences.getSelectedLocale().toLanguageTag());
         properties.setProperty("sideMenuEnabled", String.valueOf(preferences.isSideMenuEnabled()));
         properties.setProperty("statusBarEnabled", String.valueOf(preferences.isStatusBarEnabled()));
+        properties.setProperty("launchMaximized", String.valueOf(preferences.isLaunchMaximized()));
     }
 }

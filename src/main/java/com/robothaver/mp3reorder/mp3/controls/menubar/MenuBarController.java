@@ -28,6 +28,7 @@ public class MenuBarController extends BaseController<MenuBar> {
                 interactor::setSelectedLocale,
                 interactor::setSize,
                 () -> interactor.openDirectory(loadSongs),
+                interactor::changeLaunchMaximized,
                 interactor::changeDetailsSideMenuEnabled,
                 interactor::changeStatusBarEnabled,
                 () -> System.exit(0),
@@ -59,6 +60,7 @@ public class MenuBarController extends BaseController<MenuBar> {
         menuBarModel.getSelectedLocale().set(preferences.getSelectedLocale());
         menuBarModel.getSelectedTheme().set(preferences.getSelectedTheme());
         menuBarModel.getSelectedSize().set(preferences.getSelectedSize());
+        menuBarModel.getLaunchMaximized().set(preferences.isLaunchMaximized());
         menuBarModel.getDetailsMenuEnabled().set(preferences.isSideMenuEnabled());
         menuBarModel.getStatusBarEnabled().set(preferences.isStatusBarEnabled());
     }

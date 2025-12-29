@@ -14,6 +14,7 @@ import java.util.Locale;
 public class Preferences {
     private boolean sideMenuEnabled;
     private boolean statusBarEnabled;
+    private boolean launchMaximized;
     private Themes selectedTheme;
     private Size selectedSize;
     private Locale selectedLocale;

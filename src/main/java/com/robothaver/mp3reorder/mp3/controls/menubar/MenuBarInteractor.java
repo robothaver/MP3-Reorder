@@ -55,6 +55,13 @@ public class MenuBarInteractor {
         preferencesStore.savePreferences();
     }
 
+    public void changeLaunchMaximized() {
+        boolean enabled = menuBarModel.getLaunchMaximized().get();
+        Preferences preferences = preferencesStore.getPreferences();
+        preferences.setLaunchMaximized(enabled);
+        preferencesStore.savePreferences();
+    }
+
     public void changeDetailsSideMenuEnabled() {
         boolean enabled = menuBarModel.getDetailsMenuEnabled().get();
         Preferences preferences = preferencesStore.getPreferences();

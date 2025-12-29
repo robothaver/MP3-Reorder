@@ -24,6 +24,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final Consumer<Locale> onLocaleChanged;
     private final Consumer<Size> onSizeChanged;
     private final Runnable onOpenDirectory;
+    private final Runnable onLaunchMaximizedChanged;
     private final Runnable onDetailsMenuStateChanged;
     private final Runnable onStatusBarStateChanged;
     private final Runnable onExit;
@@ -94,6 +95,11 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         Menu viewMenu = new Menu("_View");
         viewMenu.textProperty().bind(localization.bindString("view"));
 
+        CheckMenuItem launchMaximizedOption = new CheckMenuItem("Launch maximized", new FontIcon(Feather.MAXIMIZE));
+        launchMaximizedOption.selectedProperty().bindBidirectional(model.getLaunchMaximized());
+        launchMaximizedOption.onActionProperty().set(_ -> onLaunchMaximizedChanged.run());
+        launchMaximizedOption.textProperty().bind(localization.bindString("launchMaximized"));
+
         CheckMenuItem detailsSideMenuOption = new CheckMenuItem("Details side menu", new FontIcon(Feather.SIDEBAR));
         detailsSideMenuOption.selectedProperty().bindBidirectional(model.getDetailsMenuEnabled());
         detailsSideMenuOption.onActionProperty().set(_ -> onDetailsMenuStateChanged.run());
@@ -160,7 +166,9 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
                 new SeparatorMenuItem(),
                 themeMenu,
                 languageOption,
-                sizeMenu
+                sizeMenu,
+                new SeparatorMenuItem(),
+                launchMaximizedOption
         );
         return viewMenu;
     }
