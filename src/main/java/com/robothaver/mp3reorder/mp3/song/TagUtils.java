@@ -33,9 +33,9 @@ public class TagUtils {
 
     public static void writeDataToTag(Song song) {
         ID3v2 tag = getOrCreateTag(song);
-        tag.setArtist(song.artistProperty().get());
-        tag.setAlbum(song.albumProperty().get());
-        tag.setYear(song.yearProperty().get());
+        tag.setArtist(formatString(song.artistProperty().get()));
+        tag.setAlbum(formatString(song.albumProperty().get()));
+        tag.setYear(formatString(song.yearProperty().get()));
         Integer genre = song.genreProperty().getValue();
         String genreDescription = song.genreDescriptionProperty().get();
         boolean genreDescriptionValid = ID3v1Genres.matchGenreDescription(genreDescription) != -1;
@@ -43,17 +43,17 @@ public class TagUtils {
             tag.setGenre(genre);
             tag.setGenreDescription(genreDescription);
         }
-        tag.setComment(song.commentProperty().get());
-        tag.setLyrics(song.lyricsProperty().get());
-        tag.setComposer(song.composerProperty().get());
-        tag.setPublisher(song.publisherProperty().get());
-        tag.setOriginalArtist(song.originalArtistProperty().get());
-        tag.setAlbumArtist(song.albumArtistProperty().get());
-        tag.setCopyright(song.copyrightProperty().get());
-        tag.setUrl(song.urlProperty().get());
-        tag.setEncoder(song.encoderProperty().get());
+        tag.setComment(formatString(song.commentProperty().get()));
+        tag.setLyrics(formatString(song.lyricsProperty().get()));
+        tag.setComposer(formatString(song.composerProperty().get()));
+        tag.setPublisher(formatString(song.publisherProperty().get()));
+        tag.setOriginalArtist(formatString(song.originalArtistProperty().get()));
+        tag.setAlbumArtist(formatString(song.albumArtistProperty().get()));
+        tag.setCopyright(formatString(song.copyrightProperty().get()));
+        tag.setUrl(formatString(song.urlProperty().get()));
+        tag.setEncoder(formatString(song.encoderProperty().get()));
         tag.setTrack(String.valueOf(song.getTrack()));
-        tag.setTitle(song.titleProperty().get());
+        tag.setTitle(formatString(song.titleProperty().get()));
     }
 
     private static ID3v2 getOrCreateTag(Song song) {
