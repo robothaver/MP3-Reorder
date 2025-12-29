@@ -9,6 +9,8 @@ An app designed to reorder MP3 files using their track field. The app includes u
 - Resolving track conflicts
 - Inserting and switching songs and tracks
 
+The app can also change other MP3 metadata fields, such as title, artist, genre, and more.
+
 ## Images
 ![Start screen](Readme/Start%20screen.png)
 ![App](Readme/App.png)
