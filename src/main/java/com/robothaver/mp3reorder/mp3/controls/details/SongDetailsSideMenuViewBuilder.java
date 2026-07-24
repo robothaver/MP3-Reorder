@@ -8,7 +8,6 @@ import com.robothaver.mp3reorder.mp3.MP3Model;
 import com.robothaver.mp3reorder.mp3.controls.details.controls.SongAlbumImageWidget;
 import com.robothaver.mp3reorder.mp3.controls.details.controls.SongTextDataWidget;
 import com.robothaver.mp3reorder.mp3.controls.details.controls.genre.SongGenreComboBox;
-import com.robothaver.mp3reorder.mp3.controls.menubar.MenuBarModel;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import com.robothaver.mp3reorder.mp3.song.TagUtils;
 import javafx.beans.binding.Bindings;
@@ -27,15 +26,14 @@ import javafx.util.Builder;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-
 public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
     private final MP3Model mp3Model;
-    private final MenuBarModel model;
     private final ViewLocalization localization = new ViewLocalization("language.detailsmenu", LanguageController.getSelectedLocale());
+    private final Runnable onClosePressed;
 
-    public SongDetailsSideMenuViewBuilder(MP3Model mp3Model) {
+    public SongDetailsSideMenuViewBuilder(MP3Model mp3Model, Runnable onClosePressed) {
         this.mp3Model = mp3Model;
-        this.model = mp3Model.getMenuBarModel();
+        this.onClosePressed = onClosePressed;
     }
 
     @Override
@@ -165,8 +163,9 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
 
         Button closeContainerButton = new Button(null, new FontIcon(Feather.X));
         closeContainerButton.getStyleClass().addAll(Styles.BUTTON_CIRCLE, Styles.FLAT);
-        closeContainerButton.setOnAction(_ -> model.getDetailsMenuEnabled().set(false));
+        closeContainerButton.setOnAction(_ -> onClosePressed.run());
         toolBar.getItems().addAll(songDetailsLabel, new Spacer(Orientation.HORIZONTAL), closeContainerButton);
+
         return toolBar;
     }
 

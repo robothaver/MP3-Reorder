@@ -14,8 +14,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -23,7 +21,6 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 public class StartViewBuilder implements Builder<StackPane> {
-    private static final Logger log = LogManager.getLogger(StartViewBuilder.class);
     private final Region mp3Region;
     private final StartModel model;
     private final Runnable onSelectFolder;

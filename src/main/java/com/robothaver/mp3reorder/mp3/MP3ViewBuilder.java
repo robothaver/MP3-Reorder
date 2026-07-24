@@ -20,9 +20,9 @@ import lombok.RequiredArgsConstructor;
 public class MP3ViewBuilder implements Builder<Region> {
     private final MP3Model model;
     private final Runnable onLoadSongs;
+    private final Runnable onCloseDetailsMenu;
 
     private TableView<Song> mp3FileTableView;
-
 
     @Override
     public Region build() {
@@ -30,7 +30,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         MenuBar menuBar = new MenuBarController(model, onLoadSongs).getView();
 
         VBox tableControls = createTableControls();
-        VBox detailsSideMenu = new SongDetailsSideMenuViewBuilder(model).build();
+        VBox detailsSideMenu = new SongDetailsSideMenuViewBuilder(model, onCloseDetailsMenu).build();
         SplitPane splitPane = buildMainSplitPane(tableControls, detailsSideMenu);
 
         StatusBar statusBar = new StatusBar(model);
