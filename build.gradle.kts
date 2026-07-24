@@ -1,10 +1,10 @@
 plugins {
     java
     application
-    id("org.javamodularity.moduleplugin") version "2.0.0"
-    id("org.openjfx.javafxplugin") version "0.1.0"
-    id("org.beryx.jlink") version "3.1.5"
-    id("io.freefair.lombok") version "8.14"
+    alias(libs.plugins.javamodularity)
+    alias(libs.plugins.javafx)
+    alias(libs.plugins.jlink)
+    alias(libs.plugins.lombok)
 }
 
 group = "com.robothaver"
@@ -37,14 +37,15 @@ javafx {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-    implementation("com.mpatric:mp3agic:0.9.1")
-    implementation("org.apache.logging.log4j:log4j-api:2.25.3")
-    implementation("org.apache.logging.log4j:log4j-core:2.25.3")
-    implementation("io.github.mkpaz:atlantafx-base:2.1.0")
-    implementation("org.kordamp.ikonli:ikonli-feather-pack:12.4.0")
-    implementation("org.kordamp.ikonli:ikonli-javafx:12.4.0")
+    implementation(libs.mp3agic)
+    implementation(libs.log4j.api)
+    implementation(libs.log4j.core)
+    implementation(libs.atlantafx.base)
+    implementation(libs.ikonli.javafx)
+    implementation(libs.ikonli.feather.pack)
+
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
 tasks.withType<Test> {
