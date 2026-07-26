@@ -19,7 +19,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -95,12 +94,11 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
         trackTextField.getTitleProperty().bind(localization.bindString("track"));
 
         StackPane imageViewContainer = new StackPane();
-        //HBox.setHgrow(imageViewContainer, Priority.ALWAYS);
         imageViewContainer.setAlignment(Pos.CENTER);
         RoundedImageView songAlbumImageWidget = new RoundedImageView();
         scrollPane.widthProperty().addListener((_, _, newWidth) -> {
-            double width = Math.clamp(newWidth.doubleValue(), 0, 370) - 30;
-            songAlbumImageWidget.setImageFitWidth(width);
+            double width = Math.clamp(newWidth.doubleValue(), 40, 370) - 30;
+            songAlbumImageWidget.setFitWidth(width);
         });
         imageViewContainer.getChildren().add(songAlbumImageWidget);
 

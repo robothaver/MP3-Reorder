@@ -8,14 +8,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Objects;
 
 @RequiredArgsConstructor
 public class AudioPlayerViewBuilder implements Builder<HBox> {
@@ -36,20 +33,16 @@ public class AudioPlayerViewBuilder implements Builder<HBox> {
         return root;
     }
 
-    private final Image defaultImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/no_image.png")));
-
-
     private HBox createInfoHBox() {
         HBox root = new HBox();
-        root.setStyle("-fx-background-color: red");
+        root.setSpacing(10);
         root.setAlignment(Pos.CENTER_LEFT);
         root.setPadding(new Insets(16));
 
         RoundedImageView imageView = new RoundedImageView();
-        imageView.setImageFitWidth(50);
-        model.getCoverImageBytes().addListener((_, _, newValue) -> {
-            imageView.setImageBytes(newValue);
-        });
+        imageView.setFitWidth(50);
+        model.getCoverImageBytes().addListener((_, _, newValue) ->
+                imageView.setImageBytes(newValue));
 
         VBox textVBox = new VBox();
         textVBox.setAlignment(Pos.CENTER);
