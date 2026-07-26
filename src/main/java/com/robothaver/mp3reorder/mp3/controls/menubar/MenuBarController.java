@@ -29,6 +29,7 @@ public class MenuBarController extends BaseController<MenuBar> {
                 interactor::setSize,
                 () -> interactor.openDirectory(loadSongs),
                 interactor::changeLaunchMaximized,
+                interactor::changeUseSystemMenubar,
                 interactor::changeDetailsSideMenuEnabled,
                 interactor::changeStatusBarEnabled,
                 () -> System.exit(0),
@@ -61,6 +62,7 @@ public class MenuBarController extends BaseController<MenuBar> {
         menuBarModel.getSelectedTheme().set(preferences.getSelectedTheme());
         menuBarModel.getSelectedSize().set(preferences.getSelectedSize());
         menuBarModel.getLaunchMaximized().set(preferences.isLaunchMaximized());
+        menuBarModel.getUseSystemMenuBar().set(preferences.isUseSystemMenuBar());
         menuBarModel.getDetailsMenuEnabled().set(preferences.isSideMenuEnabled());
         menuBarModel.getStatusBarEnabled().set(preferences.isStatusBarEnabled());
     }

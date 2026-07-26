@@ -17,4 +17,5 @@ public class MenuBarModel {
     private final BooleanProperty detailsMenuEnabled = new SimpleBooleanProperty(true);
     private final BooleanProperty statusBarEnabled = new SimpleBooleanProperty(true);
     private final BooleanProperty launchMaximized = new SimpleBooleanProperty(false);
+    private final BooleanProperty useSystemMenuBar = new SimpleBooleanProperty(true);
 }

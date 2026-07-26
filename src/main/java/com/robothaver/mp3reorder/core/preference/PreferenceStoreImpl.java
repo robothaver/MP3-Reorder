@@ -1,7 +1,6 @@
 package com.robothaver.mp3reorder.core.preference;
 
 import com.robothaver.mp3reorder.core.font.Size;
-import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3.controls.menubar.Themes;
@@ -80,6 +79,7 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
         preferences.setSideMenuEnabled(Boolean.parseBoolean(properties.getProperty("sideMenuEnabled")));
         preferences.setStatusBarEnabled(Boolean.parseBoolean(properties.getProperty("statusBarEnabled")));
         preferences.setLaunchMaximized(Boolean.parseBoolean(properties.getProperty("launchMaximized")));
+        preferences.setUseSystemMenuBar(Boolean.parseBoolean(properties.getProperty("useSystemMenuBar")));
     }
 
     private static void writeToProperties(Properties properties, Preferences preferences) {
@@ -89,5 +89,6 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
         properties.setProperty("sideMenuEnabled", String.valueOf(preferences.isSideMenuEnabled()));
         properties.setProperty("statusBarEnabled", String.valueOf(preferences.isStatusBarEnabled()));
         properties.setProperty("launchMaximized", String.valueOf(preferences.isLaunchMaximized()));
+        properties.setProperty("useSystemMenuBar", String.valueOf(preferences.isUseSystemMenuBar()));
     }
 }

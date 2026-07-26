@@ -6,3 +6,4 @@
 - Add built in audio player
 - Fix default value in genre combobox
 - Make title editable from the table view
+- Replaces old icons widgets with ThemedIconLabel

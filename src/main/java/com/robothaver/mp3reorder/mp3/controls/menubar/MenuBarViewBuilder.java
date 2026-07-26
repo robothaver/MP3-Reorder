@@ -25,6 +25,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final Consumer<Size> onSizeChanged;
     private final Runnable onOpenDirectory;
     private final Runnable onLaunchMaximizedChanged;
+    private final Runnable onUseSystemMenuBar;
     private final Runnable onDetailsMenuStateChanged;
     private final Runnable onStatusBarStateChanged;
     private final Runnable onExit;
@@ -40,6 +41,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
     @Override
     public MenuBar build() {
+        menuBar.useSystemMenuBarProperty().bindBidirectional(model.getUseSystemMenuBar());
         menuBar.getMenus().addAll(
                 createFileMenu(),
                 createEditMenu(),
@@ -99,6 +101,11 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         launchMaximizedOption.selectedProperty().bindBidirectional(model.getLaunchMaximized());
         launchMaximizedOption.onActionProperty().set(_ -> onLaunchMaximizedChanged.run());
         launchMaximizedOption.textProperty().bind(localization.bindString("launchMaximized"));
+
+        CheckMenuItem useSystemMenuBarOption = new CheckMenuItem("Use system menu bar", new FontIcon(Feather.LAYOUT));
+        useSystemMenuBarOption.selectedProperty().bindBidirectional(model.getUseSystemMenuBar());
+        useSystemMenuBarOption.onActionProperty().set(_ -> onUseSystemMenuBar.run());
+        useSystemMenuBarOption.textProperty().bind(localization.bindString("useSystemMenuBar"));
 
         CheckMenuItem detailsSideMenuOption = new CheckMenuItem("Details side menu", new FontIcon(Feather.SIDEBAR));
         detailsSideMenuOption.selectedProperty().bindBidirectional(model.getDetailsMenuEnabled());
@@ -168,7 +175,8 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
                 languageOption,
                 sizeMenu,
                 new SeparatorMenuItem(),
-                launchMaximizedOption
+                launchMaximizedOption,
+                useSystemMenuBarOption
         );
         return viewMenu;
     }

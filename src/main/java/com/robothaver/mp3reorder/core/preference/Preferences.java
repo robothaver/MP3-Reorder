@@ -15,6 +15,7 @@ public class Preferences {
     private boolean sideMenuEnabled;
     private boolean statusBarEnabled;
     private boolean launchMaximized;
+    private boolean useSystemMenuBar;
     private Themes selectedTheme;
     private Size selectedSize;
     private Locale selectedLocale;

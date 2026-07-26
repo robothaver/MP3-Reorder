@@ -62,6 +62,13 @@ public class MenuBarInteractor {
         preferencesStore.savePreferences();
     }
 
+    public void changeUseSystemMenubar() {
+        boolean enabled = menuBarModel.getUseSystemMenuBar().get();
+        Preferences preferences = preferencesStore.getPreferences();
+        preferences.setUseSystemMenuBar(enabled);
+        preferencesStore.savePreferences();
+    }
+
     public void changeDetailsSideMenuEnabled() {
         boolean enabled = menuBarModel.getDetailsMenuEnabled().get();
         Preferences preferences = preferencesStore.getPreferences();

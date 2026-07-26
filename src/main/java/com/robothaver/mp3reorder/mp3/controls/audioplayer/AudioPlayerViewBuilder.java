@@ -1,13 +1,18 @@
 package com.robothaver.mp3reorder.mp3.controls.audioplayer;
 
+import atlantafx.base.controls.ProgressSliderSkin;
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
+import com.robothaver.mp3reorder.core.utils.NodeUtils;
 import com.robothaver.mp3reorder.mp3.controls.RoundedImageView;
+import com.robothaver.mp3reorder.mp3.controls.ThemedIconButton;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -22,15 +27,82 @@ public class AudioPlayerViewBuilder implements Builder<HBox> {
     @Override
     public HBox build() {
         HBox root = new HBox();
+        root.setAlignment(Pos.CENTER);
         HBox.setHgrow(root, Priority.ALWAYS);
-        root.getStyleClass().add(Styles.BG_SUBTLE);
+        root.getStyleClass().add(Styles.BG_DEFAULT);
 
         Button playSong = new Button("Play song");
         playSong.setOnAction(_ -> onPlaySong.run());
 
-        root.getChildren().addAll(createInfoHBox(), new Spacer(), playSong, new Spacer());
+        root.getChildren().addAll(createInfoHBox(), new Spacer(), createPlayerControlsVBox(), new Spacer(), createEndHBox());
 
         return root;
+    }
+
+    private HBox createEndHBox() {
+        HBox root = new HBox();
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(10));
+
+        ThemedIconButton muteButton = new ThemedIconButton(null, "volume-1.png", 18);
+        muteButton.setPrefSize(24, 24);
+        muteButton.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_CIRCLE);
+
+        Slider volumeSlider = createHoverSlider();
+        volumeSlider.setPrefWidth(100);
+
+        root.getChildren().addAll(muteButton, volumeSlider);
+
+        return root;
+    }
+
+    private VBox createPlayerControlsVBox() {
+        VBox root = new VBox();
+        root.setSpacing(5);
+        root.setAlignment(Pos.CENTER);
+
+        HBox buttonHBox = new HBox();
+        buttonHBox.setAlignment(Pos.CENTER);
+        buttonHBox.setSpacing(10);
+
+        Button previousButton = new ThemedIconButton(null, "skip-back.png", 18);
+        previousButton.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_CIRCLE);
+        ThemedIconButton playButton = new ThemedIconButton(null, "pause.png", 20);
+        playButton.setPrefSize(36, 36);
+        playButton.getIconLabel().setStyle("-fx-text-fill: -color-fg-emphasis");
+        playButton.getStyleClass().addAll(Styles.BUTTON_CIRCLE, Styles.ACCENT);
+        Button nextButton = new ThemedIconButton(null, "skip-forward.png", 18);
+        nextButton.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_CIRCLE);
+
+        buttonHBox.getChildren().addAll(previousButton, playButton, nextButton);
+
+        HBox progressHBox = new HBox();
+        progressHBox.setSpacing(10);
+        progressHBox.setAlignment(Pos.CENTER);
+
+        Label currentTimeLabel = new Label("0:00");
+
+        Slider playTrackSlider = createHoverSlider();
+
+        Label totalTimeLabel = new Label("0:00");
+        progressHBox.getChildren().addAll(currentTimeLabel, playTrackSlider, totalTimeLabel);
+
+        root.getChildren().addAll(buttonHBox, progressHBox);
+        return root;
+    }
+
+    private Slider createHoverSlider() {
+        Slider slider = new Slider();
+        slider.getStyleClass().add(Styles.SMALL);
+        slider.setSkin(new ProgressSliderSkin(slider));
+        Node thumb = slider.lookup(".thumb");
+        NodeUtils.setNodeVisible(thumb, false);
+
+        slider.setOnMouseEntered(_ -> NodeUtils.setNodeVisible(thumb, true));
+
+        slider.setOnMouseExited(_ -> NodeUtils.setNodeVisible(thumb, false));
+
+        return slider;
     }
 
     private HBox createInfoHBox() {
