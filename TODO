@@ -1,0 +1,8 @@
+- Fix scrolling when moving song up and down with the buttons
+- Add reload folder option
+- Change resize system to slider
+- Make menubar native on macos
+- Add option to open .mp3 file in default audio player app
+- Add built in audio player
+- Fix default value in genre combobox
+- Make title editable from the table view

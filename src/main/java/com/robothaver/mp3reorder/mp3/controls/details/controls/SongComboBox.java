@@ -10,10 +10,9 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.Getter;
 
+@Getter
 public class SongComboBox<T> implements Builder<Region> {
-    @Getter
     private final StringProperty titleProperty = new SimpleStringProperty();
-    @Getter
     private final ComboBox<T> comboBox;
 
     public SongComboBox(String title) {

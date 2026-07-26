@@ -5,7 +5,7 @@ import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.mp3.MP3Model;
-import com.robothaver.mp3reorder.mp3.controls.details.controls.SongAlbumImageWidget;
+import com.robothaver.mp3reorder.mp3.controls.RoundedImageView;
 import com.robothaver.mp3reorder.mp3.controls.details.controls.SongTextDataWidget;
 import com.robothaver.mp3reorder.mp3.controls.details.controls.genre.SongGenreComboBox;
 import com.robothaver.mp3reorder.mp3.domain.Song;
@@ -19,7 +19,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Builder;
@@ -91,13 +93,19 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
         encoderTextField.getTitleProperty().bind(localization.bindString("encoder"));
         SongTextDataWidget trackTextField = new SongTextDataWidget("Track");
         trackTextField.getTitleProperty().bind(localization.bindString("track"));
-        SongAlbumImageWidget songAlbumImageWidget = new SongAlbumImageWidget();
-        scrollPane.widthProperty().addListener((_, _, newValue) ->
-                songAlbumImageWidget.resizeImage((double) newValue)
-        );
+
+        StackPane imageViewContainer = new StackPane();
+        //HBox.setHgrow(imageViewContainer, Priority.ALWAYS);
+        imageViewContainer.setAlignment(Pos.CENTER);
+        RoundedImageView songAlbumImageWidget = new RoundedImageView();
+        scrollPane.widthProperty().addListener((_, _, newWidth) -> {
+            double width = Math.clamp(newWidth.doubleValue(), 0, 370) - 30;
+            songAlbumImageWidget.setImageFitWidth(width);
+        });
+        imageViewContainer.getChildren().add(songAlbumImageWidget);
 
         detailsContainer.getChildren().addAll(
-                songAlbumImageWidget.build(),
+                imageViewContainer,
                 titleTextField.build(),
                 trackTextField.build(),
                 artistTextField.build(),
@@ -121,8 +129,7 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
             if (selectedIndex != -1) {
                 Song song = mp3Model.getSongs().get(selectedIndex);
                 TagUtils.readDataFromTag(song);
-                songAlbumImageWidget.setImage(song.getAlbumImage());
-                songAlbumImageWidget.resizeImage(scrollPane.widthProperty().get());
+                songAlbumImageWidget.setImageBytes(song.getAlbumImage());
                 songGenreComboBox.bindToProperties(song.genreProperty(), song.genreDescriptionProperty());
 
                 trackTextField.getTextField().setText(String.valueOf(song.getTrack()));

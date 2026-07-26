@@ -2,6 +2,7 @@ package com.robothaver.mp3reorder.mp3;
 
 
 import com.robothaver.mp3reorder.mp3.controls.StatusBar;
+import com.robothaver.mp3reorder.mp3.controls.audioplayer.AudioPlayerController;
 import com.robothaver.mp3reorder.mp3.controls.details.SongDetailsSideMenuViewBuilder;
 import com.robothaver.mp3reorder.mp3.controls.menubar.MenuBarController;
 import com.robothaver.mp3reorder.mp3.controls.table.MP3TableViewController;
@@ -81,7 +82,9 @@ public class MP3ViewBuilder implements Builder<Region> {
             }
         });
 
-        tableContainer.getChildren().addAll(toolBar, mp3FileTableView);
+        AudioPlayerController audioPlayerController = new AudioPlayerController();
+
+        tableContainer.getChildren().addAll(toolBar, mp3FileTableView, audioPlayerController.getView());
         return tableContainer;
     }
 
