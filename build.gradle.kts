@@ -59,7 +59,7 @@ tasks.processResources {
 }
 
 tasks.run {
-    jvmArgs = listOf("--enable-native-access=javafx.graphics")
+    jvmArgs = listOf("--enable-native-access=javafx.graphics", "--enable-native-access=javafx.media")
 }
 
 jlink {
@@ -67,7 +67,7 @@ jlink {
     options.set(listOf("--strip-debug", "--compress", "zip-9", "--no-header-files", "--no-man-pages"))
     launcher {
         name = "MP3 Reorder"
-        jvmArgs = listOf("--enable-native-access=javafx.graphics")
+        jvmArgs = listOf("--enable-native-access=javafx.graphics", "--enable-native-access=javafx.media")
     }
     jpackage {
         imageOptions = listOf("--icon", "src/main/resources/images/logo.ico", "--resource-dir", "src/main/resources/images/logo.ico")

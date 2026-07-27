@@ -3,26 +3,36 @@ package com.robothaver.mp3reorder.mp3.controls.audioplayer;
 import atlantafx.base.controls.ProgressSliderSkin;
 import atlantafx.base.controls.Spacer;
 import atlantafx.base.theme.Styles;
-import com.robothaver.mp3reorder.core.utils.NodeUtils;
+import com.robothaver.mp3reorder.core.utils.ResourceHelper;
 import com.robothaver.mp3reorder.mp3.controls.RoundedImageView;
 import com.robothaver.mp3reorder.mp3.controls.ThemedIconButton;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 
+import java.util.function.Consumer;
+
 @RequiredArgsConstructor
 public class AudioPlayerViewBuilder implements Builder<HBox> {
+    private static final Image MUTED_ICON = ResourceHelper.loadImage("volume-x.png");
+    private static final Image VOLUME_ICON = ResourceHelper.loadImage("volume-1.png");
+    private static final Image PLAY_ICON = ResourceHelper.loadImage("play.png");
+    private static final Image STOP_ICON = ResourceHelper.loadImage("pause.png");
+
     private final AudioPlayerModel model;
     private final Runnable onPlaySong;
+    private final Runnable onMutePressed;
+    private final Runnable onVolumeChanged;
+    private final Consumer<Double> onSeek;
 
     @Override
     public HBox build() {
@@ -30,9 +40,6 @@ public class AudioPlayerViewBuilder implements Builder<HBox> {
         root.setAlignment(Pos.CENTER);
         HBox.setHgrow(root, Priority.ALWAYS);
         root.getStyleClass().add(Styles.BG_DEFAULT);
-
-        Button playSong = new Button("Play song");
-        playSong.setOnAction(_ -> onPlaySong.run());
 
         root.getChildren().addAll(createInfoHBox(), new Spacer(), createPlayerControlsVBox(), new Spacer(), createEndHBox());
 
@@ -47,9 +54,17 @@ public class AudioPlayerViewBuilder implements Builder<HBox> {
         ThemedIconButton muteButton = new ThemedIconButton(null, "volume-1.png", 18);
         muteButton.setPrefSize(24, 24);
         muteButton.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_CIRCLE);
+        muteButton.setOnAction(_ -> onMutePressed.run());
+
+        model.getIsMuted().addListener((_, _, isMuted) ->
+                muteButton.getIconLabel().getImageView().setImage(isMuted ? MUTED_ICON : VOLUME_ICON));
 
         Slider volumeSlider = createHoverSlider();
         volumeSlider.setPrefWidth(100);
+        volumeSlider.setMin(0.0);
+        volumeSlider.setMax(1.0);
+        volumeSlider.valueProperty().bindBidirectional(model.getVolumeProperty());
+        volumeSlider.valueProperty().addListener((_, _, _) -> onVolumeChanged.run());
 
         root.getChildren().addAll(muteButton, volumeSlider);
 
@@ -67,10 +82,15 @@ public class AudioPlayerViewBuilder implements Builder<HBox> {
 
         Button previousButton = new ThemedIconButton(null, "skip-back.png", 18);
         previousButton.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_CIRCLE);
-        ThemedIconButton playButton = new ThemedIconButton(null, "pause.png", 20);
+        ThemedIconButton playButton = new ThemedIconButton(null, "play.png", 20);
         playButton.setPrefSize(36, 36);
         playButton.getIconLabel().setStyle("-fx-text-fill: -color-fg-emphasis");
         playButton.getStyleClass().addAll(Styles.BUTTON_CIRCLE, Styles.ACCENT);
+        playButton.setOnAction(_ -> onPlaySong.run());
+
+        model.getIsPlaying().addListener((_, _, isPlaying) ->
+                playButton.getIconLabel().getImageView().setImage(isPlaying ? STOP_ICON : PLAY_ICON));
+
         Button nextButton = new ThemedIconButton(null, "skip-forward.png", 18);
         nextButton.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_CIRCLE);
 
@@ -81,10 +101,26 @@ public class AudioPlayerViewBuilder implements Builder<HBox> {
         progressHBox.setAlignment(Pos.CENTER);
 
         Label currentTimeLabel = new Label("0:00");
+        currentTimeLabel.textProperty().bind(model.getCurrentTimeText());
 
         Slider playTrackSlider = createHoverSlider();
+        model.getCurrentTime().addListener((_, _, newValue) -> {
+            if (!playTrackSlider.isValueChanging() && !playTrackSlider.isPressed()) {
+                playTrackSlider.setValue(newValue.doubleValue());
+            }
+        });
+        playTrackSlider.setOnMouseReleased(_ -> {
+            if (model.getCurrentTime().get() != playTrackSlider.getValue()) onSeek.accept(playTrackSlider.getValue());
+        });
+        playTrackSlider.valueChangingProperty().addListener((_, oldValue, newValue) -> {
+            if (oldValue && !newValue) onSeek.accept(playTrackSlider.getValue());
+        });
+        playTrackSlider.setMin(0.0);
+        playTrackSlider.maxProperty().bind(model.getTotalTime());
 
         Label totalTimeLabel = new Label("0:00");
+        totalTimeLabel.textProperty().bind(model.getTotalTimeText());
+
         progressHBox.getChildren().addAll(currentTimeLabel, playTrackSlider, totalTimeLabel);
 
         root.getChildren().addAll(buttonHBox, progressHBox);
@@ -93,14 +129,8 @@ public class AudioPlayerViewBuilder implements Builder<HBox> {
 
     private Slider createHoverSlider() {
         Slider slider = new Slider();
-        slider.getStyleClass().add(Styles.SMALL);
+        slider.getStyleClass().addAll(Styles.SMALL, "hover-slider");
         slider.setSkin(new ProgressSliderSkin(slider));
-        Node thumb = slider.lookup(".thumb");
-        NodeUtils.setNodeVisible(thumb, false);
-
-        slider.setOnMouseEntered(_ -> NodeUtils.setNodeVisible(thumb, true));
-
-        slider.setOnMouseExited(_ -> NodeUtils.setNodeVisible(thumb, false));
 
         return slider;
     }

@@ -7,7 +7,6 @@ import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
 import com.robothaver.mp3reorder.core.preference.Preferences;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3.MP3Controller;
-import com.robothaver.mp3reorder.start.StartController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -35,13 +34,13 @@ public class MP3Reorder extends Application {
         stage.sceneProperty().addListener((_, _, newScene) -> {
             FontSizeControllerImpl.initialize(newScene.getRoot());
             FontSizeControllerImpl.getInstance().setFontSize(preferences.getSelectedSize());
+            newScene.getStylesheets().add(Objects.requireNonNull(MP3Reorder.class.getResource("/styles.css")).toString());
         });
         stage.setTitle(ApplicationInfo.APPLICATION_NAME);
         //stage.setScene(new Scene(new StartController().getView()));
         MP3Controller mp3Controller = new MP3Controller();
         stage.setScene(new Scene(mp3Controller.getView()));
         mp3Controller.loadSongs(Path.of("bulira  zenék"));
-
         stage.setWidth(800);
         stage.setHeight(600);
         stage.show();
