@@ -38,7 +38,6 @@ public class MP3TableViewInteractor {
     }
 
     public void onTrackChangedForSong(int currentTrack, int newTrack) {
-        System.out.println("onTrackChangedForSong");
         mp3TrackEditor.setNewTrackForSong(currentTrack, newTrack);
         onSelectedIndexChanged.accept(model.getSelectedSongIndex());
     }

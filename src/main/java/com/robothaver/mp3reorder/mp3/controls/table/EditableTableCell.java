@@ -4,12 +4,11 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class EditableTableCell<S, T> extends TextFieldTableCell<S, T> {
     private final BiConsumer<T, T> onValueChanged;
-    private T currentValue;
-    private T newValue;
 
     public EditableTableCell(BiConsumer<T, T> onValueChanged, StringConverter<T> stringConverter) {
         this.onValueChanged = onValueChanged;
@@ -21,21 +20,13 @@ public class EditableTableCell<S, T> extends TextFieldTableCell<S, T> {
     }
 
     @Override
-    public void updateItem(T item, boolean empty) {
-        super.updateItem(item, empty);
-        if (currentValue == null) {
-            currentValue = item;
-        } else {
-            currentValue = newValue;
-        }
-        newValue = item;
-    }
-
-    @Override
     public void commitEdit(T newValue) {
+        T oldValue = getItem();
+
         super.commitEdit(newValue);
-        if (!currentValue.equals(newValue)) {
-            onValueChanged.accept(currentValue, newValue);
+
+        if (!Objects.equals(oldValue, newValue) && onValueChanged != null) {
+            onValueChanged.accept(oldValue, newValue);
         }
     }
 }
