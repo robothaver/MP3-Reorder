@@ -3,16 +3,22 @@ package com.robothaver.mp3reorder.mp3.controls.table;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
+import com.robothaver.mp3reorder.mp3.controls.ThemedIconButton;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import com.robothaver.mp3reorder.mp3.utils.MP3FileUtils;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
 
 import java.util.function.BiConsumer;
@@ -22,6 +28,7 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
     private final ObservableList<Song> songs;
     private final BiConsumer<Integer, Integer> onTrackChanged;
     private final BiConsumer<String, String> onFileRenamed;
+    private final BiConsumer<Integer, Integer> onMoveSong;
     private final ViewLocalization localization = new ViewLocalization("language.table", LanguageController.getSelectedLocale());
 
     @Override
@@ -48,15 +55,37 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         fileNameColumn.setCellFactory(param ->
                 EditableTableCell.forStringTableColumn(onFileRenamed)
         );
-        fileNameColumn.setComparator(MP3FileUtils::compareFileNames);
+        fileNameColumn.setSortable(false);
 
         TableColumn<Song, String> titleColumn = new TableColumn<>("Title");
         titleColumn.textProperty().bind(localization.bindString("title"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        titleColumn.setSortable(false);
 
         mp3FileTableView.getColumns().add(trackColumn);
         mp3FileTableView.getColumns().add(fileNameColumn);
         mp3FileTableView.getColumns().add(titleColumn);
+        //mp3FileTableView.getColumns().add(playColumn);
+
+        DataFormat dataFormat = new DataFormat(mp3FileTableView.getClass().getSimpleName());
+        mp3FileTableView.setRowFactory(param -> {
+            TableRow<Song> tableRow = new TableRow<>() {
+                @Override
+                protected void updateItem(Song item, boolean empty) {
+                    super.updateItem(item, empty);
+                    Song selectedItem = mp3FileTableView.getSelectionModel().getSelectedItem();
+                    if (item == null || selectedItem == null) return;
+
+                }
+            };
+
+            DragAndDropTableRowController<Song> dragAndDropController = new DragAndDropTableRowController<>(tableRow, dataFormat);
+            dragAndDropController.setDragAndDropOverHandler((startIndex, newIndex) -> {
+                System.out.println("SONG MOVED FROM " + startIndex + " to " + newIndex);
+                onMoveSong.accept(startIndex, newIndex);
+            });
+            return tableRow;
+        });
 
         Styles.toggleStyleClass(mp3FileTableView, Styles.BORDERED);
 

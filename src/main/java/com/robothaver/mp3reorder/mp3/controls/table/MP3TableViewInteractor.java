@@ -32,7 +32,13 @@ public class MP3TableViewInteractor {
         model.getSongSearch().clear();
     }
 
+    public void onSongDragged(int originalIndex, int newIndex) {
+        mp3TrackEditor.insertSong(originalIndex, newIndex);
+        onSelectedIndexChanged.accept(model.getSelectedSongIndex());
+    }
+
     public void onTrackChangedForSong(int currentTrack, int newTrack) {
+        System.out.println("onTrackChangedForSong");
         mp3TrackEditor.setNewTrackForSong(currentTrack, newTrack);
         onSelectedIndexChanged.accept(model.getSelectedSongIndex());
     }
