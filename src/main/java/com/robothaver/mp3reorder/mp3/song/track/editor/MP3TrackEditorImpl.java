@@ -9,7 +9,6 @@ import com.robothaver.mp3reorder.mp3.domain.Song;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 
-import java.util.Comparator;
 import java.util.List;
 
 public class MP3TrackEditorImpl implements MP3TrackEditor {
@@ -43,7 +42,6 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
     public void insertSong(int currentSongIndex, int newSongIndex) {
         Song selectedSong = songs.get(currentSongIndex);
         Song nextSong = songs.get(newSongIndex);
-        selectedSongCurrentTrack = selectedSong.getTrack();
         insertSongInternal(selectedSong, nextSong);
     }
 
@@ -108,22 +106,22 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
     }
 
     private void insertSongInternal(Song selectedSong, Song conflictingSong) {
-        selectedSong.trackProperty().setValue(selectedSongCurrentTrack);
-        songs.sort(Comparator.comparingInt(Song::getTrack));
-        int selectedSongIndex = songs.indexOf(selectedSong);
-        int conflictingSongIndex = songs.indexOf(conflictingSong);
-        int positionDif = selectedSongIndex - conflictingSongIndex;
+        if (songs.size() < 2) return;
 
-        // The selected song is to the right in the list
-        if (positionDif > 0) {
-            for (int i = selectedSongIndex; i > conflictingSongIndex; i--) {
-                // Move selected songs to the left in the list
-                swapSongsAndTracks(i, i - 1);
-            }
-        } else {
-            for (int i = selectedSongIndex; i < conflictingSongIndex; i++) {
-                // Move selected songs to the right the list
-                swapSongsAndTracks(i, i + 1);
+        int conflictingSongIndex = songs.indexOf(conflictingSong);
+        int selectedSongIndex = songs.indexOf(selectedSong);
+        if (conflictingSongIndex == -1 || selectedSongIndex == -1) return;
+
+        songs.remove(selectedSong);
+        songs.add(conflictingSongIndex, selectedSong);
+
+        int smallerIndex = Math.min(selectedSongIndex, conflictingSongIndex);
+        int largerIndex = Math.max(selectedSongIndex, conflictingSongIndex);
+
+        for (int i = smallerIndex; i <= largerIndex; i++) {
+            int track = model.getOrderDescending().get() ? songs.size() - i : i + 1;
+            if (track != songs.get(i).getTrack()) {
+                songs.get(i).trackProperty().set(track);
             }
         }
         model.selectedSongIndexProperty().setValue(conflictingSongIndex);

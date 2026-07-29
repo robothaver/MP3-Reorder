@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 public class MP3Model {
     private final ObservableList<Song> songs = FXCollections.observableArrayList();
+    private final BooleanProperty orderDescending = new SimpleBooleanProperty(false);
     private final StringProperty selectedPath = new SimpleStringProperty();
     private final IntegerProperty selectedSongIndex = new SimpleIntegerProperty(-1);
     private final SearchTextFieldModel songSearch = new SearchTextFieldModel();

@@ -3,22 +3,18 @@ package com.robothaver.mp3reorder.mp3.controls.table;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
-import com.robothaver.mp3reorder.mp3.controls.ThemedIconButton;
 import com.robothaver.mp3reorder.mp3.domain.Song;
-import com.robothaver.mp3reorder.mp3.utils.MP3FileUtils;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
 
 import java.util.function.BiConsumer;
@@ -26,6 +22,7 @@ import java.util.function.BiConsumer;
 @RequiredArgsConstructor
 public class MP3TableViewBuilder implements Builder<TableView<Song>> {
     private final ObservableList<Song> songs;
+    private final BooleanProperty orderDescending;
     private final BiConsumer<Integer, Integer> onTrackChanged;
     private final BiConsumer<String, String> onFileRenamed;
     private final BiConsumer<Integer, Integer> onMoveSong;
@@ -47,6 +44,8 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         VBox.setVgrow(mp3FileTableView, javafx.scene.layout.Priority.ALWAYS);
 
         TableColumn<Song, Integer> trackColumn = getSongTrackTableColumn();
+        trackColumn.sortTypeProperty().addListener((_, _, newValue) ->
+                orderDescending.set(newValue == TableColumn.SortType.DESCENDING));
 
         TableColumn<Song, String> fileNameColumn = new TableColumn<>("File name");
         fileNameColumn.textProperty().bind(localization.bindString("file.name"));
@@ -67,23 +66,12 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         mp3FileTableView.getColumns().add(titleColumn);
         //mp3FileTableView.getColumns().add(playColumn);
 
-        DataFormat dataFormat = new DataFormat(mp3FileTableView.getClass().getSimpleName());
+        DataFormat dataFormat = new DataFormat("MP3Reorder/MP3TableView/Songs");
         mp3FileTableView.setRowFactory(param -> {
-            TableRow<Song> tableRow = new TableRow<>() {
-                @Override
-                protected void updateItem(Song item, boolean empty) {
-                    super.updateItem(item, empty);
-                    Song selectedItem = mp3FileTableView.getSelectionModel().getSelectedItem();
-                    if (item == null || selectedItem == null) return;
-
-                }
-            };
-
+            TableRow<Song> tableRow = new TableRow<>();
             DragAndDropTableRowController<Song> dragAndDropController = new DragAndDropTableRowController<>(tableRow, dataFormat);
-            dragAndDropController.setDragAndDropOverHandler((startIndex, newIndex) -> {
-                System.out.println("SONG MOVED FROM " + startIndex + " to " + newIndex);
-                onMoveSong.accept(startIndex, newIndex);
-            });
+            dragAndDropController.setDragAndDropOverHandler((startIndex, newIndex) ->
+                    onMoveSong.accept(startIndex, newIndex));
             return tableRow;
         });
 
