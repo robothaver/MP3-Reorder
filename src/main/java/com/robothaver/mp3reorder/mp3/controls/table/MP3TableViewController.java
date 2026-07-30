@@ -11,6 +11,7 @@ public class MP3TableViewController extends BaseController<TableView<Song>> {
         viewBuilder = new MP3TableViewBuilder(
                 model.getSongs(),
                 model.getOrderDescending(),
+                model.selectedSongIndexProperty(),
                 interactor::onTrackChangedForSong,
                 interactor::onFileRenamed,
                 interactor::onSongDragged
