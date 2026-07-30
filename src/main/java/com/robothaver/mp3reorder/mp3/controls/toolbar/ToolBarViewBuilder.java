@@ -3,8 +3,8 @@ package com.robothaver.mp3reorder.mp3.controls.toolbar;
 import atlantafx.base.controls.CustomTextField;
 import atlantafx.base.controls.Spacer;
 import com.robothaver.mp3reorder.core.language.LanguageController;
-import com.robothaver.mp3reorder.mp3.MP3Model;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
+import com.robothaver.mp3reorder.mp3.MP3Model;
 import com.robothaver.mp3reorder.mp3.controls.ImageButton;
 import com.robothaver.mp3reorder.mp3.controls.NumberOfSongsViewBuilder;
 import com.robothaver.mp3reorder.mp3.controls.search.SearchTextFieldController;
@@ -16,8 +16,6 @@ import javafx.scene.layout.HBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 
-import java.util.function.Consumer;
-
 @RequiredArgsConstructor
 public class ToolBarViewBuilder implements Builder<ToolBar> {
     private final MP3Model model;
@@ -25,7 +23,6 @@ public class ToolBarViewBuilder implements Builder<ToolBar> {
     private final Runnable onMoveSongUp;
     private final Runnable onMoveSongDown;
     private final Runnable onMoveSongToBottom;
-    private final Consumer<Integer> onSelectedIndexChanged;
     private final ViewLocalization localization = new ViewLocalization("language.toolbar", LanguageController.getSelectedLocale());
 
     @Override
@@ -70,6 +67,6 @@ public class ToolBarViewBuilder implements Builder<ToolBar> {
     }
 
     private CustomTextField createSearchTextField() {
-        return new SearchTextFieldController(model, onSelectedIndexChanged).getView();
+        return new SearchTextFieldController(model).getView();
     }
 }

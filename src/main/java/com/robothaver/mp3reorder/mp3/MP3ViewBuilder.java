@@ -8,9 +8,11 @@ import com.robothaver.mp3reorder.mp3.controls.menubar.MenuBarController;
 import com.robothaver.mp3reorder.mp3.controls.table.MP3TableViewController;
 import com.robothaver.mp3reorder.mp3.controls.toolbar.ToolBarController;
 import com.robothaver.mp3reorder.mp3.domain.Song;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -40,6 +42,9 @@ public class MP3ViewBuilder implements Builder<Region> {
         statusBar.managedProperty().bind(statusBarEnabled);
 
         baseContainer.getChildren().addAll(menuBar, splitPane, statusBar);
+
+        model.selectedSongIndexProperty().addListener(_ -> selectAndScrollToIndex());
+
         return baseContainer;
     }
 
@@ -71,10 +76,10 @@ public class MP3ViewBuilder implements Builder<Region> {
 
     private VBox createTableControls() {
         VBox tableContainer = new VBox();
-        ToolBar toolBar = new ToolBarController(model, this::selectIndex).getView();
+        ToolBar toolBar = new ToolBarController(model).getView();
         toolBar.setPrefHeight(50);
 
-        mp3FileTableView = new MP3TableViewController(model, this::selectIndex).getView();
+        mp3FileTableView = new MP3TableViewController(model).getView();
         mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((_, _, newValue) -> {
             int index = (int) newValue;
             if (index != -1) {
@@ -88,8 +93,31 @@ public class MP3ViewBuilder implements Builder<Region> {
         return tableContainer;
     }
 
-    public void selectIndex(int index) {
+    private VirtualFlow<IndexedCell<?>> flow;
+
+    public void selectAndScrollToIndex() {
+        int index = model.getSelectedSongIndex();
         mp3FileTableView.getSelectionModel().select(index);
-        //mp3FileTableView.scrollTo(index - 10);
+
+        Platform.runLater(() -> {
+            if (flow == null) {
+                //noinspection unchecked
+                flow = (VirtualFlow<IndexedCell<?>>) mp3FileTableView.lookup(".virtual-flow");
+            }
+
+            if (flow != null && flow.getFirstVisibleCell() != null && flow.getLastVisibleCell() != null) {
+                int firstVisible = flow.getFirstVisibleCell().getIndex();
+                int lastVisible = flow.getLastVisibleCell().getIndex();
+
+                if (index <= firstVisible) {
+                    flow.scrollToTop(index);
+                } else if (index >= lastVisible) {
+                    flow.scrollTo(index);
+                }
+
+            } else {
+                mp3FileTableView.scrollTo(index);
+            }
+        });
     }
 }

@@ -65,7 +65,6 @@ public class SongLoaderImpl implements SongLoader {
 
         if (!model.getSongs().isEmpty()) {
             model.selectedSongIndexProperty().set(0);
-            ((MP3ViewBuilder) viewBuilder).selectIndex(0);
         }
 
         showTrackIssueDialog(trackAssignerResult.getTrackIssue());

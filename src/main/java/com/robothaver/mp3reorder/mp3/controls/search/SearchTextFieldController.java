@@ -4,13 +4,11 @@ import atlantafx.base.controls.CustomTextField;
 import com.robothaver.mp3reorder.core.BaseController;
 import com.robothaver.mp3reorder.mp3.MP3Model;
 
-import java.util.function.Consumer;
-
 public class SearchTextFieldController extends BaseController<CustomTextField> {
 
-    public SearchTextFieldController(MP3Model mp3Model, Consumer<Integer> onSelectedIndexChanged) {
+    public SearchTextFieldController(MP3Model mp3Model) {
         SearchTextFieldModel songSearch = mp3Model.getSongSearch();
-        SearchTextFieldInteractor interactor = new SearchTextFieldInteractor(mp3Model, songSearch, onSelectedIndexChanged);
+        SearchTextFieldInteractor interactor = new SearchTextFieldInteractor(mp3Model, songSearch);
         viewBuilder = new SearchTextFieldViewBuilder(
                 songSearch,
                 interactor::selectPrevious,

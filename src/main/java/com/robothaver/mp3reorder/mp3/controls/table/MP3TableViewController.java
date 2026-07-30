@@ -5,11 +5,9 @@ import com.robothaver.mp3reorder.mp3.MP3Model;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import javafx.scene.control.TableView;
 
-import java.util.function.Consumer;
-
 public class MP3TableViewController extends BaseController<TableView<Song>> {
-    public MP3TableViewController(MP3Model model, Consumer<Integer> onSelectedIndexChanged) {
-        MP3TableViewInteractor interactor = new MP3TableViewInteractor(model, onSelectedIndexChanged);
+    public MP3TableViewController(MP3Model model) {
+        MP3TableViewInteractor interactor = new MP3TableViewInteractor(model);
         viewBuilder = new MP3TableViewBuilder(
                 model.getSongs(),
                 model.getOrderDescending(),
