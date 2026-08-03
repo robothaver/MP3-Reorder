@@ -3,6 +3,7 @@ package com.robothaver.mp3reorder.mp3.controls.table;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
+import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.DragAndDropController;
 import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.DragAndDropControllerImpl;
 import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.TableRowHoverSelectorImpl;
 import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.TableViewScrollAnimatorImpl;
@@ -42,6 +43,7 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
     private final ObjectProperty<VirtualFlow<TableRow<Song>>> virtualFlow = new SimpleObjectProperty<>(null);
 
     private TableView<Song> mp3TableView;
+    private TableViewScrollController scrollController;
     private boolean changedByTable;
 
     @Override
@@ -58,14 +60,12 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         mp3TableView.setEditable(true);
         mp3TableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_NEXT_COLUMN);
         VBox.setVgrow(mp3TableView, javafx.scene.layout.Priority.ALWAYS);
+        Styles.toggleStyleClass(mp3TableView, Styles.BORDERED);
 
-        DragAndDropControllerImpl<Song> dragAndDropController = new DragAndDropControllerImpl<>(mp3TableView, dataFormat, new TableViewScrollAnimatorImpl<>(), new TableRowHoverSelectorImpl<>(mp3TableView));
-        dragAndDropController.enableForTableView();
-        dragAndDropController.setHandler(onMoveSong::accept);
-
-        Platform.runLater(() -> virtualFlow.set((VirtualFlow<TableRow<Song>>) mp3TableView.lookup(".virtual-flow")));
-
-        virtualFlow.bindBidirectional(dragAndDropController.virtualFlowProperty());
+        getVirtualFlow();
+        scrollController = new TableViewScrollControllerImpl(mp3TableView);
+        scrollController.virtualFlowProperty().bind(virtualFlow);
+        DragAndDropController<Song> dragAndDropController = createDragAndDropController();
 
         mp3TableView.setRowFactory(_ -> {
             TableRow<Song> row = new TableRow<>();
@@ -90,7 +90,6 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         columns.add(fileNameColumn);
         columns.add(titleColumn);
         //mp3FileTableView.getColumns().add(playColumn);
-        Styles.toggleStyleClass(mp3TableView, Styles.BORDERED);
 
         return mp3TableView;
     }
@@ -129,24 +128,21 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         return trackColumn;
     }
 
+    private DragAndDropController<Song> createDragAndDropController() {
+        DragAndDropController<Song> dragAndDropController = new DragAndDropControllerImpl<>(mp3TableView, dataFormat, new TableViewScrollAnimatorImpl(), new TableRowHoverSelectorImpl<>());
+        dragAndDropController.enableForTableView();
+        dragAndDropController.setHandler(onMoveSong::accept);
+        dragAndDropController.virtualFlowProperty().bind(virtualFlow);
+        return dragAndDropController;
+    }
+
+    private void getVirtualFlow() {
+        //noinspection unchecked
+        Platform.runLater(() -> virtualFlow.set((VirtualFlow<TableRow<Song>>) mp3TableView.lookup(".virtual-flow")));
+    }
+
     private void selectAndScrollToIndex(int index, TableView<?> tableView) {
         tableView.getSelectionModel().select(index);
-
-        Platform.runLater(() -> {
-            VirtualFlow<TableRow<Song>> flow = virtualFlow.get();
-            if (flow != null && flow.getFirstVisibleCell() != null && flow.getLastVisibleCell() != null) {
-                int firstVisible = flow.getFirstVisibleCell().getIndex();
-                int lastVisible = flow.getLastVisibleCell().getIndex();
-
-                if (index <= firstVisible) {
-                    flow.scrollToTop(index);
-                } else if (index >= lastVisible) {
-                    flow.scrollTo(index);
-                }
-
-            } else {
-                tableView.scrollTo(index);
-            }
-        });
+        scrollController.scrollToIndex(index);
     }
 }

@@ -3,7 +3,6 @@ package com.robothaver.mp3reorder.mp3.controls.table.draganddrop;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.skin.VirtualFlow;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +11,8 @@ import static com.robothaver.mp3reorder.mp3.controls.table.draganddrop.DragAndDr
 
 @Getter
 @Setter
-public class TableViewScrollAnimatorImpl<T> implements TableViewScrollAnimator<T> {
-    private final ObjectProperty<VirtualFlow<TableRow<T>>> virtualFlowProperty = new SimpleObjectProperty<>();
+public class TableViewScrollAnimatorImpl implements TableViewScrollAnimator {
+    private final ObjectProperty<VirtualFlow<?>> virtualFlowProperty = new SimpleObjectProperty<>();
     private final AnimationTimer animationTimer;
     private double pixelsToMove = 300;
     private double scrollDelta;
@@ -34,7 +33,7 @@ public class TableViewScrollAnimatorImpl<T> implements TableViewScrollAnimator<T
     }
 
     @Override
-    public ObjectProperty<VirtualFlow<TableRow<T>>> virtualFlowProperty() {
+    public ObjectProperty<VirtualFlow<?>> virtualFlowProperty() {
         return virtualFlowProperty;
     }
 

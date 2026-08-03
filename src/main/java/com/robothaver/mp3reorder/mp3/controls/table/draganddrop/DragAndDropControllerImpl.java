@@ -10,7 +10,6 @@ import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import lombok.Getter;
-import lombok.Setter;
 
 public class DragAndDropControllerImpl<T> implements DragAndDropController<T> {
     private static final double SCROLL_UP_PERCENTAGE = 0.3;
@@ -18,15 +17,14 @@ public class DragAndDropControllerImpl<T> implements DragAndDropController<T> {
 
     private final TableView<T> tableView;
     private final DataFormat dataFormat;
-    private final TableViewScrollAnimator<T> scrollAnimator;
+    private final TableViewScrollAnimator scrollAnimator;
     private final TableRowHoverSelector<T> hoverSelector;
     private final ObjectProperty<VirtualFlow<TableRow<T>>> virtualFlowProperty = new SimpleObjectProperty<>();
 
     @Getter
-    @Setter
     private DragDroppedHandler handler;
 
-    public DragAndDropControllerImpl(TableView<T> tableView, DataFormat dataFormat, TableViewScrollAnimator<T> scrollAnimator, TableRowHoverSelector<T> hoverSelector) {
+    public DragAndDropControllerImpl(TableView<T> tableView, DataFormat dataFormat, TableViewScrollAnimator scrollAnimator, TableRowHoverSelector<T> hoverSelector) {
         this.tableView = tableView;
         this.dataFormat = dataFormat;
         this.scrollAnimator = scrollAnimator;
@@ -49,7 +47,7 @@ public class DragAndDropControllerImpl<T> implements DragAndDropController<T> {
 
             double mouseY = event.getY();
             double mouseX = event.getX();
-            hoverSelector.setMousePosition(mouseX, mouseY);
+            hoverSelector.setMousePosition(tableView.localToScene(mouseX, mouseY));
             scrollAnimator.setScrollDelta(getScrollDelta(mouseY));
         });
         tableView.setOnDragDropped(event -> {
@@ -95,6 +93,11 @@ public class DragAndDropControllerImpl<T> implements DragAndDropController<T> {
     }
 
     @Override
+    public void setHandler(DragDroppedHandler handler) {
+        this.handler = handler;
+    }
+
+    @Override
     public ObjectProperty<VirtualFlow<TableRow<T>>> virtualFlowProperty() {
         return virtualFlowProperty;
     }
@@ -113,10 +116,5 @@ public class DragAndDropControllerImpl<T> implements DragAndDropController<T> {
             scrollDelta = 0.0;
         }
         return scrollDelta;
-    }
-    @FunctionalInterface
-    public interface DragDroppedHandler {
-
-        void handle(int originalIndex, int newIndex);
     }
 }

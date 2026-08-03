@@ -6,25 +6,21 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.control.IndexedCell;
 import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
 import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 public class TableRowHoverSelectorImpl<T> implements TableRowHoverSelector<T> {
     private final ObjectProperty<VirtualFlow<TableRow<T>>> virtualFlowProperty = new SimpleObjectProperty<>();
-    private final TableView<T> tableView;
     private final AnimationTimer animationTimer;
 
     private TableRow<T> lastHoveredRow;
     private Border oldBorder;
-    private double mouseX;
-    private double mouseY;
+    private Point2D mouseScenePosition;
     private int rowIndexToIgnore = -1;
 
-    public TableRowHoverSelectorImpl(TableView<T> tableView) {
-        this.tableView = tableView;
-        animationTimer = getAnimationTimer();
+    public TableRowHoverSelectorImpl() {
+        this.animationTimer = getAnimationTimer();
     }
 
     @Override
@@ -42,9 +38,8 @@ public class TableRowHoverSelectorImpl<T> implements TableRowHoverSelector<T> {
     }
 
     @Override
-    public void setMousePosition(double x, double y) {
-        mouseX = x;
-        mouseY = y;
+    public void setMousePosition(Point2D mouseScenePosition) {
+        this.mouseScenePosition = mouseScenePosition;
     }
 
     @Override
@@ -66,10 +61,10 @@ public class TableRowHoverSelectorImpl<T> implements TableRowHoverSelector<T> {
                     TableRow<T> row = getRowFromFlow(virtualFlowProperty.get());
 
                     if (row != null && row.getIndex() != rowIndexToIgnore) {
-                            oldBorder = row.getBorder();
-                            BorderStroke stroke = getStroke(row);
-                            row.setBorder(new Border(stroke));
-                        }
+                        oldBorder = row.getBorder();
+                        BorderStroke stroke = getStroke(row);
+                        row.setBorder(new Border(stroke));
+                    }
 
                     lastHoveredRow = row;
                 }
@@ -102,12 +97,11 @@ public class TableRowHoverSelectorImpl<T> implements TableRowHoverSelector<T> {
         IndexedCell<?> last = flow.getLastVisibleCell();
         if (first == null || last == null) return null;
 
-        Point2D scenePt = tableView.localToScene(mouseX, mouseY);
-        if (scenePt == null) return null;
+        if (mouseScenePosition == null) return null;
 
         for (int i = first.getIndex(); i <= last.getIndex(); i++) {
             TableRow<T> row = flow.getCell(i);
-            Point2D localPt = row.sceneToLocal(scenePt);
+            Point2D localPt = row.sceneToLocal(mouseScenePosition);
 
             if (localPt != null && row.contains(localPt)) {
                 return row;
