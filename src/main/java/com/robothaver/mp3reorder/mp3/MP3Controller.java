@@ -15,7 +15,7 @@ public class MP3Controller extends BaseController<Region> {
     public MP3Controller() {
         model = new MP3Model();
         MP3Interactor interactor = new MP3Interactor(model);
-        viewBuilder = new MP3ViewBuilder(model, this::onLoadSongs, interactor::closeDetailsSideMenu);
+        viewBuilder = new MP3ViewBuilder(model, this::onLoadSongs, interactor::closeDetailsSideMenu, interactor::togglePlay);
         songLoader = new SongLoaderImpl(model, viewBuilder);
     }
 

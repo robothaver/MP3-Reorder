@@ -3,16 +3,16 @@ package com.robothaver.mp3reorder.mp3;
 
 import com.robothaver.mp3reorder.mp3.controls.StatusBar;
 import com.robothaver.mp3reorder.mp3.controls.audioplayer.AudioPlayerController;
+import com.robothaver.mp3reorder.mp3.controls.audioplayer.AudioPlayerModel;
 import com.robothaver.mp3reorder.mp3.controls.details.SongDetailsSideMenuViewBuilder;
 import com.robothaver.mp3reorder.mp3.controls.menubar.MenuBarController;
 import com.robothaver.mp3reorder.mp3.controls.table.MP3TableViewController;
+import com.robothaver.mp3reorder.mp3.controls.table.MP3TableViewModel;
 import com.robothaver.mp3reorder.mp3.controls.toolbar.ToolBarController;
-import com.robothaver.mp3reorder.mp3.domain.Song;
 import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TableView;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -20,11 +20,14 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 
+import java.util.function.Consumer;
+
 @RequiredArgsConstructor
 public class MP3ViewBuilder implements Builder<Region> {
     private final MP3Model model;
     private final Runnable onLoadSongs;
     private final Runnable onCloseDetailsMenu;
+    private final Consumer<Integer> onTogglePlay;
 
     @Override
     public Region build() {
@@ -76,10 +79,25 @@ public class MP3ViewBuilder implements Builder<Region> {
         ToolBar toolBar = new ToolBarController(model).getView();
         toolBar.setPrefHeight(50);
 
-        TableView<Song> mp3FileTableView = new MP3TableViewController(model).getView();
+        MP3TableViewController tableViewController = new MP3TableViewController(model.getTrackEditor(), model.getSongs(), onTogglePlay);
+        MP3TableViewModel tableViewModel = tableViewController.getModel();
+        tableViewModel.selectedIndexProperty().bindBidirectional(model.selectedSongIndexProperty());
+        tableViewModel.orderDescendingProperty().bindBidirectional(model.orderDescendingProperty());
+        tableViewModel.songInPlayerProperty().bind(model.songInPlayerProperty());
+        tableViewModel.songPlayingProperty().bind(model.songPlayingProperty());
+
         AudioPlayerController audioPlayerController = new AudioPlayerController();
 
-        tableContainer.getChildren().addAll(toolBar, mp3FileTableView, audioPlayerController.getView());
+        model.songInPlayerProperty().addListener((_, _, selectedSong) -> {
+            if (selectedSong == null) return;
+
+            audioPlayerController.playSong(selectedSong.getFileName(), selectedSong.getArtist(), selectedSong.getAlbumImage(), selectedSong.getPath().toString());
+        });
+
+        AudioPlayerModel audioPlayerModel = audioPlayerController.getModel();
+        audioPlayerModel.playingProperty().bindBidirectional(model.songPlayingProperty());
+
+        tableContainer.getChildren().addAll(toolBar, tableViewController.getView(), audioPlayerController.getView());
         return tableContainer;
     }
 }

@@ -3,7 +3,6 @@ package com.robothaver.mp3reorder.mp3.controls.toolbar;
 import com.robothaver.mp3reorder.mp3.MP3Model;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import com.robothaver.mp3reorder.mp3.song.track.editor.MP3TrackEditor;
-import com.robothaver.mp3reorder.mp3.song.track.editor.MP3TrackEditorImpl;
 import javafx.collections.ObservableList;
 
 public class ToolBarInteractor {
@@ -12,7 +11,7 @@ public class ToolBarInteractor {
 
     public ToolBarInteractor(MP3Model model) {
         this.model = model;
-        this.mp3TrackEditor = new MP3TrackEditorImpl(model);
+        this.mp3TrackEditor = model.getTrackEditor();
     }
 
     public void moveSelectedSongToTop() {

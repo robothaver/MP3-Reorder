@@ -4,30 +4,32 @@ import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.dialog.option.OptionDialogMessage;
-import com.robothaver.mp3reorder.mp3.MP3Model;
 import com.robothaver.mp3reorder.mp3.domain.Song;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public class MP3TrackEditorImpl implements MP3TrackEditor {
-    private final MP3Model model;
-    private final List<Song> songs;
     private final ViewLocalization localization = new ViewLocalization("language.track_editor", LanguageController.getSelectedLocale());
+    private final IntegerProperty selectedSongIndexProperty;
+    private final BooleanProperty orderDescendingProperty;
+    private final ObservableList<Song> songs;
+
     private Integer selectedSongCurrentTrack;
 
-    public MP3TrackEditorImpl(MP3Model model) {
-        this.model = model;
-        this.songs = model.getSongs();
-    }
 
     @Override
     public void setNewTrackForSong(int currentTrack, int newTrack) {
         selectedSongCurrentTrack = currentTrack;
 
         Song conflictingSong = tryGetConflictingSong(newTrack);
-        Song selectedSong = songs.get(model.getSelectedSongIndex());
+        Song selectedSong = songs.get(selectedSongIndexProperty.get());
         if (conflictingSong != null) {
             // There is a song with the same track
             TrackConflictSolutions solution = getTrackConflictSolution();
@@ -69,7 +71,7 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
 
     private Song tryGetConflictingSong(int track) {
         for (int i = 0; i < songs.size(); i++) {
-            if (i != model.getSelectedSongIndex() && songs.get(i).getTrack() == track) {
+            if (i != selectedSongIndexProperty.get() && songs.get(i).getTrack() == track) {
                 return songs.get(i);
             }
         }
@@ -119,12 +121,12 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         int largerIndex = Math.max(selectedSongIndex, conflictingSongIndex);
 
         for (int i = smallerIndex; i <= largerIndex; i++) {
-            int track = model.getOrderDescending().get() ? songs.size() - i : i + 1;
+            int track = orderDescendingProperty.get() ? songs.size() - i : i + 1;
             if (track != songs.get(i).getTrack()) {
                 songs.get(i).trackProperty().set(track);
             }
         }
-        model.selectedSongIndexProperty().setValue(conflictingSongIndex);
+        selectedSongIndexProperty.setValue(conflictingSongIndex);
     }
 
     private void switchTracksForSongs(Song selectedSong, Song conflictingSong) {
@@ -133,6 +135,6 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         int selectedSongIndex = songs.indexOf(selectedSong);
         int conflictingSongIndex = songs.indexOf(conflictingSong);
         swapSongsAndTracks(selectedSongIndex, conflictingSongIndex);
-        model.selectedSongIndexProperty().set(conflictingSongIndex);
+        selectedSongIndexProperty.set(conflictingSongIndex);
     }
 }
