@@ -3,9 +3,6 @@ package com.robothaver.mp3reorder.mp3.controls.table;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
-import com.robothaver.mp3reorder.core.utils.NodeUtils;
-import com.robothaver.mp3reorder.core.utils.ResourceHelper;
-import com.robothaver.mp3reorder.mp3.controls.ThemedIconButton;
 import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.DragAndDropController;
 import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.DragAndDropControllerImpl;
 import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.TableRowHoverSelectorImpl;
@@ -13,28 +10,29 @@ import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.TableViewScrollA
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.skin.VirtualFlow;
-import javafx.scene.image.Image;
 import javafx.scene.input.DataFormat;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class MP3TableViewBuilder implements Builder<TableView<Song>> {
     private static final DataFormat dataFormat = new DataFormat("MP3Reorder/MP3TableView/Songs");
-    private static final Image PLAY_ICON = ResourceHelper.loadImage("play.png");
-    private static final Image PAUSE_ICON = ResourceHelper.loadImage("pause.png");
 
     private final MP3TableViewModel model;
     private final BiConsumer<Integer, Integer> onTrackChanged;
@@ -69,7 +67,18 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         DragAndDropController<Song> dragAndDropController = createDragAndDropController();
 
         mp3TableView.setRowFactory(_ -> {
-            TableRow<Song> row = new TableRow<>();
+            TableRow<Song> row = new TableRow<>() {
+                {
+                    StringBinding styleBinding = Bindings.createStringBinding(() -> {
+                        if (Objects.equals(model.getSongInPlayer(), getItem())) {
+                            return "-fx-background-color: -color-accent-muted";
+                        }
+                        return "";
+                    }, model.songInPlayerProperty(), model.getSongs(), itemProperty());
+
+                    styleProperty().bind(styleBinding);
+                }
+            };
             row.setOnMouseEntered(_ -> model.setHoveredIndex(row.getIndex()));
             row.setOnMouseExited(_ -> model.setHoveredIndex(-1));
             dragAndDropController.enableForTableRow(row);
@@ -91,40 +100,7 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         TableColumn<Song, Void> playColumn = new TableColumn<>();
         playColumn.setMaxWidth(50);
         playColumn.setSortable(false);
-        playColumn.setCellFactory(_ -> {
-            TableCell<Song, Void> cell = new TableCell<>();
-            NodeUtils.setNodeVisible(cell, false);
-            ThemedIconButton button = new ThemedIconButton("", "play.png", 16);
-            button.getStyleClass().addAll(Styles.ACCENT, Styles.BUTTON_CIRCLE);
-            button.setOnAction(_ -> onTogglePlay.accept(cell.getTableRow().getIndex()));
-
-            model.songPlayingProperty().addListener((_, _, isPlaying) -> {
-                if (cell.getTableRow() == null) return;
-                int rowIndex = cell.getTableRow().getIndex();
-
-                boolean isInPlayer = model.getSongInPlayer() != null && rowIndex == model.getSongs().indexOf(model.getSongInPlayer());
-                Image icon;
-                if (isInPlayer) {
-                    icon = isPlaying ? PAUSE_ICON : PLAY_ICON;
-                } else {
-                    icon = PLAY_ICON;
-                }
-                button.getIconLabel().getImageView().setImage(icon);
-            });
-
-            BooleanBinding visibleBinding = Bindings.createBooleanBinding(() -> {
-                if (cell.getTableRow() == null) return false;
-                int rowIndex = cell.getTableRow().getIndex();
-
-                boolean isInPlayer = model.getSongInPlayer() != null && rowIndex == model.getSongs().indexOf(model.getSongInPlayer());
-                return rowIndex == model.getHoveredIndex() || isInPlayer;
-            }, model.songInPlayerProperty(), model.hoveredIndexProperty());
-            cell.managedProperty().bind(visibleBinding);
-            cell.visibleProperty().bind(visibleBinding);
-
-            cell.setGraphic(button);
-            return cell;
-        });
+        playColumn.setCellFactory(_ -> new PlayTableCell(model, onTogglePlay));
 
         ObservableList<TableColumn<Song, ?>> columns = mp3TableView.getColumns();
         columns.add(trackColumn);

@@ -12,7 +12,7 @@ public class MP3TableViewModel {
     private final IntegerProperty hoveredIndex = new SimpleIntegerProperty();
     private final BooleanProperty orderDescending = new SimpleBooleanProperty(false);
     private final BooleanProperty songPlaying = new SimpleBooleanProperty(false);
-    private final ObjectProperty<Song> songInPlayer = new SimpleObjectProperty<>();
+    private final ObjectProperty<Song> songInPlayer = new SimpleObjectProperty<>(null);
 
     public ObservableList<Song> getSongs() {
         return songs;
