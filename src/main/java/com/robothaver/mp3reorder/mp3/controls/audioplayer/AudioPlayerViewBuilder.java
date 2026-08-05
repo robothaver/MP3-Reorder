@@ -99,6 +99,13 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
 
         Button previousButton = new ThemedIconButton(null, "skip-back.png", 18);
         previousButton.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_CIRCLE);
+        previousButton.setOnAction(_ -> {
+            Runnable onPlayPrevious = model.getOnPlayPrevious();
+            if (onPlayPrevious != null) {
+                onPlayPrevious.run();
+            }
+        });
+
         ThemedIconButton playButton = new ThemedIconButton(null, "play.png", 20);
         playButton.setPrefSize(36, 36);
         playButton.getIconLabel().setStyle("-fx-text-fill: -color-fg-emphasis");
@@ -110,6 +117,12 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
 
         Button nextButton = new ThemedIconButton(null, "skip-forward.png", 18);
         nextButton.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_CIRCLE);
+        nextButton.setOnAction(_ -> {
+            Runnable onPlayNext = model.getOnPlayNext();
+            if (onPlayNext != null) {
+                onPlayNext.run();
+            }
+        });
 
         buttonHBox.getChildren().addAll(previousButton, playButton, nextButton);
 
@@ -181,6 +194,9 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
             String artist = model.getArtist();
             return artist == null ? localization.getForKey("no_artist") : artist;
         }, model.artistProperty()));
+        Tooltip artitsTooltip = new Tooltip();
+        artitsTooltip.textProperty().bind(artistLabel.textProperty());
+        artistLabel.setTooltip(artitsTooltip);
 
         textVBox.getChildren().addAll(songNameLabel, artistLabel);
         root.getChildren().addAll(imageView, textVBox);

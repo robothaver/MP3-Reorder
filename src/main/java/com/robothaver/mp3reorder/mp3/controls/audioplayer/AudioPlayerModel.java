@@ -17,135 +17,154 @@ public class AudioPlayerModel {
     private final BooleanProperty muted = new SimpleBooleanProperty(true);
     private final DoubleProperty volume = new SimpleDoubleProperty(0.0);
 
+    private Runnable onPlayNext;
+    private Runnable onPlayPrevious;
+
     public String getSongName() {
         return songName.get();
-    }
-
-    public void setSongName(String songName) {
-        this.songName.set(songName);
     }
 
     public StringProperty songNameProperty() {
         return songName;
     }
 
-    public String getArtist() {
-        return artist.get();
+    public void setSongName(String songName) {
+        this.songName.set(songName);
     }
 
-    public void setArtist(String artist) {
-        this.artist.set(artist);
+    public String getArtist() {
+        return artist.get();
     }
 
     public StringProperty artistProperty() {
         return artist;
     }
 
-    public byte[] getCoverImageBytes() {
-        return coverImageBytes.get();
+    public void setArtist(String artist) {
+        this.artist.set(artist);
     }
 
-    public void setCoverImageBytes(byte[] coverImageBytes) {
-        this.coverImageBytes.set(coverImageBytes);
+    public byte[] getCoverImageBytes() {
+        return coverImageBytes.get();
     }
 
     public ObjectProperty<byte[]> coverImageBytesProperty() {
         return coverImageBytes;
     }
 
-    public String getSongPathProperty() {
-        return songPathProperty.get();
+    public void setCoverImageBytes(byte[] coverImageBytes) {
+        this.coverImageBytes.set(coverImageBytes);
     }
 
-    public void setSongPathProperty(String songPathProperty) {
-        this.songPathProperty.set(songPathProperty);
+    public String getSongPathProperty() {
+        return songPathProperty.get();
     }
 
     public StringProperty songPathPropertyProperty() {
         return songPathProperty;
     }
 
-    public double getTotalTimeSeconds() {
-        return totalTimeSeconds.get();
+    public void setSongPathProperty(String songPathProperty) {
+        this.songPathProperty.set(songPathProperty);
     }
 
-    public void setTotalTimeSeconds(double totalTimeSeconds) {
-        this.totalTimeSeconds.set(totalTimeSeconds);
+    public double getTotalTimeSeconds() {
+        return totalTimeSeconds.get();
     }
 
     public DoubleProperty totalTimeSecondsProperty() {
         return totalTimeSeconds;
     }
 
-    public double getCurrentTimeSeconds() {
-        return currentTimeSeconds.get();
+    public void setTotalTimeSeconds(double totalTimeSeconds) {
+        this.totalTimeSeconds.set(totalTimeSeconds);
     }
 
-    public void setCurrentTimeSeconds(double currentTimeSeconds) {
-        this.currentTimeSeconds.set(currentTimeSeconds);
+    public double getCurrentTimeSeconds() {
+        return currentTimeSeconds.get();
     }
 
     public DoubleProperty currentTimeSecondsProperty() {
         return currentTimeSeconds;
     }
 
-    public String getCurrentTimeText() {
-        return currentTimeText.get();
+    public void setCurrentTimeSeconds(double currentTimeSeconds) {
+        this.currentTimeSeconds.set(currentTimeSeconds);
     }
 
-    public void setCurrentTimeText(String currentTimeText) {
-        this.currentTimeText.set(currentTimeText);
+    public String getCurrentTimeText() {
+        return currentTimeText.get();
     }
 
     public StringProperty currentTimeTextProperty() {
         return currentTimeText;
     }
 
-    public String getTotalTimeText() {
-        return totalTimeText.get();
+    public void setCurrentTimeText(String currentTimeText) {
+        this.currentTimeText.set(currentTimeText);
     }
 
-    public void setTotalTimeText(String totalTimeText) {
-        this.totalTimeText.set(totalTimeText);
+    public String getTotalTimeText() {
+        return totalTimeText.get();
     }
 
     public StringProperty totalTimeTextProperty() {
         return totalTimeText;
     }
 
-    public boolean isPlaying() {
-        return playing.get();
+    public void setTotalTimeText(String totalTimeText) {
+        this.totalTimeText.set(totalTimeText);
     }
 
-    public void setPlaying(boolean playing) {
-        this.playing.set(playing);
+    public boolean isPlaying() {
+        return playing.get();
     }
 
     public BooleanProperty playingProperty() {
         return playing;
     }
 
-    public boolean isMuted() {
-        return muted.get();
+    public void setPlaying(boolean playing) {
+        this.playing.set(playing);
     }
 
-    public void setMuted(boolean muted) {
-        this.muted.set(muted);
+    public boolean isMuted() {
+        return muted.get();
     }
 
     public BooleanProperty mutedProperty() {
         return muted;
     }
 
+    public void setMuted(boolean muted) {
+        this.muted.set(muted);
+    }
+
     public double getVolume() {
         return volume.get();
+    }
+
+    public DoubleProperty volumeProperty() {
+        return volume;
     }
 
     public void setVolume(double volume) {
         this.volume.set(volume);
     }
 
-    public DoubleProperty volumeProperty() {
-        return volume;
+    public Runnable getOnPlayNext() {
+        return onPlayNext;
+    }
+
+    public void setOnPlayNext(Runnable onPlayNext) {
+        this.onPlayNext = onPlayNext;
+    }
+
+    public Runnable getOnPlayPrevious() {
+        return onPlayPrevious;
+    }
+
+    public void setOnPlayPrevious(Runnable onPlayPrevious) {
+        this.onPlayPrevious = onPlayPrevious;
     }
 }

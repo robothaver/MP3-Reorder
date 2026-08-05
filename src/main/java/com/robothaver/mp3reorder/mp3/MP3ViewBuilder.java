@@ -27,6 +27,8 @@ public class MP3ViewBuilder implements Builder<Region> {
     private final MP3Model model;
     private final Runnable onLoadSongs;
     private final Runnable onCloseDetailsMenu;
+    private final Runnable onPlayNext;
+    private final Runnable onPlayPrevious;
     private final Consumer<Integer> onTogglePlay;
 
     @Override
@@ -90,12 +92,13 @@ public class MP3ViewBuilder implements Builder<Region> {
 
         model.songInPlayerProperty().addListener((_, _, selectedSong) -> {
             if (selectedSong == null) return;
-
             audioPlayerController.playSong(selectedSong.getFileName(), selectedSong.getArtist(), selectedSong.getAlbumImage(), selectedSong.getPath().toString());
         });
 
         AudioPlayerModel audioPlayerModel = audioPlayerController.getModel();
         audioPlayerModel.playingProperty().bindBidirectional(model.songPlayingProperty());
+        audioPlayerModel.setOnPlayNext(onPlayNext);
+        audioPlayerModel.setOnPlayPrevious(onPlayPrevious);
 
         tableContainer.getChildren().addAll(toolBar, tableViewController.getView(), audioPlayerController.getView());
         return tableContainer;
