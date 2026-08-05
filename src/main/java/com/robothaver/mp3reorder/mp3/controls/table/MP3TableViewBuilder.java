@@ -3,14 +3,15 @@ package com.robothaver.mp3reorder.mp3.controls.table;
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
+import com.robothaver.mp3reorder.mp3.controls.table.cell.EditableTableCell;
+import com.robothaver.mp3reorder.mp3.controls.table.cell.IntegerStringConverter;
+import com.robothaver.mp3reorder.mp3.controls.table.cell.PlayTableCell;
 import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.DragAndDropController;
 import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.DragAndDropControllerImpl;
 import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.TableRowHoverSelectorImpl;
 import com.robothaver.mp3reorder.mp3.controls.table.draganddrop.TableViewScrollAnimatorImpl;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -26,7 +27,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -67,20 +67,7 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         DragAndDropController<Song> dragAndDropController = createDragAndDropController();
 
         mp3TableView.setRowFactory(_ -> {
-            TableRow<Song> row = new TableRow<>() {
-                {
-                    StringBinding styleBinding = Bindings.createStringBinding(() -> {
-                        if (Objects.equals(model.getSongInPlayer(), getItem())) {
-                            return "-fx-background-color: -color-accent-muted";
-                        }
-                        return "";
-                    }, model.songInPlayerProperty(), model.getSongs(), itemProperty());
-
-                    styleProperty().bind(styleBinding);
-                }
-            };
-            row.setOnMouseEntered(_ -> model.setHoveredIndex(row.getIndex()));
-            row.setOnMouseExited(_ -> model.setHoveredIndex(-1));
+            SongTableRow row = new SongTableRow(model);
             dragAndDropController.enableForTableRow(row);
             return row;
         });

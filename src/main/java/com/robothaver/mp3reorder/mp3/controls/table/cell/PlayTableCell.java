@@ -1,9 +1,10 @@
-package com.robothaver.mp3reorder.mp3.controls.table;
+package com.robothaver.mp3reorder.mp3.controls.table.cell;
 
 import atlantafx.base.theme.Styles;
 import com.robothaver.mp3reorder.core.utils.NodeUtils;
 import com.robothaver.mp3reorder.core.utils.ResourceHelper;
 import com.robothaver.mp3reorder.mp3.controls.ThemedIconButton;
+import com.robothaver.mp3reorder.mp3.controls.table.MP3TableViewModel;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
