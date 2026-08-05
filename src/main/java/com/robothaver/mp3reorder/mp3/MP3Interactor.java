@@ -60,4 +60,11 @@ public class MP3Interactor {
             mp3Model.setScrollToSelected(!mp3Model.getScrollToSelected());
         }
     }
+
+    public void onPlayPressedWhenEmpty() {
+        int index = mp3Model.getSelectedSongIndex();
+        if (index == -1) return;
+
+        mp3Model.setSongInPlayer(mp3Model.getSongs().get(index));
+    }
 }

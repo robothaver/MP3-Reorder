@@ -20,7 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 @RequiredArgsConstructor
 public class MP3ViewBuilder implements Builder<Region> {
@@ -30,7 +30,8 @@ public class MP3ViewBuilder implements Builder<Region> {
     private final Runnable onPlayNext;
     private final Runnable onPlayPrevious;
     private final Runnable onScrollToPlaying;
-    private final Consumer<Integer> onTogglePlay;
+    private final Runnable onPlayPressedWhenEmpty;
+    private final IntConsumer onTogglePlay;
 
     @Override
     public Region build() {
@@ -82,19 +83,23 @@ public class MP3ViewBuilder implements Builder<Region> {
         ToolBar toolBar = new ToolBarController(model).getView();
         toolBar.setPrefHeight(50);
 
-        MP3TableViewController tableViewController = new MP3TableViewController(model.getTrackEditor(), model.getSongs(), onTogglePlay);
+        MP3TableViewController tableViewController = new MP3TableViewController(model.getTrackEditor(), model.getSongs());
         MP3TableViewModel tableViewModel = tableViewController.getModel();
         tableViewModel.selectedIndexProperty().bindBidirectional(model.selectedSongIndexProperty());
         tableViewModel.orderDescendingProperty().bindBidirectional(model.orderDescendingProperty());
         tableViewModel.songInPlayerProperty().bind(model.songInPlayerProperty());
         tableViewModel.songPlayingProperty().bind(model.songPlayingProperty());
         tableViewModel.scrollToSelectedProperty().bind(model.scrollToSelectedProperty());
+        tableViewModel.setOnTogglePlay(onTogglePlay);
 
         AudioPlayerController audioPlayerController = new AudioPlayerController();
 
         model.songInPlayerProperty().addListener((_, _, selectedSong) -> {
-            if (selectedSong == null) return;
-            audioPlayerController.playSong(selectedSong.getFileName(), selectedSong.getArtist(), selectedSong.getAlbumImage(), selectedSong.getPath().toString());
+            if (selectedSong == null) {
+                audioPlayerController.reset();
+            } else {
+                audioPlayerController.playSong(selectedSong.getFileName(), selectedSong.getArtist(), selectedSong.getAlbumImage(), selectedSong.getPath().toString());
+            }
         });
 
         AudioPlayerModel audioPlayerModel = audioPlayerController.getModel();
@@ -102,6 +107,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         audioPlayerModel.setOnPlayNext(onPlayNext);
         audioPlayerModel.setOnPlayPrevious(onPlayPrevious);
         audioPlayerModel.setOnTitleClicked(onScrollToPlaying);
+        audioPlayerModel.setOnPlayPressedWhenEmpty(onPlayPressedWhenEmpty);
 
         tableContainer.getChildren().addAll(toolBar, tableViewController.getView(), audioPlayerController.getView());
         return tableContainer;

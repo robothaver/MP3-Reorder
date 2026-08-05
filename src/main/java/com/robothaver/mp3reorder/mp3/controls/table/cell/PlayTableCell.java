@@ -15,23 +15,20 @@ import javafx.scene.control.TableRow;
 import javafx.scene.image.Image;
 
 import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 public class PlayTableCell extends TableCell<Song, Void> {
     private static final Image PLAY_ICON = ResourceHelper.loadImage("play.png");
     private static final Image PAUSE_ICON = ResourceHelper.loadImage("pause.png");
 
     private final MP3TableViewModel model;
-    private final Consumer<Integer> onTogglePlay;
-
     private final ObservableValue<Song> cellSong;
     private final BooleanBinding isInPlayerBinding;
     private final ObjectBinding<Image> imageBinding;
     private final BooleanBinding visibilityBinding;
 
-    public PlayTableCell(MP3TableViewModel model, Consumer<Integer> onTogglePlay) {
+    public PlayTableCell(MP3TableViewModel model) {
         this.model = model;
-        this.onTogglePlay = onTogglePlay;
         this.cellSong = tableRowProperty().flatMap(TableRow::itemProperty);
         this.isInPlayerBinding = Bindings.createBooleanBinding(
                 () -> Objects.equals(cellSong.getValue(), model.getSongInPlayer()),
@@ -53,7 +50,10 @@ public class PlayTableCell extends TableCell<Song, Void> {
     private ThemedIconButton createIconButton() {
         ThemedIconButton iconButton = new ThemedIconButton(PLAY_ICON, 16);
         iconButton.getStyleClass().addAll(Styles.ACCENT, Styles.BUTTON_CIRCLE);
-        iconButton.setOnAction(_ -> onTogglePlay.accept(getIndex()));
+        iconButton.setOnAction(_ -> {
+            IntConsumer onTogglePlay = model.getOnTogglePlay();
+            if (onTogglePlay != null) onTogglePlay.accept(getIndex());
+        });
         iconButton.getIconLabel().getImageView().imageProperty().bind(imageBinding);
 
         isInPlayerBinding.addListener((_, _, isInPlayer) -> {

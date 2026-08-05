@@ -5,6 +5,8 @@ import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import lombok.RequiredArgsConstructor;
 
+import java.util.function.IntConsumer;
+
 @RequiredArgsConstructor
 public class MP3TableViewModel {
     private final ObservableList<Song> songs;
@@ -14,6 +16,8 @@ public class MP3TableViewModel {
     private final BooleanProperty songPlaying = new SimpleBooleanProperty(false);
     private final BooleanProperty scrollToSelected = new SimpleBooleanProperty(false);
     private final ObjectProperty<Song> songInPlayer = new SimpleObjectProperty<>(null);
+
+    private IntConsumer onTogglePlay;
 
     public ObservableList<Song> getSongs() {
         return songs;
@@ -67,7 +71,7 @@ public class MP3TableViewModel {
         this.songPlaying.set(songPlaying);
     }
 
-    public boolean getScrollToSelected() {
+    public boolean isScrollToSelected() {
         return scrollToSelected.get();
     }
 
@@ -89,5 +93,13 @@ public class MP3TableViewModel {
 
     public void setSongInPlayer(Song songInPlayer) {
         this.songInPlayer.set(songInPlayer);
+    }
+
+    public IntConsumer getOnTogglePlay() {
+        return onTogglePlay;
+    }
+
+    public void setOnTogglePlay(IntConsumer onTogglePlay) {
+        this.onTogglePlay = onTogglePlay;
     }
 }

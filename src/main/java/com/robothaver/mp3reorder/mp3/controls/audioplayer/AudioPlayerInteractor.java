@@ -23,6 +23,18 @@ public class AudioPlayerInteractor {
                 onPlayingStateChanged());
     }
 
+    public void reset() {
+        if (mediaPlayer != null) mediaPlayer.dispose();
+        model.setSongName(null);
+        model.setArtist(null);
+        model.setCoverImageBytes(null);
+        model.setCurrentTimeSeconds(0);
+        model.setTotalTimeSeconds(0);
+        model.setCurrentTimeText(null);
+        model.setTotalTimeText(null);
+        model.setPlaying(false);
+    }
+
     public void playSong(String songName, String artis, byte[] coverImage, String path) {
         model.setSongName(songName);
         model.setArtist(artis);
@@ -50,9 +62,12 @@ public class AudioPlayerInteractor {
     }
 
     public void onTogglePlay() {
-        if (mediaPlayer == null) return;
-
-        model.setPlaying(!model.isPlaying());
+        if (mediaPlayer == null) {
+            Runnable onPlayPressedWhenEmpty = model.getOnPlayPressedWhenEmpty();
+            if (onPlayPressedWhenEmpty != null) onPlayPressedWhenEmpty.run();
+        } else {
+            model.setPlaying(!model.isPlaying());
+        }
     }
 
     public void toggleMute() {

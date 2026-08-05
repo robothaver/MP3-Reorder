@@ -8,6 +8,7 @@ import com.robothaver.mp3reorder.core.utils.ResourceHelper;
 import com.robothaver.mp3reorder.mp3.controls.RoundedImageView;
 import com.robothaver.mp3reorder.mp3.controls.ThemedIconButton;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -131,8 +132,7 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
         progressHBox.setSpacing(10);
         progressHBox.setAlignment(Pos.CENTER);
 
-        Label currentTimeLabel = new Label("0:00");
-        currentTimeLabel.textProperty().bind(model.currentTimeTextProperty());
+        Label currentTimeLabel = createTimeLabel(model.currentTimeTextProperty());
 
         Slider playTrackSlider = createHoverSlider();
         model.currentTimeSecondsProperty().addListener((_, _, newValue) -> {
@@ -149,13 +149,21 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
         playTrackSlider.setMin(0.0);
         playTrackSlider.maxProperty().bind(model.totalTimeSecondsProperty());
 
-        Label totalTimeLabel = new Label("0:00");
-        totalTimeLabel.textProperty().bind(model.totalTimeTextProperty());
+        Label totalTimeLabel = createTimeLabel(model.totalTimeTextProperty());
 
         progressHBox.getChildren().addAll(currentTimeLabel, playTrackSlider, totalTimeLabel);
 
         root.getChildren().addAll(buttonHBox, progressHBox);
         return root;
+    }
+
+    private Label createTimeLabel(StringProperty textProperty) {
+        Label timeLabel = new Label("00:00");
+        textProperty.addListener((_, _, newText) -> {
+            if (newText == null) newText = "00:00";
+            timeLabel.setText(newText);
+        });
+        return timeLabel;
     }
 
     private Slider createHoverSlider() {

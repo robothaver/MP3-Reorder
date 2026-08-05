@@ -28,7 +28,6 @@ import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class MP3TableViewBuilder implements Builder<TableView<Song>> {
@@ -38,7 +37,6 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
     private final BiConsumer<Integer, Integer> onTrackChanged;
     private final BiConsumer<String, String> onFileRenamed;
     private final BiConsumer<Integer, Integer> onMoveSong;
-    private final Consumer<Integer> onTogglePlay;
     private final ViewLocalization localization = new ViewLocalization("language.table", LanguageController.getSelectedLocale());
 
     private final ObjectProperty<VirtualFlow<TableRow<Song>>> virtualFlow = new SimpleObjectProperty<>(null);
@@ -89,7 +87,7 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         TableColumn<Song, Void> playColumn = new TableColumn<>();
         playColumn.setMaxWidth(50);
         playColumn.setSortable(false);
-        playColumn.setCellFactory(_ -> new PlayTableCell(model, onTogglePlay));
+        playColumn.setCellFactory(_ -> new PlayTableCell(model));
 
         ObservableList<TableColumn<Song, ?>> columns = mp3TableView.getColumns();
         columns.add(trackColumn);

@@ -19,4 +19,8 @@ public class AudioPlayerController extends BaseController<StackPane> {
     public void playSong(String title, String artis, byte[] coverImage, String path) {
         interactor.playSong(title, artis, coverImage, path);
     }
+
+    public void reset() {
+        interactor.reset();
+    }
 }
