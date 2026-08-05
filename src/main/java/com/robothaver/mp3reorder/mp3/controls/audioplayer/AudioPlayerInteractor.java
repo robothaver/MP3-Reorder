@@ -74,15 +74,12 @@ public class AudioPlayerInteractor {
         boolean muted = !model.isMuted();
         model.setMuted(muted);
         if (muted) selectedVolume = model.getVolume();
-        model.setVolume(muted ? 0 : selectedVolume);
+        double targetVolume = (selectedVolume == 0) ? 1 : selectedVolume;
+        model.setVolume(muted ? 0 : targetVolume);
     }
 
     public void onVolumeChanged() {
-        boolean muted = model.isMuted();
-        double volume = model.getVolume();
-        if (muted && volume > 0) {
-            model.setMuted(false);
-        }
+        model.setMuted(model.getVolume() == 0);
     }
 
     public void onSeek(double seconds) {

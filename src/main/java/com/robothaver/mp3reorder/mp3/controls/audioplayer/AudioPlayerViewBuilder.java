@@ -70,7 +70,7 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
         root.setPadding(new Insets(10));
         root.setMaxWidth(Region.USE_PREF_SIZE);
 
-        ThemedIconButton muteButton = new ThemedIconButton(null, "volume-1.png", 18);
+        ThemedIconButton muteButton = new ThemedIconButton(model.isMuted() ? MUTED_ICON : VOLUME_ICON, 18);
         muteButton.setPrefSize(24, 24);
         muteButton.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_CIRCLE);
         muteButton.setOnAction(_ -> onMutePressed.run());
@@ -99,7 +99,7 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
         buttonHBox.setAlignment(Pos.CENTER);
         buttonHBox.setSpacing(10);
 
-        Button previousButton = new ThemedIconButton(null, "skip-back.png", 18);
+        Button previousButton = new ThemedIconButton("skip-back.png", 18);
         previousButton.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_CIRCLE);
         previousButton.setOnAction(_ -> {
             Runnable onPlayPrevious = model.getOnPlayPrevious();
@@ -108,7 +108,7 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
             }
         });
 
-        ThemedIconButton playButton = new ThemedIconButton(null, "play.png", 20);
+        ThemedIconButton playButton = new ThemedIconButton("play.png", 20);
         playButton.setPrefSize(36, 36);
         playButton.getIconLabel().setStyle("-fx-text-fill: -color-fg-emphasis");
         playButton.getStyleClass().addAll(Styles.BUTTON_CIRCLE, Styles.ACCENT);
@@ -117,7 +117,7 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
         model.playingProperty().addListener((_, _, isPlaying) ->
                 playButton.getIconLabel().getImageView().setImage(isPlaying ? STOP_ICON : PLAY_ICON));
 
-        Button nextButton = new ThemedIconButton(null, "skip-forward.png", 18);
+        Button nextButton = new ThemedIconButton("skip-forward.png", 18);
         nextButton.getStyleClass().addAll(Styles.FLAT, Styles.BUTTON_CIRCLE);
         nextButton.setOnAction(_ -> {
             Runnable onPlayNext = model.getOnPlayNext();
