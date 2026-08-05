@@ -24,6 +24,7 @@ public class MP3TableViewInteractor {
     }
 
     public void onSongDragged(int originalIndex, int newIndex) {
+        model.setHoveredIndex(newIndex);
         mp3TrackEditor.insertSong(originalIndex, newIndex);
     }
 

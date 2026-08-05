@@ -29,7 +29,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
     private final MP3Model mp3Model;
-    private final ViewLocalization localization = new ViewLocalization("language.detailsmenu", LanguageController.getSelectedLocale());
+    private final ViewLocalization localization = new ViewLocalization("language.details_menu", LanguageController.getSelectedLocale());
     private final Runnable onClosePressed;
 
     public SongDetailsSideMenuViewBuilder(MP3Model mp3Model, Runnable onClosePressed) {

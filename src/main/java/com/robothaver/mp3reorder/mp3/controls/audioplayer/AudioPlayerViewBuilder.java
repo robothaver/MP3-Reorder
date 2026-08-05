@@ -2,6 +2,8 @@ package com.robothaver.mp3reorder.mp3.controls.audioplayer;
 
 import atlantafx.base.controls.ProgressSliderSkin;
 import atlantafx.base.theme.Styles;
+import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.core.utils.ResourceHelper;
 import com.robothaver.mp3reorder.mp3.controls.RoundedImageView;
 import com.robothaver.mp3reorder.mp3.controls.ThemedIconButton;
@@ -11,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.util.Builder;
@@ -30,6 +33,7 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
     private final Runnable onMutePressed;
     private final Runnable onVolumeChanged;
     private final Consumer<Double> onSeek;
+    private final ViewLocalization localization = new ViewLocalization("language.audio_player", LanguageController.getSelectedLocale());
 
     @Override
     public StackPane build() {
@@ -165,14 +169,17 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
         Label songNameLabel = new Label();
         songNameLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             String songName = model.getSongName();
-            return songName == null ? "No song selected" : songName;
+            return songName == null ? localization.getForKey("no_song_selected") : songName;
         }, model.songNameProperty()));
         songNameLabel.getStyleClass().add(Styles.TEXT_BOLD);
+        Tooltip songNameTooltip = new Tooltip();
+        songNameTooltip.textProperty().bind(songNameLabel.textProperty());
+        songNameLabel.setTooltip(songNameTooltip);
 
         Label artistLabel = new Label();
         artistLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             String artist = model.getArtist();
-            return artist == null ? "Artist unavailable" : artist;
+            return artist == null ? localization.getForKey("no_artist") : artist;
         }, model.artistProperty()));
 
         textVBox.getChildren().addAll(songNameLabel, artistLabel);
