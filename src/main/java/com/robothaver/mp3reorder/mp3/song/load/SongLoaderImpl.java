@@ -8,7 +8,6 @@ import com.robothaver.mp3reorder.dialog.error.ErrorListAlertMessage;
 import com.robothaver.mp3reorder.dialog.progress.ProgressDialogState;
 import com.robothaver.mp3reorder.dialog.progress.ProgressState;
 import com.robothaver.mp3reorder.mp3.MP3Model;
-import com.robothaver.mp3reorder.mp3.MP3ViewBuilder;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import com.robothaver.mp3reorder.mp3.song.load.task.SongLoaderTaskProvider;
 import com.robothaver.mp3reorder.mp3.song.task.SongTaskExecutor;

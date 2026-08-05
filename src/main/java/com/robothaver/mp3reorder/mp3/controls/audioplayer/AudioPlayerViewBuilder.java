@@ -10,6 +10,7 @@ import com.robothaver.mp3reorder.mp3.controls.ThemedIconButton;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -180,6 +181,13 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
         textVBox.setAlignment(Pos.CENTER_LEFT);
 
         Label songNameLabel = new Label();
+        songNameLabel.setOnMouseEntered(_ -> songNameLabel.setUnderline(true));
+        songNameLabel.setOnMouseExited(_ -> songNameLabel.setUnderline(false));
+        songNameLabel.setOnMouseClicked(_ -> {
+            Runnable onScrollToSong = model.getOnTitleClicked();
+            if (onScrollToSong != null) onScrollToSong.run();
+        });
+        songNameLabel.setCursor(Cursor.HAND);
         songNameLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             String songName = model.getSongName();
             return songName == null ? localization.getForKey("no_song_selected") : songName;

@@ -19,6 +19,7 @@ public class MP3Model {
     private final SearchTextFieldModel songSearch = new SearchTextFieldModel();
     private final MenuBarModel menuBarModel = new MenuBarModel();
     private final MP3TrackEditor trackEditor = new MP3TrackEditorImpl(selectedSongIndex, orderDescending, songs);
+    private final BooleanProperty scrollToSelected = new SimpleBooleanProperty(false);
 
     public ObservableList<Song> getSongs() {
         return songs;
@@ -94,5 +95,17 @@ public class MP3Model {
 
     public MP3TrackEditor getTrackEditor() {
         return trackEditor;
+    }
+
+    public boolean getScrollToSelected() {
+        return scrollToSelected.get();
+    }
+
+    public BooleanProperty scrollToSelectedProperty() {
+        return scrollToSelected;
+    }
+
+    public void setScrollToSelected(boolean scrollToSelected) {
+        this.scrollToSelected.set(scrollToSelected);
     }
 }

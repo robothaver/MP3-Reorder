@@ -78,7 +78,7 @@ public class PlayTableCell extends TableCell<Song, Void> {
 
     private ObjectBinding<Image> createImageBinding() {
         return Bindings.createObjectBinding(
-                () -> (isInPlayerBinding.get() && model.getSongPlaying()) ? PAUSE_ICON : PLAY_ICON,
+                () -> (isInPlayerBinding.get() && model.isSongPlaying()) ? PAUSE_ICON : PLAY_ICON,
                 model.songPlayingProperty(), isInPlayerBinding
         );
     }

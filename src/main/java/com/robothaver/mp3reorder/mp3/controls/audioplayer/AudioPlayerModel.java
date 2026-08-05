@@ -19,6 +19,7 @@ public class AudioPlayerModel {
 
     private Runnable onPlayNext;
     private Runnable onPlayPrevious;
+    private Runnable onTitleClicked;
 
     public String getSongName() {
         return songName.get();
@@ -166,5 +167,13 @@ public class AudioPlayerModel {
 
     public void setOnPlayPrevious(Runnable onPlayPrevious) {
         this.onPlayPrevious = onPlayPrevious;
+    }
+
+    public Runnable getOnTitleClicked() {
+        return onTitleClicked;
+    }
+
+    public void setOnTitleClicked(Runnable onTitleClicked) {
+        this.onTitleClicked = onTitleClicked;
     }
 }

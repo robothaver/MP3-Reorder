@@ -29,6 +29,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private final Runnable onCloseDetailsMenu;
     private final Runnable onPlayNext;
     private final Runnable onPlayPrevious;
+    private final Runnable onScrollToPlaying;
     private final Consumer<Integer> onTogglePlay;
 
     @Override
@@ -87,6 +88,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         tableViewModel.orderDescendingProperty().bindBidirectional(model.orderDescendingProperty());
         tableViewModel.songInPlayerProperty().bind(model.songInPlayerProperty());
         tableViewModel.songPlayingProperty().bind(model.songPlayingProperty());
+        tableViewModel.scrollToSelectedProperty().bind(model.scrollToSelectedProperty());
 
         AudioPlayerController audioPlayerController = new AudioPlayerController();
 
@@ -99,6 +101,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         audioPlayerModel.playingProperty().bindBidirectional(model.songPlayingProperty());
         audioPlayerModel.setOnPlayNext(onPlayNext);
         audioPlayerModel.setOnPlayPrevious(onPlayPrevious);
+        audioPlayerModel.setOnTitleClicked(onScrollToPlaying);
 
         tableContainer.getChildren().addAll(toolBar, tableViewController.getView(), audioPlayerController.getView());
         return tableContainer;

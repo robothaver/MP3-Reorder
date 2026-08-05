@@ -79,6 +79,8 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
             if (!changedByTable) selectAndScrollToIndex(newValue.intValue(), mp3TableView);
             changedByTable = false;
         });
+        model.scrollToSelectedProperty().addListener((_, _, _) ->
+                scrollController.scrollToIndex(model.getSelectedIndex()));
 
         TableColumn<Song, Integer> trackColumn = getSongTrackTableColumn();
         TableColumn<Song, String> fileNameColumn = createFileNameColumn();

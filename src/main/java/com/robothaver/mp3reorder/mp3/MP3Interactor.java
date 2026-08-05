@@ -52,4 +52,12 @@ public class MP3Interactor {
             mp3Model.setSongPlaying(true);
         }
     }
+
+    public void onScrollToPlaying() {
+        Song songInPlayer = mp3Model.getSongInPlayer();
+        if (songInPlayer != null) {
+            mp3Model.setSelectedSongIndex(mp3Model.getSongs().indexOf(songInPlayer));
+            mp3Model.setScrollToSelected(!mp3Model.getScrollToSelected());
+        }
+    }
 }

@@ -12,6 +12,7 @@ public class MP3TableViewModel {
     private final IntegerProperty hoveredIndex = new SimpleIntegerProperty();
     private final BooleanProperty orderDescending = new SimpleBooleanProperty(false);
     private final BooleanProperty songPlaying = new SimpleBooleanProperty(false);
+    private final BooleanProperty scrollToSelected = new SimpleBooleanProperty(false);
     private final ObjectProperty<Song> songInPlayer = new SimpleObjectProperty<>(null);
 
     public ObservableList<Song> getSongs() {
@@ -54,7 +55,7 @@ public class MP3TableViewModel {
         this.orderDescending.set(orderDescending);
     }
 
-    public boolean getSongPlaying() {
+    public boolean isSongPlaying() {
         return songPlaying.get();
     }
 
@@ -64,6 +65,18 @@ public class MP3TableViewModel {
 
     public void setSongPlaying(boolean songPlaying) {
         this.songPlaying.set(songPlaying);
+    }
+
+    public boolean getScrollToSelected() {
+        return scrollToSelected.get();
+    }
+
+    public BooleanProperty scrollToSelectedProperty() {
+        return scrollToSelected;
+    }
+
+    public void setScrollToSelected(boolean scrollToSelected) {
+        this.scrollToSelected.set(scrollToSelected);
     }
 
     public Song getSongInPlayer() {
