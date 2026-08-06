@@ -50,6 +50,7 @@ public class PlayTableCell extends TableCell<Song, Void> {
     private ThemedIconButton createIconButton() {
         ThemedIconButton iconButton = new ThemedIconButton(PLAY_ICON, 16);
         iconButton.getStyleClass().addAll(Styles.ACCENT, Styles.BUTTON_CIRCLE);
+        iconButton.getIconLabel().setStyle("-fx-text-fill: -color-fg-emphasis");
         iconButton.setOnAction(_ -> {
             IntConsumer onTogglePlay = model.getOnTogglePlay();
             if (onTogglePlay != null) onTogglePlay.accept(getIndex());
@@ -60,9 +61,11 @@ public class PlayTableCell extends TableCell<Song, Void> {
             if (isInPlayer) {
                 iconButton.getStyleClass().add(Styles.FLAT);
                 iconButton.getStyleClass().remove(Styles.ACCENT);
+                iconButton.getIconLabel().setStyle("");
             } else {
                 iconButton.getStyleClass().add(Styles.ACCENT);
                 iconButton.getStyleClass().remove(Styles.FLAT);
+                iconButton.getIconLabel().setStyle("-fx-text-fill: -color-fg-emphasis");
             }
         });
 
