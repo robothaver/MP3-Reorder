@@ -42,7 +42,7 @@ public class SongSaveTask implements Callable<Void> {
         // Have to re-read mp3 file to avoid byte change issues
         reloadMp3File(newSavePath, mp3File.getId3v2Tag());
 
-        song.getFileChanged().set(false);
+        song.setFileChanged(false);
         return null;
     }
 

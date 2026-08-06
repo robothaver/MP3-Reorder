@@ -70,6 +70,13 @@ jlink {
         jvmArgs = listOf("--enable-native-access=javafx.graphics", "--enable-native-access=javafx.media")
     }
     jpackage {
-        imageOptions = listOf("--icon", "src/main/resources/images/logo.ico", "--resource-dir", "src/main/resources/images/logo.ico")
+        val osName = System.getProperty("os.name").lowercase()
+        val iconFile = when {
+            osName.contains("win") -> "src/main/resources/images/logo.ico"
+            osName.contains("mac") -> "src/main/resources/images/logo.icns"
+            else -> "src/main/resources/images/logo.png"
+        }
+        imageName = "MP3Reorder"
+        imageOptions = listOf("--icon", iconFile)
     }
 }

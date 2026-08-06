@@ -11,32 +11,17 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Properties;
 
 import static com.robothaver.mp3reorder.core.preference.PreferencesUtils.DEFAULT_PREFERENCES;
+import static com.robothaver.mp3reorder.core.preference.PreferencesUtils.PREFERENCES_PATH;
 
 @Log4j2
 public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
     private static final PreferencesStore<Preferences> instance = new PreferenceStoreImpl();
-    private static final String PREFERENCES_FILE_NAME = "preferences.properties";
-    private static final Path PREFERENCES_PATH = Paths.get(PREFERENCES_FILE_NAME);
     private static final ViewLocalization localization = new ViewLocalization("language.preferences", new SimpleObjectProperty<>(DEFAULT_PREFERENCES.getSelectedLocale()));
     private static Preferences preferences;
-
-    @Override
-    public Preferences getPreferences() {
-        return preferences;
-    }
-
-    @Override
-    public void savePreferences() {
-        Properties properties = new Properties();
-        writeToProperties(properties, preferences);
-        saveProperties(properties);
-    }
 
     public static PreferencesStore<Preferences> getInstance() {
         if (preferences == null) loadPreferences();
@@ -47,12 +32,12 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
         Properties properties = new Properties();
         if (Files.exists(PREFERENCES_PATH)) {
             preferences = new Preferences();
-            try (FileInputStream inputStream = new FileInputStream(PREFERENCES_FILE_NAME)) {
+            try (FileInputStream inputStream = new FileInputStream(PREFERENCES_PATH.toFile())) {
                 properties.load(inputStream);
                 loadFromProperties(properties, preferences);
             } catch (Exception e) {
                 log.error("Failed to load preferences, reverting to default configuration", e);
-                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, localization.getForKey("loading.error.dialog.title"), localization.getForKey("loading.error.dialog.message"));
+                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, localization.getForKey("loading.error.dialog.title"), localization.getForKey("loading.error.dialog.message") + e);
                 preferences = DEFAULT_PREFERENCES;
             }
         } else {
@@ -67,7 +52,7 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
         try (FileWriter fileWriter = new FileWriter(PREFERENCES_PATH.toFile())) {
             properties.store(fileWriter, "App preferences");
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            log.error("Failed to save properties", e);
         }
     }
 
@@ -89,5 +74,17 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
         properties.setProperty("statusBarEnabled", String.valueOf(preferences.isStatusBarEnabled()));
         properties.setProperty("launchMaximized", String.valueOf(preferences.isLaunchMaximized()));
         properties.setProperty("useSystemMenuBar", String.valueOf(preferences.isUseSystemMenuBar()));
+    }
+
+    @Override
+    public Preferences getPreferences() {
+        return preferences;
+    }
+
+    @Override
+    public void savePreferences() {
+        Properties properties = new Properties();
+        writeToProperties(properties, preferences);
+        saveProperties(properties);
     }
 }

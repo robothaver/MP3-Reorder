@@ -54,12 +54,15 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
         centerControls.setMaxWidth(Region.USE_PREF_SIZE);
         centerControls.setPickOnBounds(false);
 
-        root.widthProperty().addListener((observable, oldValue, newValue) -> {
-            double totalWidth = newValue.doubleValue();
+        Runnable updateWidths = () -> {
+            double totalWidth = root.getWidth();
             double available = (totalWidth / 2) - (centerControls.getWidth() / 2);
             infoHBox.setMaxWidth(available);
             endHBox.setMaxWidth(available);
-        });
+        };
+
+        root.widthProperty().addListener((_, _, _) -> updateWidths.run());
+        centerControls.widthProperty().addListener((_, _, _) -> updateWidths.run());
 
         root.getChildren().addAll(sideControls, centerControls);
         return root;

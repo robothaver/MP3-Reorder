@@ -29,7 +29,7 @@ public class SongSaveAsTask implements Callable<Void> {
         Files.deleteIfExists(newSavePath);
         song.getMp3File().save(newSavePath.toString());
 
-        song.getFileChanged().set(false);
+        song.setFileChanged(false);
         return null;
     }
 }

@@ -1,23 +1,25 @@
 package com.robothaver.mp3reorder;
 
 import com.robothaver.mp3reorder.core.ApplicationInfo;
+import com.robothaver.mp3reorder.core.LoggerConfig;
 import com.robothaver.mp3reorder.core.font.FontSizeControllerImpl;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
 import com.robothaver.mp3reorder.core.preference.Preferences;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
-import com.robothaver.mp3reorder.mp3.MP3Controller;
+import com.robothaver.mp3reorder.start.StartController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import lombok.extern.log4j.Log4j2;
 
-import java.nio.file.Path;
 import java.util.Objects;
 
-@Log4j2
 public class MP3Reorder extends Application {
+    static {
+        LoggerConfig.setLoggerDirectory();
+    }
+
     static void main(String[] args) {
         launch(args);
     }
@@ -37,10 +39,10 @@ public class MP3Reorder extends Application {
             newScene.getStylesheets().add(Objects.requireNonNull(MP3Reorder.class.getResource("/styles.css")).toString());
         });
         stage.setTitle(ApplicationInfo.APPLICATION_NAME);
-        //stage.setScene(new Scene(new StartController().getView()));
-        MP3Controller mp3Controller = new MP3Controller();
-        stage.setScene(new Scene(mp3Controller.getView()));
-        mp3Controller.loadSongs(Path.of("bulira  zenék"));
+        stage.setScene(new Scene(new StartController().getView()));
+        //MP3Controller mp3Controller = new MP3Controller();
+        //stage.setScene(new Scene(mp3Controller.getView()));
+        //mp3Controller.loadSongs(Path.of("bulira  zenék"));
         stage.setWidth(800);
         stage.setHeight(600);
         stage.show();
