@@ -8,6 +8,7 @@ import com.robothaver.mp3reorder.core.utils.ResourceHelper;
 import com.robothaver.mp3reorder.mp3.controls.RoundedImageView;
 import com.robothaver.mp3reorder.mp3.controls.ThemedIconButton;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -196,20 +197,23 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
             if (onScrollToSong != null) onScrollToSong.run();
         });
         songNameLabel.setCursor(Cursor.HAND);
+        StringBinding noSongBinding = localization.bindString("no_song_selected");
         songNameLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             String songName = model.getSongName();
-            return songName == null ? localization.getForKey("no_song_selected") : songName;
-        }, model.songNameProperty()));
+            return songName == null ? noSongBinding.get() : songName;
+        }, model.songNameProperty(), noSongBinding));
+
         songNameLabel.getStyleClass().add(Styles.TEXT_BOLD);
         Tooltip songNameTooltip = new Tooltip();
         songNameTooltip.textProperty().bind(songNameLabel.textProperty());
         songNameLabel.setTooltip(songNameTooltip);
 
         Label artistLabel = new Label();
+        StringBinding noArtistBinding = localization.bindString("no_artist");
         artistLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             String artist = model.getArtist();
-            return artist == null ? localization.getForKey("no_artist") : artist;
-        }, model.artistProperty()));
+            return artist == null ? noArtistBinding.get() : artist;
+        }, model.songNameProperty(), noArtistBinding));
         Tooltip artitsTooltip = new Tooltip();
         artitsTooltip.textProperty().bind(artistLabel.textProperty());
         artistLabel.setTooltip(artitsTooltip);

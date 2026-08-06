@@ -18,6 +18,9 @@ public class MP3TableViewModel {
     private final ObjectProperty<Song> songInPlayer = new SimpleObjectProperty<>(null);
 
     private IntConsumer onTogglePlay;
+    private Runnable onRevealInFolder;
+    private Runnable onOpenInDefaultPlayer;
+    private Runnable onPlaySelected;
 
     public ObservableList<Song> getSongs() {
         return songs;
@@ -101,5 +104,29 @@ public class MP3TableViewModel {
 
     public void setOnTogglePlay(IntConsumer onTogglePlay) {
         this.onTogglePlay = onTogglePlay;
+    }
+
+    public Runnable getOnRevealInFolder() {
+        return onRevealInFolder;
+    }
+
+    public void setOnRevealInFolder(Runnable onRevealInFolder) {
+        this.onRevealInFolder = onRevealInFolder;
+    }
+
+    public Runnable getOnOpenInDefaultPlayer() {
+        return onOpenInDefaultPlayer;
+    }
+
+    public void setOnOpenInDefaultPlayer(Runnable onOpenInDefaultPlayer) {
+        this.onOpenInDefaultPlayer = onOpenInDefaultPlayer;
+    }
+
+    public Runnable getOnPlaySelected() {
+        return onPlaySelected;
+    }
+
+    public void setOnPlaySelected(Runnable onPlaySelected) {
+        this.onPlaySelected = onPlaySelected;
     }
 }
