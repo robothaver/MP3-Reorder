@@ -5,9 +5,10 @@ import atlantafx.base.controls.Spacer;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.mp3.MP3Model;
-import com.robothaver.mp3reorder.mp3.controls.ImageButton;
 import com.robothaver.mp3reorder.mp3.controls.NumberOfSongsViewBuilder;
+import com.robothaver.mp3reorder.mp3.controls.ThemedIconButton;
 import com.robothaver.mp3reorder.mp3.controls.search.SearchTextFieldController;
+import javafx.beans.binding.StringBinding;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
@@ -27,22 +28,6 @@ public class ToolBarViewBuilder implements Builder<ToolBar> {
 
     @Override
     public ToolBar build() {
-        Button moveSongToTop = new ImageButton("Top", "/icons/first_icon.png");
-        moveSongToTop.textProperty().bind(localization.bindString("top"));
-        moveSongToTop.setOnAction(e -> onMoveSongToTop.run());
-
-        Button moveSongUpBtn = new ImageButton("Up", "/icons/up_icon.png");
-        moveSongUpBtn.textProperty().bind(localization.bindString("up"));
-        moveSongUpBtn.setOnAction(e -> onMoveSongUp.run());
-
-        Button moveSongDownBtn = new ImageButton("Down", "/icons/down_icon.png");
-        moveSongDownBtn.textProperty().bind(localization.bindString("down"));
-        moveSongDownBtn.setOnAction(e -> onMoveSongDown.run());
-
-        Button moveSongToBottom = new ImageButton("Bottom", "/icons/last_icon.png");
-        moveSongToBottom.textProperty().bind(localization.bindString("bottom"));
-        moveSongToBottom.setOnAction(e -> onMoveSongToBottom.run());
-
         NumberOfSongsViewBuilder songsViewBuilder = new NumberOfSongsViewBuilder(model.getSongs());
         HBox numberOfSongs = songsViewBuilder.build();
 
@@ -51,12 +36,11 @@ public class ToolBarViewBuilder implements Builder<ToolBar> {
         searchTextField.setPrefWidth(300);
 
         ToolBar toolBar = new ToolBar();
-        toolBar.setOrientation(Orientation.HORIZONTAL);
         toolBar.getItems().addAll(
-                moveSongToTop,
-                moveSongUpBtn,
-                moveSongDownBtn,
-                moveSongToBottom,
+                createButton("first_icon.png", localization.bindString("top"), onMoveSongToTop),
+                createButton("up_icon.png", localization.bindString("up"), onMoveSongUp),
+                createButton("down_icon.png", localization.bindString("down"), onMoveSongDown),
+                createButton("last_icon.png", localization.bindString("bottom"), onMoveSongToBottom),
                 new Separator(Orientation.VERTICAL),
                 new Spacer(Orientation.HORIZONTAL),
                 numberOfSongs,
@@ -64,6 +48,15 @@ public class ToolBarViewBuilder implements Builder<ToolBar> {
                 searchTextField
         );
         return toolBar;
+    }
+
+    private Button createButton(String icon, StringBinding localization, Runnable onAction) {
+        ThemedIconButton button = new ThemedIconButton(icon, 20);
+        button.getIconLabel().setStyle("-fx-text-fill: -color-fg-default");
+        button.textProperty().bind(localization);
+        button.setOnAction(_ -> onAction.run());
+
+        return button;
     }
 
     private CustomTextField createSearchTextField() {

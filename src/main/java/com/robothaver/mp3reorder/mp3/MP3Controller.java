@@ -35,6 +35,7 @@ public class MP3Controller extends BaseController<Region> {
 
     private void onLoadSongs() {
         model.setSongInPlayer(null);
+        model.getSongSearch().clear();
         songLoader.loadSongs();
     }
 }
