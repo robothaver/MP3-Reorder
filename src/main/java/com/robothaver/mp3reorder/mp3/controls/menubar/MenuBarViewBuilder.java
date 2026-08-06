@@ -1,7 +1,6 @@
 package com.robothaver.mp3reorder.mp3.controls.menubar;
 
 import com.robothaver.mp3reorder.core.ApplicationInfo;
-import com.robothaver.mp3reorder.core.font.Size;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import javafx.scene.control.*;
@@ -22,7 +21,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final MenuBarModel model;
     private final Consumer<Themes> onThemeChanged;
     private final Consumer<Locale> onLocaleChanged;
-    private final Consumer<Size> onSizeChanged;
+    private final Consumer<Integer> onSizeChanged;
     private final Runnable onOpenDirectory;
     private final Runnable onLaunchMaximizedChanged;
     private final Runnable onUseSystemMenuBar;
@@ -35,6 +34,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final Runnable onSaveAs;
 
     private final MenuBar menuBar = new MenuBar();
+    private int size = 1;
 
 
     private final ViewLocalization localization = new ViewLocalization("language.menubar", LanguageController.getSelectedLocale());
@@ -151,18 +151,13 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
         Menu sizeMenu = new Menu("_Size", new FontIcon(Feather.TYPE));
         sizeMenu.textProperty().bind(localization.bindString("size"));
-        for (Size size : Size.values()) {
-            CheckMenuItem sizeMenuItem = new CheckMenuItem(size.toString());
-            sizeMenuItem.setOnAction(_ -> onSizeChanged.accept(size));
-            if (model.getSelectedSize().get().getFontSize() == size.getFontSize()) {
-                sizeMenuItem.setSelected(true);
-            }
-            sizeMenu.getItems().add(sizeMenuItem);
+        for (int i = 6; i < 26; i += 2) {
+            sizeMenu.getItems().add(createSizeItem(i));
         }
 
         model.getSelectedSize().addListener((_, _, newValue) -> {
             for (MenuItem item : sizeMenu.getItems()) {
-                boolean selectedOption = item.getText().equals(newValue.toString());
+                boolean selectedOption = ((int) item.getUserData()) == newValue.intValue();
                 ((CheckMenuItem) item).setSelected(selectedOption);
             }
         });
@@ -179,6 +174,16 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
                 useSystemMenuBarOption
         );
         return viewMenu;
+    }
+
+    private CheckMenuItem createSizeItem(int size) {
+        CheckMenuItem sizeMenuItem = new CheckMenuItem(size + "px");
+        sizeMenuItem.setOnAction(_ -> onSizeChanged.accept(size));
+        sizeMenuItem.setUserData(size);
+        if (model.getSelectedSize().get() == size) {
+            sizeMenuItem.setSelected(true);
+        }
+        return sizeMenuItem;
     }
 
     private MenuItem createItem(String text, Ikon icon, KeyCombination accelerator) {

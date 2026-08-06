@@ -7,8 +7,8 @@ public class FontSizeControllerImpl implements FontSizeController {
     private static Parent parent;
 
     @Override
-    public void setFontSize(Size size) {
-        parent.setStyle("-fx-font-size: %dpx".formatted(size.getFontSize()));
+    public void setFontSize(int size) {
+        parent.setStyle("-fx-font-size: %dpx".formatted(size));
     }
 
     public static void initialize(Parent parent) {

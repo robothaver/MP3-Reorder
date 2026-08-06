@@ -1,7 +1,6 @@
 package com.robothaver.mp3reorder.mp3.controls.menubar;
 
 import com.robothaver.mp3reorder.core.font.FontSizeControllerImpl;
-import com.robothaver.mp3reorder.core.font.Size;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
 import com.robothaver.mp3reorder.core.preference.Preferences;
@@ -48,7 +47,7 @@ public class MenuBarInteractor {
         preferencesStore.savePreferences();
     }
 
-    public void setSize(Size size) {
+    public void setSize(int size) {
         menuBarModel.getSelectedSize().set(size);
         FontSizeControllerImpl.getInstance().setFontSize(size);
         preferencesStore.getPreferences().setSelectedSize(size);

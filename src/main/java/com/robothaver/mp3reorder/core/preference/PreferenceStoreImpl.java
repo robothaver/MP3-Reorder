@@ -1,6 +1,5 @@
 package com.robothaver.mp3reorder.core.preference;
 
-import com.robothaver.mp3reorder.core.font.Size;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3.controls.menubar.Themes;
@@ -74,7 +73,7 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
 
     private static void loadFromProperties(Properties properties, Preferences preferences) {
         preferences.setSelectedTheme(Themes.fromString(properties.getProperty("theme")));
-        preferences.setSelectedSize(Size.fromString(properties.getProperty("size")));
+        preferences.setSelectedSize(Integer.parseInt(properties.getProperty("size")));
         preferences.setSelectedLocale(Locale.forLanguageTag(properties.getProperty("locale")));
         preferences.setSideMenuEnabled(Boolean.parseBoolean(properties.getProperty("sideMenuEnabled")));
         preferences.setStatusBarEnabled(Boolean.parseBoolean(properties.getProperty("statusBarEnabled")));
@@ -84,7 +83,7 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
 
     private static void writeToProperties(Properties properties, Preferences preferences) {
         properties.setProperty("theme", preferences.getSelectedTheme().toString());
-        properties.setProperty("size", preferences.getSelectedSize().toString());
+        properties.setProperty("size", String.valueOf(preferences.getSelectedSize()));
         properties.setProperty("locale", preferences.getSelectedLocale().toLanguageTag());
         properties.setProperty("sideMenuEnabled", String.valueOf(preferences.isSideMenuEnabled()));
         properties.setProperty("statusBarEnabled", String.valueOf(preferences.isStatusBarEnabled()));
