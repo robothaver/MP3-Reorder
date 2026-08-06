@@ -20,7 +20,6 @@ public class MP3TableViewModel {
     private IntConsumer onTogglePlay;
     private Runnable onRevealInFolder;
     private Runnable onOpenInDefaultPlayer;
-    private Runnable onPlaySelected;
 
     public ObservableList<Song> getSongs() {
         return songs;
@@ -120,13 +119,5 @@ public class MP3TableViewModel {
 
     public void setOnOpenInDefaultPlayer(Runnable onOpenInDefaultPlayer) {
         this.onOpenInDefaultPlayer = onOpenInDefaultPlayer;
-    }
-
-    public Runnable getOnPlaySelected() {
-        return onPlaySelected;
-    }
-
-    public void setOnPlaySelected(Runnable onPlaySelected) {
-        this.onPlaySelected = onPlaySelected;
     }
 }

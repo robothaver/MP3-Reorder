@@ -14,6 +14,8 @@ public class MP3TableViewController extends BaseController<TableView<Song>> {
     public MP3TableViewController(MP3TrackEditor trackEditor, ObservableList<Song> songs) {
         model = new MP3TableViewModel(songs);
         MP3TableViewInteractor interactor = new MP3TableViewInteractor(model, trackEditor);
+        model.setOnOpenInDefaultPlayer(interactor::openInDefaultPlayer);
+        model.setOnRevealInFolder(interactor::revealInFolder);
         viewBuilder = new MP3TableViewBuilder(
                 model,
                 interactor::onTrackChangedForSong,
