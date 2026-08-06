@@ -3,6 +3,7 @@ package com.robothaver.mp3reorder.mp3.controls.table;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
+import com.robothaver.mp3reorder.mp3.controls.search.SearchTextFieldModel;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import com.robothaver.mp3reorder.mp3.song.track.editor.MP3TrackEditor;
 import javafx.scene.control.Alert;
@@ -16,6 +17,8 @@ import java.awt.*;
 public class MP3TableViewInteractor {
     private final MP3TableViewModel model;
     private final MP3TrackEditor mp3TrackEditor;
+    private final SearchTextFieldModel searchModel;
+
     private final Desktop desktop = getDesktop();
     private final ViewLocalization localization = new ViewLocalization("language.table", LanguageController.getSelectedLocale());
 
@@ -28,12 +31,13 @@ public class MP3TableViewInteractor {
                 return;
             }
         }
-        //mp3Model.getSongSearch().clear();
+        searchModel.clear();
     }
 
     public void onSongDragged(int originalIndex, int newIndex) {
         model.setHoveredIndex(newIndex);
         mp3TrackEditor.insertSong(originalIndex, newIndex);
+        searchModel.clear();
     }
 
     public void onTrackChangedForSong(int currentTrack, int newTrack) {

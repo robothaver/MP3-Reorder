@@ -83,7 +83,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         ToolBar toolBar = new ToolBarController(model).getView();
         toolBar.setPrefHeight(50);
 
-        MP3TableViewController tableViewController = new MP3TableViewController(model.getTrackEditor(), model.getSongs());
+        MP3TableViewController tableViewController = new MP3TableViewController(model.getTrackEditor(), model.getSongSearch(), model.getSongs());
         MP3TableViewModel tableViewModel = tableViewController.getModel();
         tableViewModel.selectedIndexProperty().bindBidirectional(model.selectedSongIndexProperty());
         tableViewModel.orderDescendingProperty().bindBidirectional(model.orderDescendingProperty());
