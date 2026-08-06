@@ -178,7 +178,10 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
     private CheckMenuItem createSizeItem(int size) {
         CheckMenuItem sizeMenuItem = new CheckMenuItem(size + "px");
-        sizeMenuItem.setOnAction(_ -> onSizeChanged.accept(size));
+        sizeMenuItem.setOnAction(_ -> {
+            onSizeChanged.accept(size);
+            sizeMenuItem.setSelected((int) sizeMenuItem.getUserData() == model.getSelectedSize().get());
+        });
         sizeMenuItem.setUserData(size);
         if (model.getSelectedSize().get() == size) {
             sizeMenuItem.setSelected(true);
