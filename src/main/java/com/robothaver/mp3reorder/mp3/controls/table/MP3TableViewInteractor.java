@@ -1,5 +1,7 @@
 package com.robothaver.mp3reorder.mp3.controls.table;
 
+import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import com.robothaver.mp3reorder.mp3.song.track.editor.MP3TrackEditor;
@@ -8,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import java.awt.*;
-import java.io.IOException;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -16,13 +17,14 @@ public class MP3TableViewInteractor {
     private final MP3TableViewModel model;
     private final MP3TrackEditor mp3TrackEditor;
     private final Desktop desktop = getDesktop();
+    private final ViewLocalization localization = new ViewLocalization("language.table", LanguageController.getSelectedLocale());
 
     public void onFileRenamed(String oldName, String newName) {
         Song selectedSong = model.getSongs().get(model.getSelectedIndex());
         for (Song song : model.getSongs()) {
             if (!song.equals(selectedSong) && song.getFileName().equals(newName)) {
                 selectedSong.fileNameProperty().set(oldName);
-                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.WARNING, "Can't rename file", "Can't have files with the same name!");
+                DialogManagerImpl.getInstance().showAlert(Alert.AlertType.WARNING, localization.getForKey("rename.failed.title"), localization.getForKey("rename.failed"));
                 return;
             }
         }
@@ -40,7 +42,7 @@ public class MP3TableViewInteractor {
 
     public void revealInFolder() {
         if (desktop == null) {
-            showActionError("reveal song in folder");
+            showActionDesktopError(localization.getForKey("action.reveal_in_folder"));
             return;
         }
 
@@ -51,13 +53,13 @@ public class MP3TableViewInteractor {
             desktop.browseFileDirectory(selectedSong.getPath().toFile());
         } catch (Exception e) {
             log.error("Failed to reveal song in folder", e);
-            showErrorDialog("Action failed!", "Failed to reveal song in folder. " + e);
+            showActionError(localization.getForKey("action.reveal_in_folder"), e);
         }
     }
 
     public void openInDefaultPlayer() {
         if (desktop == null) {
-            showActionError("open song in default player");
+            showActionDesktopError(localization.getForKey("action.open_in_default_player"));
             return;
         }
 
@@ -66,18 +68,10 @@ public class MP3TableViewInteractor {
 
         try {
             desktop.open(selectedSong.getPath().toFile());
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Failed to open song in default player", e);
-            showErrorDialog("Action failed!", "Failed to open song in default player. " + e);
+            showActionError(localization.getForKey("action.open_in_default_player"), e);
         }
-    }
-
-    public void playSelected() {
-        Song selectedSong = getSelectedSong();
-        if (selectedSong == null) return;
-
-        if (model.getOnTogglePlay() == null) return;
-        model.getOnTogglePlay().accept(model.getSongs().indexOf(selectedSong));
     }
 
     private Song getSelectedSong() {
@@ -86,17 +80,16 @@ public class MP3TableViewInteractor {
         return model.getSongs().get(selectedIndex);
     }
 
-    private void showActionError(String actionName) {
-        showErrorDialog("Unavailable action", "Failed to %s because desktop could not be resolved!".formatted(actionName));
+    private void showActionError(String actionName, Exception exception) {
+        showErrorDialog(localization.getForKey("action.failed.title"), "%s %s".formatted(localization.getForKey("action.failed").formatted(actionName), exception));
+    }
+
+    private void showActionDesktopError(String actionName) {
+        showErrorDialog(localization.getForKey("action.unavailable"), localization.getForKey("desktop_error_message").formatted(actionName));
     }
 
     private void showErrorDialog(String title, String message) {
-        DialogManagerImpl.getInstance()
-                .showAlert(
-                        Alert.AlertType.WARNING,
-                        title,
-                        message
-                );
+        DialogManagerImpl.getInstance().showAlert(Alert.AlertType.WARNING, title, message);
     }
 
     private Desktop getDesktop() {

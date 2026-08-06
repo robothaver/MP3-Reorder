@@ -1,5 +1,7 @@
 package com.robothaver.mp3reorder.mp3.controls.table;
 
+import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -14,6 +16,7 @@ import java.util.Objects;
 
 public class SongTableRow extends TableRow<Song> {
     private final MP3TableViewModel model;
+    private final ViewLocalization localization = new ViewLocalization("language.table", LanguageController.getSelectedLocale());
 
     public SongTableRow(MP3TableViewModel model) {
         this.model = model;
@@ -36,9 +39,12 @@ public class SongTableRow extends TableRow<Song> {
 
         MenuItem revealInFolder = new MenuItem("Reveal in folder", new FontIcon(Feather.FOLDER));
         revealInFolder.setOnAction(_ -> tryExecuteRunnable(model.getOnRevealInFolder()));
+        revealInFolder.textProperty().bind(localization.bindString("action.reveal_in_folder"));
         MenuItem openInDefaultPlayer = new MenuItem("Open in default player", new FontIcon(Feather.MUSIC));
         openInDefaultPlayer.setOnAction(_ -> tryExecuteRunnable(model.getOnOpenInDefaultPlayer()));
+        openInDefaultPlayer.textProperty().bind(localization.bindString("action.open_in_default_player"));
         MenuItem play = new MenuItem("Play", new FontIcon(Feather.PLAY));
+        play.textProperty().bind(localization.bindString("action.play"));
         play.setOnAction(_ -> {
             if (model.getOnTogglePlay() != null) model.getOnTogglePlay().accept(getIndex());
         });
