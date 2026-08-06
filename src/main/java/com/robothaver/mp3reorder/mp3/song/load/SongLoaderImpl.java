@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.robothaver.mp3reorder.core.ApplicationInfo.APPLICATION_NAME;
 
@@ -96,9 +97,9 @@ public class SongLoaderImpl implements SongLoader {
         );
     }
 
-    private void showTrackIssueDialog(TrackIssue trackIssue) {
-        if (trackIssue != TrackIssue.NONE) {
-            log.warn("Existing tracks ignored because {}", trackIssue);
+    private void showTrackIssueDialog(Set<TrackIssue> trackIssue) {
+        if (!trackIssue.isEmpty()) {
+            log.warn("Some existing tracks ignored because {}", trackIssue);
             String message = buildTrackIssueMessage(trackIssue);
             DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION, trackAssignerLocalization.getForKey("song.track.issue.title"), message);
         } else {
@@ -106,13 +107,16 @@ public class SongLoaderImpl implements SongLoader {
         }
     }
 
-    private String buildTrackIssueMessage(TrackIssue issue) {
+    private String buildTrackIssueMessage(Set<TrackIssue> issues) {
         StringBuilder stringBuilder = new StringBuilder(trackAssignerLocalization.getForKey("error.base.message") + " ");
-        if (issue == TrackIssue.DUPLICATE_TRACKS) {
+        if (issues.contains(TrackIssue.DUPLICATE_TRACKS)) {
             stringBuilder.append(trackAssignerLocalization.getForKey("error.duplicate.tracks"));
-        } else if (issue == TrackIssue.TRACKS_IN_INVALID_RANGE) {
+        }
+        if (issues.contains(TrackIssue.TRACKS_IN_INVALID_RANGE)) {
+            if (issues.size() > 1) stringBuilder.append(", ");
             stringBuilder.append(trackAssignerLocalization.getForKey("error.outside.range"));
         }
+        stringBuilder.append(".");
         return stringBuilder.toString();
     }
 }

@@ -200,7 +200,8 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
         StringBinding noSongBinding = localization.bindString("no_song_selected");
         songNameLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             String songName = model.getSongName();
-            return songName == null ? noSongBinding.get() : songName;
+            boolean noName = songName == null || songName.isBlank();
+            return noName ? noSongBinding.get() : songName;
         }, model.songNameProperty(), noSongBinding));
 
         songNameLabel.getStyleClass().add(Styles.TEXT_BOLD);
@@ -212,8 +213,9 @@ public class AudioPlayerViewBuilder implements Builder<StackPane> {
         StringBinding noArtistBinding = localization.bindString("no_artist");
         artistLabel.textProperty().bind(Bindings.createStringBinding(() -> {
             String artist = model.getArtist();
-            return artist == null ? noArtistBinding.get() : artist;
-        }, model.songNameProperty(), noArtistBinding));
+            boolean noArtist = artist == null || artist.isBlank();
+            return noArtist ? noArtistBinding.get() : artist;
+        }, model.artistProperty(), noArtistBinding));
         Tooltip artitsTooltip = new Tooltip();
         artitsTooltip.textProperty().bind(artistLabel.textProperty());
         artistLabel.setTooltip(artitsTooltip);

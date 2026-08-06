@@ -84,7 +84,7 @@ public class Song {
     }
 
     public void setTrack(int track) {
-        this.track.set(track);
+        this.track.setValue(track);
     }
 
     public String getFileName() {

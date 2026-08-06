@@ -123,7 +123,7 @@ public class MP3TrackEditorImpl implements MP3TrackEditor {
         for (int i = smallerIndex; i <= largerIndex; i++) {
             int track = orderDescendingProperty.get() ? songs.size() - i : i + 1;
             if (track != songs.get(i).getTrack()) {
-                songs.get(i).trackProperty().set(track);
+                songs.get(i).trackProperty().setValue(track);
             }
         }
         selectedSongIndexProperty.setValue(conflictingSongIndex);
