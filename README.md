@@ -84,6 +84,7 @@ To build a native, standalone executable for your current operating system using
 
 ![Start screen](Readme/Start.png)
 ![Example](Readme/Example_1.png)
+![Track conflict dialog](Readme/Track_Conflict.png)
 ![Themes](Readme/Themes.png)
 
 ## Libraries used
