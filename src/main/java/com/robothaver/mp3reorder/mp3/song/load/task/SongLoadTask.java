@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
+@Getter
 @RequiredArgsConstructor
 public class SongLoadTask implements Callable<Song> {
-    @Getter
     private final Path file;
 
     @Override

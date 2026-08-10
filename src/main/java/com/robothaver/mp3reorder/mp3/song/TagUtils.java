@@ -4,7 +4,9 @@ import com.mpatric.mp3agic.*;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 
 public class TagUtils {
+
     private TagUtils() {
+        /* This utility class should not be instantiated */
     }
 
     public static void readDataFromTag(Song song) {

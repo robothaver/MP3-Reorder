@@ -25,12 +25,12 @@ public class MP3Controller extends BaseController<Region> {
                 interactor::onPlayPressedWhenEmpty,
                 interactor::togglePlay
         );
-        songLoader = new SongLoaderImpl(model, viewBuilder);
+        songLoader = new SongLoaderImpl(model);
     }
 
     public void loadSongs(Path selectedDir) {
         model.selectedPathProperty().set(selectedDir.toString());
-        songLoader.loadSongs();
+        onLoadSongs();
     }
 
     private void onLoadSongs() {

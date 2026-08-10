@@ -32,10 +32,9 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final Runnable onRemoveIndexFromFileName;
     private final Runnable onSave;
     private final Runnable onSaveAs;
+    private final Runnable onReopenDir;
 
     private final MenuBar menuBar = new MenuBar();
-    private int size = 1;
-
 
     private final ViewLocalization localization = new ViewLocalization("language.menubar", LanguageController.getSelectedLocale());
 
@@ -57,6 +56,9 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         MenuItem openOption = createItem("Open", Feather.FOLDER, new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
         openOption.textProperty().bind(localization.bindString("file.open"));
         openOption.setOnAction(_ -> onOpenDirectory.run());
+        MenuItem reOpenOption = createItem("Reopen directory", Feather.REFRESH_CW, new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN));
+        reOpenOption.textProperty().bind(localization.bindString("file.reopen"));
+        reOpenOption.setOnAction(_ -> onReopenDir.run());
         MenuItem saveOption = createItem("Save", Feather.SAVE, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         saveOption.textProperty().bind(localization.bindString("file.save"));
         saveOption.setOnAction(_ -> onSave.run());
@@ -68,6 +70,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         exitOption.setOnAction(_ -> onExit.run());
         fileMenu.getItems().addAll(
                 openOption,
+                reOpenOption,
                 new SeparatorMenuItem(),
                 saveOption,
                 saveAsOption,

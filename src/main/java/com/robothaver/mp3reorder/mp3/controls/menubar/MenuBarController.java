@@ -17,17 +17,19 @@ public class MenuBarController extends BaseController<MenuBar> {
     private final MP3Model mp3Model;
     private final MenuBarModel menuBarModel;
     private final MenuBarInteractor interactor;
+    private final Runnable onLoadSongs;
 
-    public MenuBarController(MP3Model mp3Model, Runnable loadSongs) {
+    public MenuBarController(MP3Model mp3Model, Runnable onLoadSongs) {
         this.mp3Model = mp3Model;
-        menuBarModel = mp3Model.getMenuBarModel();
-        interactor = new MenuBarInteractor(mp3Model);
-        viewBuilder = new MenuBarViewBuilder(
+        this.onLoadSongs = onLoadSongs;
+        this.menuBarModel = mp3Model.getMenuBarModel();
+        this.interactor = new MenuBarInteractor(mp3Model);
+        this.viewBuilder = new MenuBarViewBuilder(
                 menuBarModel,
                 interactor::selectTheme,
                 interactor::setSelectedLocale,
                 interactor::setSize,
-                () -> interactor.openDirectory(loadSongs),
+                () -> interactor.openDirectory(onLoadSongs),
                 interactor::changeLaunchMaximized,
                 interactor::changeUseSystemMenubar,
                 interactor::changeDetailsSideMenuEnabled,
@@ -36,9 +38,21 @@ public class MenuBarController extends BaseController<MenuBar> {
                 interactor::setTracksForSongsByFileName,
                 interactor::removeIndexFromFileNames,
                 this::onSave,
-                this::onSaveAs
+                this::onSaveAs,
+                this::onReopenFolder
         );
         setupModel();
+    }
+
+    private boolean reopenFolder;
+
+    private void onReopenFolder() {
+        reopenFolder = true;
+        if (interactor.hasUnsavedChanges() && interactor.saveChanges()) {
+            onSave();
+        } else {
+            onLoadSongs.run();
+        }
     }
 
     private void onSave() {
@@ -52,8 +66,13 @@ public class MenuBarController extends BaseController<MenuBar> {
     }
 
     private void saveSongs(Path savePath) {
-        SongSaver songSaver = new SongSaverImpl(Paths.get(mp3Model.getSelectedPath()), savePath, mp3Model.getSongs());
+        SongSaver songSaver = new SongSaverImpl(Paths.get(mp3Model.getSelectedPath()), savePath, mp3Model.getSongs(), this::onSavingFinished);
         songSaver.save();
+    }
+
+    private void onSavingFinished() {
+        if (reopenFolder) onLoadSongs.run();
+        reopenFolder = false;
     }
 
     private void setupModel() {

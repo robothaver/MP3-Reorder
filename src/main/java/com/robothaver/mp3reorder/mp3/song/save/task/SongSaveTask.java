@@ -27,27 +27,28 @@ public class SongSaveTask implements Callable<Void> {
         TagUtils.writeDataToTag(song);
 
         // Get what folder to save in
+        String newSongName = SongSaveUtils.createValidSongName(song);
         String parentDir = song.getPath().getParent().toString();
-        String newSongName = SongSaveUtils.buildSongName(song);
-        song.fileNameProperty().set(newSongName);
-
         Path newSavePath = Paths.get(parentDir, newSongName);
-        if (song.getFileName().equals(song.getPath().getFileName().toString())) {
+
+        if (song.getFileName().equals(newSongName)) {
             // The file has not been renamed
             saveWithExistingName(parentDir, newSongName, newSavePath);
         } else {
             // The file has a new name, have to remove the existing file
             saveWithNewName(newSavePath);
         }
+        song.fileNameProperty().set(newSongName);
+
         // Have to re-read mp3 file to avoid byte change issues
-        reloadMp3File(newSavePath, mp3File.getId3v2Tag());
+        reloadMp3File(newSavePath);
 
         song.setFileChanged(false);
         return null;
     }
 
     private void saveWithExistingName(String parentDir, String newSongName, Path newSavePath) throws IOException, NotSupportedException {
-        Path tempSavePath = Paths.get(parentDir, "EDITED_" + newSongName);
+        Path tempSavePath = Paths.get(parentDir, newSongName + ".tmp");
         mp3File.save(tempSavePath.toString());
         Files.move(tempSavePath, newSavePath, REPLACE_EXISTING);
     }
@@ -58,9 +59,9 @@ public class SongSaveTask implements Callable<Void> {
         song.setPath(newSavePath);
     }
 
-    private void reloadMp3File(Path savePath, ID3v2 tag) throws InvalidDataException, UnsupportedTagException, IOException {
+    private void reloadMp3File(Path savePath) throws InvalidDataException, UnsupportedTagException, IOException {
         Mp3File saveMp3File = new Mp3File(savePath);
-        saveMp3File.setId3v2Tag(tag);
+        song.setTag(saveMp3File.getId3v2Tag());
         song.setMp3File(saveMp3File);
     }
 }

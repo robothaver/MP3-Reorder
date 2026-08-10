@@ -33,7 +33,6 @@ import static com.robothaver.mp3reorder.core.ApplicationInfo.APPLICATION_NAME;
 @RequiredArgsConstructor
 public class SongLoaderImpl implements SongLoader {
     private final MP3Model model;
-    private final Builder<Region> viewBuilder;
     private final ViewLocalization songLoaderLocalization = new ViewLocalization("language.song_loader", LanguageController.getSelectedLocale());
     private final ViewLocalization trackAssignerLocalization = new ViewLocalization("language.song_track_assigner", LanguageController.getSelectedLocale());
 
@@ -63,9 +62,7 @@ public class SongLoaderImpl implements SongLoader {
         TrackAssignerResult trackAssignerResult = trackAssigner.assignTracks();
         model.getSongs().setAll(trackAssignerResult.getSongs());
 
-        if (!model.getSongs().isEmpty()) {
-            model.selectedSongIndexProperty().set(0);
-        }
+        if (!model.getSongs().isEmpty()) model.selectedSongIndexProperty().set(0);
 
         showTrackIssueDialog(trackAssignerResult.getTrackIssue());
         showFailedSongsDialog(result.getErrors());

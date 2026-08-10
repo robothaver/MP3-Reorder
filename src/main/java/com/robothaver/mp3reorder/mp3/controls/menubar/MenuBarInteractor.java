@@ -6,17 +6,20 @@ import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
 import com.robothaver.mp3reorder.core.preference.Preferences;
 import com.robothaver.mp3reorder.core.preference.PreferencesStore;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
+import com.robothaver.mp3reorder.dialog.option.OptionDialogMessage;
 import com.robothaver.mp3reorder.mp3.MP3Model;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import com.robothaver.mp3reorder.mp3.utils.MP3FileUtils;
 import javafx.application.Application;
+import javafx.scene.control.ButtonType;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static com.robothaver.mp3reorder.mp3.utils.MP3FileUtils.getTrackNumberFromFileName;
 
@@ -124,5 +127,26 @@ public class MenuBarInteractor {
             }
         }
         mp3Model.getSongSearch().clear();
+    }
+
+    public boolean saveChanges() {
+        ButtonType save = new ButtonType("Save");
+        ButtonType ignore = new ButtonType("Ignore");
+        OptionDialogMessage dialogMessage = OptionDialogMessage.builder()
+                .title("Unsaved changes")
+                .message("Unsaved changes have been made to the songs. Would you like to save and reopen?")
+                .options(List.of(ignore, save))
+                .build();
+        Optional<ButtonType> userChoice = DialogManagerImpl.getInstance().showOptionDialog(dialogMessage);
+        return userChoice.isPresent() && userChoice.get().equals(save);
+    }
+
+    public boolean hasUnsavedChanges() {
+        for (Song song : mp3Model.getSongs()) {
+            if (song.isFileChanged()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

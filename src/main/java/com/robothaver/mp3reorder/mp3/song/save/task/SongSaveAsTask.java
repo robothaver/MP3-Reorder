@@ -22,14 +22,13 @@ public class SongSaveAsTask implements Callable<Void> {
         // Write the data to the mp3 file's tag
         TagUtils.writeDataToTag(song);
 
-        String newSongName = SongSaveUtils.buildSongName(song);
-        song.fileNameProperty().set(newSongName);
+        String newSongName = SongSaveUtils.createValidSongName(song);
+        song.fileNameProperty().setValue(newSongName);
 
         Path newSavePath = Paths.get(savePath.toString(), newSongName);
         Files.deleteIfExists(newSavePath);
         song.getMp3File().save(newSavePath.toString());
 
-        song.setFileChanged(false);
         return null;
     }
 }

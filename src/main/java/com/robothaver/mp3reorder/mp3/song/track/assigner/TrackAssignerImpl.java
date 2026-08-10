@@ -63,7 +63,7 @@ public class TrackAssignerImpl implements TrackAssigner {
         for (int i = 0; i < sortedSongArray.length; i++) {
             if (sortedSongArray[i] == null) {
                 Song withoutTracks = songsWithoutTracks.get(songIndex);
-                withoutTracks.setTrack(i + 1);
+                withoutTracks.trackProperty().setValue(i + 1);
                 sortedSongArray[i] = withoutTracks;
                 songIndex++;
             }

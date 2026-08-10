@@ -51,6 +51,7 @@ public class SearchTextFieldInteractor {
             int firstIndex = mp3Model.getSongs().indexOf(results.getFirst());
             model.getSelectedResultIndex().set(0);
             mp3Model.selectedSongIndexProperty().set(firstIndex);
+            mp3Model.setScrollToSelected(!mp3Model.getScrollToSelected());
         } else {
             model.getSelectedResultIndex().set(-1);
         }
