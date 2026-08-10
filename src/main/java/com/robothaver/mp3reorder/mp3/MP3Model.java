@@ -11,15 +11,15 @@ import javafx.collections.ObservableList;
 
 public class MP3Model {
     private final ObservableList<Song> songs = FXCollections.observableArrayList();
-    private final BooleanProperty orderDescending = new SimpleBooleanProperty(false);
+    private final BooleanProperty orderDescending = new SimpleBooleanProperty();
     private final StringProperty selectedPath = new SimpleStringProperty();
-    private final IntegerProperty selectedSongIndex = new SimpleIntegerProperty(-1);
+    private final IntegerProperty selectedSongIndex = new SimpleIntegerProperty();
     private final ObjectProperty<Song> songInPlayer = new SimpleObjectProperty<>();
     private final BooleanProperty songPlaying = new SimpleBooleanProperty();
     private final SearchTextFieldModel songSearch = new SearchTextFieldModel();
     private final MenuBarModel menuBarModel = new MenuBarModel();
+    private final BooleanProperty scrollToSelected = new SimpleBooleanProperty();
     private final MP3TrackEditor trackEditor = new MP3TrackEditorImpl(selectedSongIndex, orderDescending, songs);
-    private final BooleanProperty scrollToSelected = new SimpleBooleanProperty(false);
 
     public ObservableList<Song> getSongs() {
         return songs;
