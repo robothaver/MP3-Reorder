@@ -12,6 +12,7 @@ public class MenuBarModel {
     private final ObjectProperty<Locale> selectedLocale = new SimpleObjectProperty<>();
     private final BooleanProperty detailsMenuEnabled = new SimpleBooleanProperty(true);
     private final BooleanProperty statusBarEnabled = new SimpleBooleanProperty(true);
+    private final BooleanProperty audioPlayerEnabled = new SimpleBooleanProperty(true);
     private final BooleanProperty launchMaximized = new SimpleBooleanProperty(false);
     private final BooleanProperty useSystemMenuBar = new SimpleBooleanProperty(true);
 }

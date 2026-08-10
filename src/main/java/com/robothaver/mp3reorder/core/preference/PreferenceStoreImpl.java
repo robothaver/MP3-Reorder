@@ -64,6 +64,7 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
         preferences.setStatusBarEnabled(Boolean.parseBoolean(properties.getProperty("statusBarEnabled")));
         preferences.setLaunchMaximized(Boolean.parseBoolean(properties.getProperty("launchMaximized")));
         preferences.setUseSystemMenuBar(Boolean.parseBoolean(properties.getProperty("useSystemMenuBar")));
+        preferences.setAudioPlayerEnabled(Boolean.parseBoolean(properties.getProperty("audioPlayerEnabled")));
     }
 
     private static void writeToProperties(Properties properties, Preferences preferences) {
@@ -74,6 +75,7 @@ public class PreferenceStoreImpl implements PreferencesStore<Preferences> {
         properties.setProperty("statusBarEnabled", String.valueOf(preferences.isStatusBarEnabled()));
         properties.setProperty("launchMaximized", String.valueOf(preferences.isLaunchMaximized()));
         properties.setProperty("useSystemMenuBar", String.valueOf(preferences.isUseSystemMenuBar()));
+        properties.setProperty("audioPlayerEnabled", String.valueOf(preferences.isAudioPlayerEnabled()));
     }
 
     @Override

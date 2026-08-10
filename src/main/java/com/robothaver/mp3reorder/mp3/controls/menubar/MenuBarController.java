@@ -36,6 +36,7 @@ public class MenuBarController extends BaseController<MenuBar> {
                 interactor::changeUseSystemMenubar,
                 interactor::changeDetailsSideMenuEnabled,
                 interactor::changeStatusBarEnabled,
+                interactor::onToggleAudioPlayer,
                 () -> System.exit(0),
                 interactor::setTracksForSongsByFileName,
                 interactor::removeIndexFromFileNames,
@@ -76,6 +77,8 @@ public class MenuBarController extends BaseController<MenuBar> {
     }
 
     private void setupModel() {
+        menuBarModel.getAudioPlayerEnabled().bindBidirectional(mp3Model.audioPlayerEnabledProperty());
+
         Preferences preferences = PreferenceStoreImpl.getInstance().getPreferences();
         menuBarModel.getSelectedLocale().set(preferences.getSelectedLocale());
         menuBarModel.getSelectedTheme().set(preferences.getSelectedTheme());
@@ -84,5 +87,6 @@ public class MenuBarController extends BaseController<MenuBar> {
         menuBarModel.getUseSystemMenuBar().set(preferences.isUseSystemMenuBar());
         menuBarModel.getDetailsMenuEnabled().set(preferences.isSideMenuEnabled());
         menuBarModel.getStatusBarEnabled().set(preferences.isStatusBarEnabled());
+        menuBarModel.getAudioPlayerEnabled().set(preferences.isAudioPlayerEnabled());
     }
 }

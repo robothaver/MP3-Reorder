@@ -34,6 +34,11 @@ public class MenuBarInteractor {
         this.menuBarModel = mp3Model.getMenuBarModel();
     }
 
+    public void onToggleAudioPlayer() {
+        preferencesStore.getPreferences().setAudioPlayerEnabled(mp3Model.isAudioPlayerEnabled());
+        preferencesStore.savePreferences();
+    }
+
     public Path getSaveLocation() {
         File selectedDirectory = DialogManagerImpl.getInstance()
                 .showDirectoryChooserDialog(localization.getForKey("file.saveAsDialogTitle"), new File("."));

@@ -16,6 +16,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
@@ -109,7 +110,11 @@ public class MP3ViewBuilder implements Builder<Region> {
         audioPlayerModel.setOnTitleClicked(onScrollToPlaying);
         audioPlayerModel.setOnPlayPressedWhenEmpty(onPlayPressedWhenEmpty);
 
-        tableContainer.getChildren().addAll(toolBar, tableViewController.getView(), audioPlayerController.getView());
+        StackPane audioPlayer = audioPlayerController.getView();
+        audioPlayer.managedProperty().bind(model.audioPlayerEnabledProperty());
+        audioPlayer.visibleProperty().bind(model.audioPlayerEnabledProperty());
+
+        tableContainer.getChildren().addAll(toolBar, tableViewController.getView(), audioPlayer);
         return tableContainer;
     }
 }

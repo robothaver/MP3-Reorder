@@ -27,6 +27,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final Runnable onUseSystemMenuBar;
     private final Runnable onDetailsMenuStateChanged;
     private final Runnable onStatusBarStateChanged;
+    private final Runnable onAudioPlayerToggled;
     private final Runnable onExit;
     private final Runnable onSetTracksByFileName;
     private final Runnable onRemoveIndexFromFileName;
@@ -120,6 +121,11 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         statusBarOption.onActionProperty().set(_ -> onStatusBarStateChanged.run());
         statusBarOption.textProperty().bind(localization.bindString("statusBar"));
 
+        CheckMenuItem audioPlayer = new CheckMenuItem("Audio player", new FontIcon(Feather.MUSIC));
+        audioPlayer.selectedProperty().bindBidirectional(model.getAudioPlayerEnabled());
+        audioPlayer.onActionProperty().set(_ -> onAudioPlayerToggled.run());
+        audioPlayer.textProperty().bind(localization.bindString("audioPlayer"));
+
         Menu themeMenu = new Menu("_Theme", new FontIcon(Feather.SUN));
         themeMenu.textProperty().bind(localization.bindString("theme"));
         for (Themes theme : Themes.values()) {
@@ -174,7 +180,8 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
                 sizeMenu,
                 new SeparatorMenuItem(),
                 launchMaximizedOption,
-                useSystemMenuBarOption
+                useSystemMenuBarOption,
+                audioPlayer
         );
         return viewMenu;
     }

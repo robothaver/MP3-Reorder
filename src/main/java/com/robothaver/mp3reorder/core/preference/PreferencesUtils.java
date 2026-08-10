@@ -15,7 +15,7 @@ public class PreferencesUtils {
     }
 
     private static final String PREFERENCES_FILE_NAME = "preferences.properties";
-    public static final Preferences DEFAULT_PREFERENCES = new Preferences(true, true, false, true, Themes.PRIMER_DARK, 14, ApplicationInfo.DEFAULT_LOCALE);
+    public static final Preferences DEFAULT_PREFERENCES = new Preferences(true, true, false, true, true, Themes.PRIMER_DARK, 14, ApplicationInfo.DEFAULT_LOCALE);
     public static final Path PREFERENCES_PATH = resolvePreferencesPath();
 
     private static Path resolvePreferencesPath() {

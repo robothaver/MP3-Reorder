@@ -15,6 +15,7 @@ public class Preferences {
     private boolean statusBarEnabled;
     private boolean launchMaximized;
     private boolean useSystemMenuBar;
+    private boolean audioPlayerEnabled;
     private Themes selectedTheme;
     private int selectedSize;
     private Locale selectedLocale;
