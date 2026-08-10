@@ -14,7 +14,7 @@
 ## What is MP3 Reorder?
 
 MP3 Reorder is a desktop application designed to help you organize your local music library. The core focus of the app
-is bulk-editing the MP3 `track` field, but it also functions as a general ID3 tag editor for modifying titles, artists,
+is editing the MP3 `track` field, but it also functions as a general ID3 tag editor for modifying titles, artists,
 genres, and more.
 
 ## How it works
