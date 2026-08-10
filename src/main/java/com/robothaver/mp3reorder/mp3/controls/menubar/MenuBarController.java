@@ -19,6 +19,8 @@ public class MenuBarController extends BaseController<MenuBar> {
     private final MenuBarInteractor interactor;
     private final Runnable onLoadSongs;
 
+    private boolean reopenFolder;
+
     public MenuBarController(MP3Model mp3Model, Runnable onLoadSongs) {
         this.mp3Model = mp3Model;
         this.onLoadSongs = onLoadSongs;
@@ -44,11 +46,9 @@ public class MenuBarController extends BaseController<MenuBar> {
         setupModel();
     }
 
-    private boolean reopenFolder;
-
     private void onReopenFolder() {
         reopenFolder = true;
-        if (interactor.hasUnsavedChanges() && interactor.saveChanges()) {
+        if (interactor.hasUnsavedChanges() && interactor.shouldSaveChanges()) {
             onSave();
         } else {
             onLoadSongs.run();

@@ -55,7 +55,7 @@ public class SongSaveTask implements Callable<Void> {
 
     private void saveWithNewName(Path newSavePath) throws IOException, NotSupportedException {
         mp3File.save(newSavePath.toString());
-        Files.deleteIfExists(song.getPath());
+        if (!Files.isSameFile(song.getPath(), newSavePath)) Files.deleteIfExists(song.getPath());
         song.setPath(newSavePath);
     }
 

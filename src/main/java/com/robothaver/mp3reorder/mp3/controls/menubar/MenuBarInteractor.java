@@ -129,12 +129,12 @@ public class MenuBarInteractor {
         mp3Model.getSongSearch().clear();
     }
 
-    public boolean saveChanges() {
-        ButtonType save = new ButtonType("Save");
-        ButtonType ignore = new ButtonType("Ignore");
+    public boolean shouldSaveChanges() {
+        ButtonType save = new ButtonType(localization.getForKey("unsaved_changes_dialog.save"));
+        ButtonType ignore = new ButtonType(localization.getForKey("unsaved_changes_dialog.ignore"));
         OptionDialogMessage dialogMessage = OptionDialogMessage.builder()
-                .title("Unsaved changes")
-                .message("Unsaved changes have been made to the songs. Would you like to save and reopen?")
+                .title(localization.getForKey("unsaved_changes_dialog.title"))
+                .message(localization.getForKey("unsaved_changes_dialog.message"))
                 .options(List.of(ignore, save))
                 .build();
         Optional<ButtonType> userChoice = DialogManagerImpl.getInstance().showOptionDialog(dialogMessage);
