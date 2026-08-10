@@ -12,7 +12,7 @@ import javafx.scene.input.TransferMode;
 import lombok.Getter;
 
 public class DragAndDropControllerImpl<T> implements DragAndDropController<T> {
-    private static final double SCROLL_UP_PERCENTAGE = 0.3;
+    private static final double SCROLL_UP_PERCENTAGE = 0.2;
     private static final double SCROLL_DOWN_PERCENTAGE = 0.9;
 
     private final TableView<T> tableView;

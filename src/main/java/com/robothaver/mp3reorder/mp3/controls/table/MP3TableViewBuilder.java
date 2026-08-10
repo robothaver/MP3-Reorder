@@ -69,14 +69,8 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
             dragAndDropController.enableForTableRow(row);
             return row;
         });
-        mp3TableView.getSelectionModel().selectedIndexProperty().addListener((_, _, newValue) -> {
-            changedByTable = true;
-            model.setSelectedIndex(newValue.intValue());
-        });
-        model.selectedIndexProperty().addListener((_, _, newValue) -> {
-            if (!changedByTable) selectAndScrollToIndex(newValue.intValue(), mp3TableView);
-            changedByTable = false;
-        });
+        setupSelectionListener();
+
         model.scrollToSelectedProperty().addListener((_, _, _) ->
                 scrollController.scrollToIndex(model.getSelectedIndex()));
 
@@ -96,6 +90,17 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
         columns.add(playColumn);
 
         return mp3TableView;
+    }
+
+    private void setupSelectionListener() {
+        mp3TableView.getSelectionModel().selectedIndexProperty().addListener((_, _, newValue) -> {
+            changedByTable = true;
+            model.setSelectedIndex(newValue.intValue());
+        });
+        model.selectedIndexProperty().addListener((_, _, newValue) -> {
+            if (!changedByTable) selectAndScrollToIndex(newValue.intValue(), mp3TableView);
+            changedByTable = false;
+        });
     }
 
     private Label createPlaceHolder() {

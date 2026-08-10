@@ -29,12 +29,12 @@ public class MP3Interactor {
     }
 
     public void togglePlay(int index) {
-        Song newSong = mp3Model.getSongs().get(index);
+        mp3Model.setSelectedSongIndex(index);
+        Song newSong = mp3Model.getSelectedSong();
         if (mp3Model.getSongInPlayer() != null && newSong.equals(mp3Model.getSongInPlayer())) {
             mp3Model.setSongPlaying(!mp3Model.isSongPlaying());
         } else {
             mp3Model.setSongInPlayer(newSong);
-            mp3Model.setSongPlaying(true);
         }
     }
 
@@ -48,7 +48,6 @@ public class MP3Interactor {
             if (nextIndex == songs.size()) nextIndex = 0;
             mp3Model.setSelectedSongIndex(nextIndex);
             mp3Model.setSongInPlayer(songs.get(nextIndex));
-            mp3Model.setSongPlaying(true);
         }
     }
 
@@ -62,7 +61,6 @@ public class MP3Interactor {
             if (previousIndex == -1) previousIndex = songs.size() - 1;
             mp3Model.setSelectedSongIndex(previousIndex);
             mp3Model.setSongInPlayer(songs.get(previousIndex));
-            mp3Model.setSongPlaying(true);
         }
     }
 
