@@ -8,8 +8,6 @@ import com.robothaver.mp3reorder.mp3.MP3Model;
 import com.robothaver.mp3reorder.mp3.controls.RoundedImageView;
 import com.robothaver.mp3reorder.mp3.controls.details.controls.SongTextDataWidget;
 import com.robothaver.mp3reorder.mp3.controls.details.controls.genre.SongGenreComboBox;
-import com.robothaver.mp3reorder.mp3.domain.Song;
-import com.robothaver.mp3reorder.mp3.song.TagUtils;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Insets;
@@ -32,6 +30,9 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
     private final ViewLocalization localization = new ViewLocalization("language.details_menu", LanguageController.getSelectedLocale());
     private final Runnable onClosePressed;
 
+    private BooleanBinding emptyContainerVisible;
+    private BooleanBinding scrollPaneVisible;
+
     public SongDetailsSideMenuViewBuilder(MP3Model mp3Model, Runnable onClosePressed) {
         this.mp3Model = mp3Model;
         this.onClosePressed = onClosePressed;
@@ -39,6 +40,9 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
 
     @Override
     public VBox build() {
+        scrollPaneVisible = Bindings.createBooleanBinding(() -> mp3Model.getSelectedSongIndex() != -1, mp3Model.selectedSongIndexProperty());
+        emptyContainerVisible = Bindings.createBooleanBinding(() -> mp3Model.getSelectedSongIndex() == -1, mp3Model.selectedSongIndexProperty());
+
         VBox rootContainer = new VBox();
         rootContainer.setMaxWidth(800);
         rootContainer.setPadding(new Insets(0));
@@ -122,32 +126,28 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
         );
         trackTextField.setEditable(false);
 
-        mp3Model.selectedSongIndexProperty().addListener((_, _, currentIndex) -> {
-            int selectedIndex = (int) currentIndex;
-            if (selectedIndex != -1) {
-                Song song = mp3Model.getSongs().get(selectedIndex);
-                TagUtils.readDataFromTag(song);
-                songAlbumImageWidget.setImageBytes(song.getAlbumImage());
-                songGenreComboBox.bindToProperties(song.genreProperty(), song.genreDescriptionProperty());
+        mp3Model.selectedSongProperty().addListener((_, _, song) -> {
+            if (song == null) return;
 
-                trackTextField.getTextField().setText(String.valueOf(song.getTrack()));
-                song.trackProperty().addListener((_, _, newTrack) ->
-                        trackTextField.getTextField().setText(String.valueOf(newTrack))
-                );
-                titleTextField.bind(song.titleProperty());
-                artistTextField.bind(song.artistProperty());
-                albumTextField.bind(song.albumProperty());
-                yearTextField.bind(song.yearProperty());
-                commentTextField.bind(song.commentProperty());
-                lyricsTextField.bind(song.lyricsProperty());
-                composerTextField.bind(song.composerProperty());
-                publisherTextField.bind(song.publisherProperty());
-                originalArtistTextField.bind(song.originalArtistProperty());
-                albumArtistTextField.bind(song.albumArtistProperty());
-                copyrightTextField.bind(song.copyrightProperty());
-                urlTextField.bind(song.urlProperty());
-                encoderTextField.bind(song.encoderProperty());
-            }
+            songAlbumImageWidget.setImageBytes(song.getAlbumImage());
+            songGenreComboBox.bindToProperties(song.genreProperty(), song.genreDescriptionProperty());
+            trackTextField.getTextField().setText(String.valueOf(song.getTrack()));
+            song.trackProperty().addListener((_, _, newTrack) ->
+                    trackTextField.getTextField().setText(String.valueOf(newTrack))
+            );
+            titleTextField.bind(song.titleProperty());
+            artistTextField.bind(song.artistProperty());
+            albumTextField.bind(song.albumProperty());
+            yearTextField.bind(song.yearProperty());
+            commentTextField.bind(song.commentProperty());
+            lyricsTextField.bind(song.lyricsProperty());
+            composerTextField.bind(song.composerProperty());
+            publisherTextField.bind(song.publisherProperty());
+            originalArtistTextField.bind(song.originalArtistProperty());
+            albumArtistTextField.bind(song.albumArtistProperty());
+            copyrightTextField.bind(song.copyrightProperty());
+            urlTextField.bind(song.urlProperty());
+            encoderTextField.bind(song.encoderProperty());
         });
     }
 
@@ -180,7 +180,6 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
         scrollPane.setPadding(new Insets(10));
         scrollPane.hbarPolicyProperty().set(ScrollPane.ScrollBarPolicy.NEVER);
 
-        BooleanBinding scrollPaneVisible = Bindings.createBooleanBinding(() -> mp3Model.getSelectedSongIndex() != -1, mp3Model.selectedSongIndexProperty());
         scrollPane.managedProperty().bind(scrollPaneVisible);
         scrollPane.visibleProperty().bind(scrollPaneVisible);
         return scrollPane;
@@ -197,7 +196,6 @@ public class SongDetailsSideMenuViewBuilder implements Builder<VBox> {
         noSongSelectedLabel.textProperty().bind(localization.bindString("emptyText"));
         emptyContainer.getChildren().add(noSongSelectedLabel);
 
-        BooleanBinding emptyContainerVisible = Bindings.createBooleanBinding(() -> mp3Model.getSelectedSongIndex() == -1, mp3Model.selectedSongIndexProperty());
         emptyContainer.managedProperty().bind(emptyContainerVisible);
         emptyContainer.visibleProperty().bind(emptyContainerVisible);
         return emptyContainer;

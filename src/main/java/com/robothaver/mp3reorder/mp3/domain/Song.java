@@ -1,7 +1,5 @@
 package com.robothaver.mp3reorder.mp3.domain;
 
-import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.Mp3File;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -28,26 +26,14 @@ public class Song {
     private final TrackedStringProperty encoder = new TrackedStringProperty(fileChanged);
 
     private byte[] albumImage;
-    private Mp3File mp3File;
     private Path path;
-    private ID3v2 tag;
     private boolean readDataFromTag = false;
 
-    public Song(Mp3File mp3File, Path path, int track, ID3v2 tag) {
-        this(mp3File, path, track, tag.getTitle(), tag);
-    }
-
-    public Song(Mp3File mp3File, Path path) {
-        this(mp3File, path, -1, "", null);
-    }
-
-    private Song(Mp3File mp3File, Path path, int track, String title, ID3v2 tag) {
-        this.mp3File = mp3File;
+    public Song(Path path, int track, String title) {
         this.path = path;
         this.track.set(track);
         this.title.set(title);
         this.fileName.set(path.getFileName().toString());
-        this.tag = tag;
     }
 
     public boolean isFileChanged() {
@@ -274,28 +260,12 @@ public class Song {
         this.albumImage = albumImage;
     }
 
-    public Mp3File getMp3File() {
-        return mp3File;
-    }
-
-    public void setMp3File(Mp3File mp3File) {
-        this.mp3File = mp3File;
-    }
-
     public Path getPath() {
         return path;
     }
 
     public void setPath(Path path) {
         this.path = path;
-    }
-
-    public ID3v2 getTag() {
-        return tag;
-    }
-
-    public void setTag(ID3v2 tag) {
-        this.tag = tag;
     }
 
     public boolean isReadDataFromTag() {

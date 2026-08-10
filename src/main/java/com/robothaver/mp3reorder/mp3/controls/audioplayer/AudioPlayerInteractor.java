@@ -6,6 +6,7 @@ import javafx.util.Duration;
 import lombok.extern.log4j.Log4j2;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 
 import static com.robothaver.mp3reorder.mp3.controls.audioplayer.Utils.formatDuration;
 

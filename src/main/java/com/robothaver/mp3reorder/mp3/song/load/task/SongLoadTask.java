@@ -16,12 +16,12 @@ public class SongLoadTask implements Callable<Song> {
 
     @Override
     public Song call() throws Exception {
-        Mp3File mp3File = new Mp3File(file);
+        Mp3File mp3File = new Mp3File(file, 65536, false);
         if (mp3File.hasId3v2Tag()) {
             ID3v2 tag = mp3File.getId3v2Tag();
-            return new Song(mp3File, file, getTrackFromTag(tag), tag);
+            return new Song(file, getTrackFromTag(tag), tag.getTitle());
         } else {
-            return new Song(mp3File, file);
+            return new Song(file, -1, null);
         }
     }
 

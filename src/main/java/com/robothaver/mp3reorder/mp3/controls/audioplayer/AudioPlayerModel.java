@@ -14,8 +14,8 @@ public class AudioPlayerModel {
     private final StringProperty totalTimeText = new SimpleStringProperty("00:00");
 
     private final BooleanProperty playing = new SimpleBooleanProperty(false);
-    private final BooleanProperty muted = new SimpleBooleanProperty(true);
-    private final DoubleProperty volume = new SimpleDoubleProperty(0.0);
+    private final BooleanProperty muted = new SimpleBooleanProperty(false);
+    private final DoubleProperty volume = new SimpleDoubleProperty(0.5);
 
     private Runnable onPlayNext;
     private Runnable onPlayPrevious;

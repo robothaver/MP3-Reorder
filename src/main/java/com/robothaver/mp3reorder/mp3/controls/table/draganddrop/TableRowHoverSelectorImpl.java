@@ -85,7 +85,7 @@ public class TableRowHoverSelectorImpl<T> implements TableRowHoverSelector<T> {
             widths = new BorderWidths(1, 0, 0, 0);
         }
         return new BorderStroke(
-                Color.LIGHTSKYBLUE,
+                Color.CORNFLOWERBLUE,
                 BorderStrokeStyle.SOLID,
                 CornerRadii.EMPTY,
                 widths

@@ -2,12 +2,25 @@ package com.robothaver.mp3reorder.mp3;
 
 import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
 import com.robothaver.mp3reorder.mp3.domain.Song;
+import com.robothaver.mp3reorder.mp3.song.TagUtils;
 import javafx.collections.ObservableList;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class MP3Interactor {
     private final MP3Model mp3Model;
+
+    public MP3Interactor(MP3Model mp3Model) {
+        this.mp3Model = mp3Model;
+
+        mp3Model.selectedSongIndexProperty().addListener((_, _, newValue) -> {
+            if (newValue.intValue() != -1) {
+                Song song = mp3Model.getSongs().get(newValue.intValue());
+                TagUtils.readDataFromTag(song);
+                mp3Model.setSelectedSong(song);
+            } else {
+                mp3Model.setSelectedSong(null);
+            }
+        });
+    }
 
     public void closeDetailsSideMenu() {
         mp3Model.getMenuBarModel().getDetailsMenuEnabled().set(false);
@@ -33,8 +46,8 @@ public class MP3Interactor {
         if (songInPlayer != null) {
             int nextIndex = songs.indexOf(songInPlayer) + 1;
             if (nextIndex == songs.size()) nextIndex = 0;
-            mp3Model.setSongInPlayer(songs.get(nextIndex));
             mp3Model.setSelectedSongIndex(nextIndex);
+            mp3Model.setSongInPlayer(songs.get(nextIndex));
             mp3Model.setSongPlaying(true);
         }
     }
@@ -47,8 +60,8 @@ public class MP3Interactor {
         if (songInPlayer != null) {
             int previousIndex = songs.indexOf(songInPlayer) - 1;
             if (previousIndex == -1) previousIndex = songs.size() - 1;
-            mp3Model.setSongInPlayer(songs.get(previousIndex));
             mp3Model.setSelectedSongIndex(previousIndex);
+            mp3Model.setSongInPlayer(songs.get(previousIndex));
             mp3Model.setSongPlaying(true);
         }
     }

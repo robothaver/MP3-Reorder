@@ -21,10 +21,10 @@ public class SongSaveTask implements Callable<Void> {
 
     @Override
     public Void call() throws IOException, NotSupportedException, InvalidDataException, UnsupportedTagException {
-        mp3File = song.getMp3File();
+        mp3File = new Mp3File(song.getPath());
 
         // Write the data to the mp3 file's tag
-        TagUtils.writeDataToTag(song);
+        TagUtils.writeDataToTag(song, mp3File);
 
         // Get what folder to save in
         String newSongName = SongSaveUtils.createValidSongName(song);
@@ -40,10 +40,8 @@ public class SongSaveTask implements Callable<Void> {
         }
         song.fileNameProperty().set(newSongName);
 
-        // Have to re-read mp3 file to avoid byte change issues
-        reloadMp3File(newSavePath);
-
         song.setFileChanged(false);
+
         return null;
     }
 
@@ -57,11 +55,5 @@ public class SongSaveTask implements Callable<Void> {
         mp3File.save(newSavePath.toString());
         if (!Files.isSameFile(song.getPath(), newSavePath)) Files.deleteIfExists(song.getPath());
         song.setPath(newSavePath);
-    }
-
-    private void reloadMp3File(Path savePath) throws InvalidDataException, UnsupportedTagException, IOException {
-        Mp3File saveMp3File = new Mp3File(savePath);
-        song.setTag(saveMp3File.getId3v2Tag());
-        song.setMp3File(saveMp3File);
     }
 }

@@ -15,6 +15,7 @@ public class MP3Model {
     private final StringProperty selectedPath = new SimpleStringProperty();
     private final IntegerProperty selectedSongIndex = new SimpleIntegerProperty();
     private final ObjectProperty<Song> songInPlayer = new SimpleObjectProperty<>();
+    private final ObjectProperty<Song> selectedSong = new SimpleObjectProperty<>();
     private final BooleanProperty songPlaying = new SimpleBooleanProperty();
     private final SearchTextFieldModel songSearch = new SearchTextFieldModel();
     private final MenuBarModel menuBarModel = new MenuBarModel();
@@ -120,5 +121,17 @@ public class MP3Model {
 
     public MP3TrackEditor getTrackEditor() {
         return trackEditor;
+    }
+
+    public Song getSelectedSong() {
+        return selectedSong.get();
+    }
+
+    public ObjectProperty<Song> selectedSongProperty() {
+        return selectedSong;
+    }
+
+    public void setSelectedSong(Song selectedSong) {
+        this.selectedSong.set(selectedSong);
     }
 }
