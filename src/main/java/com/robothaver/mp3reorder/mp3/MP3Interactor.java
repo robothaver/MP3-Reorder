@@ -22,6 +22,11 @@ public class MP3Interactor {
         });
     }
 
+    public void onAudioPlayerError() {
+        mp3Model.setSongInPlayer(null);
+        mp3Model.setSongPlaying(false);
+    }
+
     public void closeDetailsSideMenu() {
         mp3Model.getMenuBarModel().getDetailsMenuEnabled().set(false);
         PreferenceStoreImpl.getInstance().getPreferences().setSideMenuEnabled(false);

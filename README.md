@@ -35,7 +35,7 @@ loaded songs.
 
 ### Playback and system integration
 
-- Built-in Player: Listen to your tracks directly within the app.
+- Built-in Player: Listen to your tracks directly within the app. (On some Linux distributions, the JavaFX MediaPlayer might fail to initialize. In this case, installing the `ffmpeg-compat-57` package might solve the issue.)
 - System Integration: Open songs in your default music player or reveal them directly in your file explorer.
 
 ### UI

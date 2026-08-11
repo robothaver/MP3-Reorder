@@ -23,6 +23,7 @@ public class MP3Controller extends BaseController<Region> {
                 interactor::onPlayPrevious,
                 interactor::onScrollToPlaying,
                 interactor::onPlayPressedWhenEmpty,
+                interactor::onAudioPlayerError,
                 interactor::togglePlay
         );
         songLoader = new SongLoaderImpl(model);

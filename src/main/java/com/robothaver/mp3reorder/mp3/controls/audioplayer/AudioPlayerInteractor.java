@@ -1,12 +1,15 @@
 package com.robothaver.mp3reorder.mp3.controls.audioplayer;
 
+import com.robothaver.mp3reorder.core.language.LanguageController;
+import com.robothaver.mp3reorder.core.language.ViewLocalization;
+import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
+import javafx.scene.control.Alert;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import lombok.extern.log4j.Log4j2;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 import static com.robothaver.mp3reorder.mp3.controls.audioplayer.Utils.formatDuration;
 
@@ -14,6 +17,7 @@ import static com.robothaver.mp3reorder.mp3.controls.audioplayer.Utils.formatDur
 public class AudioPlayerInteractor {
     private final AudioPlayerModel model;
 
+    private final ViewLocalization localization = new ViewLocalization("language.audio_player", LanguageController.getSelectedLocale());
     private MediaPlayer mediaPlayer;
     private double selectedVolume;
     private boolean endOfMedia;
@@ -43,10 +47,12 @@ public class AudioPlayerInteractor {
 
         if (mediaPlayer != null) mediaPlayer.dispose();
 
-        Media media = new Media(Path.of(path).toUri().toString());
-        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer = tryCreateMediaPlayer(path);
+        if (mediaPlayer == null) return;
+
         mediaPlayer.setOnReady(() -> {
             model.setPlaying(true);
+            Media media = mediaPlayer.getMedia();
             double totalLengthSeconds = media.getDuration().toSeconds();
             model.setTotalTimeSeconds(totalLengthSeconds);
             model.setTotalTimeText(totalLengthSeconds > 0 ? formatDuration(media.getDuration()) : "00:00");
@@ -117,5 +123,35 @@ public class AudioPlayerInteractor {
 
         model.setCurrentTimeText(seconds > 0 ? formatDuration(duration) : "00:00");
         model.setCurrentTimeSeconds(seconds);
+    }
+
+    private MediaPlayer tryCreateMediaPlayer(String path) {
+        try {
+            Media media = tryCreateMedia(path);
+            if (media == null) {
+                if (model.getOnError() != null) model.getOnError().run();
+                return null;
+            }
+            return new MediaPlayer(media);
+        } catch (Exception e) {
+            log.error("Failed to create MediaPlayer!", e);
+            if (model.getOnError() != null) model.getOnError().run();
+            showErrorDialog(localization.getForKey("error.dialog.media.player.message") + e);
+            return null;
+        }
+    }
+
+    private Media tryCreateMedia(String path) {
+        try {
+            return new Media(Path.of(path).toUri().toString());
+        } catch (Exception e) {
+            log.error("Failed to create Media!", e);
+            showErrorDialog(localization.getForKey("error.dialog.media.message") + e);
+            return null;
+        }
+    }
+
+    private void showErrorDialog(String message) {
+        DialogManagerImpl.getInstance().showAlert(Alert.AlertType.ERROR, localization.getForKey("error.dialog.title"), message);
     }
 }

@@ -31,7 +31,7 @@ import java.util.function.BiConsumer;
 
 @RequiredArgsConstructor
 public class MP3TableViewBuilder implements Builder<TableView<Song>> {
-    private static final DataFormat dataFormat = new DataFormat("MP3Reorder/MP3TableView/Songs");
+    private static final DataFormat dataFormat = new DataFormat("mp3reorder-index");
 
     private final MP3TableViewModel model;
     private final BiConsumer<Integer, Integer> onTrackChanged;
@@ -142,7 +142,7 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
                 model.setOrderDescending(newValue == TableColumn.SortType.DESCENDING));
         return trackColumn;
     }
-
+    
     private DragAndDropController<Song> createDragAndDropController() {
         DragAndDropController<Song> dragAndDropController = new DragAndDropControllerImpl<>(mp3TableView, dataFormat, new TableViewScrollAnimatorImpl(), new TableRowHoverSelectorImpl<>());
         dragAndDropController.enableForTableView();

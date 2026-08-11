@@ -32,6 +32,7 @@ public class MP3ViewBuilder implements Builder<Region> {
     private final Runnable onPlayPrevious;
     private final Runnable onScrollToPlaying;
     private final Runnable onPlayPressedWhenEmpty;
+    private final Runnable onAudioPlayerError;
     private final IntConsumer onTogglePlay;
 
     @Override
@@ -109,6 +110,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         audioPlayerModel.setOnPlayPrevious(onPlayPrevious);
         audioPlayerModel.setOnTitleClicked(onScrollToPlaying);
         audioPlayerModel.setOnPlayPressedWhenEmpty(onPlayPressedWhenEmpty);
+        audioPlayerModel.setOnError(onAudioPlayerError);
 
         StackPane audioPlayer = audioPlayerController.getView();
         audioPlayer.managedProperty().bind(model.audioPlayerEnabledProperty());
