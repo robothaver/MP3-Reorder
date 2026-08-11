@@ -53,6 +53,9 @@ jobs:
 
           mv macos-build/MP3Reorder-macOS.zip .
 
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
       - name: Upload Assets to GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,5 +63,4 @@ jobs:
           gh release upload "${{ github.event.release.tag_name }}" \
             MP3Reorder-linux.zip \
             MP3Reorder-windows.zip \
-            MP3Reorder-macOS.zip \
-            --repo ${{ github.repository }}
+            MP3Reorder-macOS.zip
