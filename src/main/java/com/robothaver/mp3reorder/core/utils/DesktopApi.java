@@ -13,6 +13,7 @@ import java.nio.file.Path;
 
 @Log4j2
 public class DesktopApi {
+    private static final String XDG_OPEN = "xdg-open";
     private static final ViewLocalization localization = new ViewLocalization("language.table", LanguageController.getSelectedLocale());
     private static final Desktop desktop = getDesktop();
 
@@ -24,9 +25,9 @@ public class DesktopApi {
         try {
             String os = System.getProperty("os.name").toLowerCase();
 
-            if (os.equals("linux")) {
+            if (os.equals("linux") && commandExists(XDG_OPEN)) {
                 // desktop.isSupported returns true for OPEN, but it freezes the app
-                runCommand("xdg-open", path.toAbsolutePath().toString());
+                runCommand(XDG_OPEN, path.toAbsolutePath().toString());
             } else {
                 if (desktop == null) {
                     showActionDesktopError(localization.getForKey("action.open_in_default_player"));
@@ -70,8 +71,8 @@ public class DesktopApi {
                 runCommand("dolphin", "--select", path);
             } else if (commandExists("nautilus")) {
                 runCommand("nautilus", "--select", path);
-            } else if (commandExists("xdg-open")) {
-                runCommand("xdg-open", songPath.getParent().toString());
+            } else if (commandExists(XDG_OPEN)) {
+                runCommand(XDG_OPEN, songPath.getParent().toString());
             }
         }
     }
