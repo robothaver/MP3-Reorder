@@ -6,11 +6,13 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.skin.VirtualFlow;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
 import static com.robothaver.mp3reorder.mp3.controls.table.draganddrop.DragAndDropUtils.NANOSECOND_TO_SECOND;
 
 @Getter
 @Setter
+@Log4j2
 public class TableViewScrollAnimatorImpl implements TableViewScrollAnimator {
     private final ObjectProperty<VirtualFlow<?>> virtualFlowProperty = new SimpleObjectProperty<>();
     private final AnimationTimer animationTimer;
@@ -48,6 +50,8 @@ public class TableViewScrollAnimatorImpl implements TableViewScrollAnimator {
 
                     if (virtualFlowProperty.get() != null) {
                         virtualFlowProperty.get().scrollPixels(pixelsToMove * scrollDelta * deltaTime);
+                    } else {
+                        log.warn("Cannot scroll because VirtualFlow is null");
                     }
                 }
                 lastUpdate = nowNs;

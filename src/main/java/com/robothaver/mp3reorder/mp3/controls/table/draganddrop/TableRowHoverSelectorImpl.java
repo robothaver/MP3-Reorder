@@ -9,7 +9,9 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class TableRowHoverSelectorImpl<T> implements TableRowHoverSelector<T> {
     private final ObjectProperty<VirtualFlow<TableRow<T>>> virtualFlowProperty = new SimpleObjectProperty<>();
     private final AnimationTimer animationTimer;
@@ -67,6 +69,8 @@ public class TableRowHoverSelectorImpl<T> implements TableRowHoverSelector<T> {
                     }
 
                     lastHoveredRow = row;
+                } else {
+                    log.warn("Cannot detect hovered row because VirtualFlow is null");
                 }
 
             }

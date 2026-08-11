@@ -69,7 +69,7 @@ public class DialogManagerImpl implements DialogManager {
     }
 
     private void parentStageSizeFix() {
-        // Fix for maximized window breaking on linux
+        // Fix for maximized window breaking on Linux
         if (primaryStage.isMaximized()) {
             primaryStage.setWidth(primaryStage.getWidth());
             primaryStage.setHeight(primaryStage.getHeight());

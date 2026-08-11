@@ -142,7 +142,7 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
                 model.setOrderDescending(newValue == TableColumn.SortType.DESCENDING));
         return trackColumn;
     }
-    
+
     private DragAndDropController<Song> createDragAndDropController() {
         DragAndDropController<Song> dragAndDropController = new DragAndDropControllerImpl<>(mp3TableView, dataFormat, new TableViewScrollAnimatorImpl(), new TableRowHoverSelectorImpl<>());
         dragAndDropController.enableForTableView();
@@ -152,8 +152,12 @@ public class MP3TableViewBuilder implements Builder<TableView<Song>> {
     }
 
     private void getVirtualFlow() {
-        //noinspection unchecked
-        Platform.runLater(() -> virtualFlow.set((VirtualFlow<TableRow<Song>>) mp3TableView.lookup(".virtual-flow")));
+        mp3TableView.skinProperty().addListener((_, _, newValue) -> {
+            if (newValue != null) {
+                //noinspection unchecked
+                Platform.runLater(() -> virtualFlow.set((VirtualFlow<TableRow<Song>>) mp3TableView.lookup(".virtual-flow")));
+            }
+        });
     }
 
     private void selectAndScrollToIndex(int index, TableView<?> tableView) {

@@ -6,7 +6,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.TableView;
 import javafx.scene.control.skin.VirtualFlow;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @RequiredArgsConstructor
 public class TableViewScrollControllerImpl implements TableViewScrollController {
     private final ObjectProperty<VirtualFlow<?>> virtualFlowProperty = new SimpleObjectProperty<>();
@@ -25,8 +27,8 @@ public class TableViewScrollControllerImpl implements TableViewScrollController 
                 } else if (index >= lastVisible) {
                     flow.scrollTo(index);
                 }
-
             } else {
+                log.warn("VirtualFlow is null, using table view to scroll");
                 tableView.scrollTo(index);
             }
         });
