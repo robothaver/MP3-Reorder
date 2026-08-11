@@ -25,7 +25,7 @@ jobs:
             ditto -c -k --sequesterRsrc --keepParent MP3Reorder.app MP3Reorder-macOS.zip
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: MP3Reorder-macOS
           path: build/jpackage/MP3Reorder-macOS.zip
