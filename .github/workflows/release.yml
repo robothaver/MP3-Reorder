@@ -1,0 +1,63 @@
+name: Build and Upload Release Assets
+
+on:
+  workflow_call:
+  release:
+    types: [ created ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    uses: ./.github/workflows/linux_image.yml
+
+  build-macos:
+    uses: ./.github/workflows/macos_image.yml
+
+  build-windows:
+    uses: ./.github/workflows/windows_image.yml
+
+  upload-to-release:
+    needs: [ build-linux, build-macos, build-windows ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Linux Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: MP3Reorder-linux
+          path: linux-build
+
+      - name: Download macOS Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: MP3Reorder-macOS
+          path: macos-build
+
+      - name: Download Windows Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: MP3Reorder-windows
+          path: windows-build
+
+      - name: Prepare Release Zips
+        run: |
+          cd linux-build
+          zip -r ../MP3Reorder-linux.zip .
+          cd ..
+
+          cd windows-build
+          zip -r ../MP3Reorder-windows.zip .
+          cd ..
+
+          mv macos-build/MP3Reorder-macOS.zip .
+
+      - name: Upload Assets to GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" \
+            MP3Reorder-linux.zip \
+            MP3Reorder-windows.zip \
+            MP3Reorder-macOS.zip
