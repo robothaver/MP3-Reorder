@@ -23,9 +23,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v7
-
       - name: Download Linux Artifact
         uses: actions/download-artifact@v8
         with:
