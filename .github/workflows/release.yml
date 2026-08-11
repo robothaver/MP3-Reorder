@@ -60,4 +60,5 @@ jobs:
           gh release upload "${{ github.event.release.tag_name }}" \
             MP3Reorder-linux.zip \
             MP3Reorder-windows.zip \
-            MP3Reorder-macOS.zip
+            MP3Reorder-macOS.zip \
+            --repo ${{ github.repository }}
