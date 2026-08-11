@@ -1,0 +1,27 @@
+name: macos_image.yml
+on:
+  - workflow_dispatch
+  - workflow_call
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: 'gradle'
+
+      - name: Build Jlink native image
+        run: .\gradlew.bat jpackageImage
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: MP3Reorder_MacOS
+          path: build/jpackage/MP3Reorder.app
+          if-no-files-found: error
