@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3.controls.table;
+package com.robothaver.mp3reorder.mp3.controls.table.cell;
 
 import javafx.util.StringConverter;
 

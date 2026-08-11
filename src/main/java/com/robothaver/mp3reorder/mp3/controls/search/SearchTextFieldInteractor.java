@@ -5,13 +5,10 @@ import com.robothaver.mp3reorder.mp3.domain.Song;
 import javafx.collections.ObservableList;
 import lombok.RequiredArgsConstructor;
 
-import java.util.function.Consumer;
-
 @RequiredArgsConstructor
 public class SearchTextFieldInteractor {
     private final MP3Model mp3Model;
     private final SearchTextFieldModel model;
-    private final Consumer<Integer> onSelectedIndexChanged;
 
     public void selectPrevious() {
         if (model.getResults().size() < 2) return;
@@ -19,10 +16,10 @@ public class SearchTextFieldInteractor {
         if (selectedIndex == 0) {
             int lastIndex = model.getResults().size() - 1;
             model.getSelectedResultIndex().set(lastIndex);
-            onSelectedIndexChanged.accept(mp3Model.getSongs().indexOf(model.getResults().get(lastIndex)));
+            mp3Model.selectedSongIndexProperty().set(mp3Model.getSongs().indexOf(model.getResults().get(lastIndex)));
         } else {
             model.getSelectedResultIndex().set(selectedIndex - 1);
-            onSelectedIndexChanged.accept(mp3Model.getSongs().indexOf(model.getResults().get(selectedIndex - 1)));
+            mp3Model.selectedSongIndexProperty().set(mp3Model.getSongs().indexOf(model.getResults().get(selectedIndex - 1)));
         }
     }
 
@@ -32,10 +29,10 @@ public class SearchTextFieldInteractor {
         int lastIndex = model.getResults().size() - 1;
         if (selectedIndex == lastIndex) {
             model.getSelectedResultIndex().set(0);
-            onSelectedIndexChanged.accept(mp3Model.getSongs().indexOf(model.getResults().getFirst()));
+            mp3Model.selectedSongIndexProperty().set(mp3Model.getSongs().indexOf(model.getResults().getFirst()));
         } else {
             model.getSelectedResultIndex().set(selectedIndex + 1);
-            onSelectedIndexChanged.accept(mp3Model.getSongs().indexOf(model.getResults().get(selectedIndex + 1)));
+            mp3Model.selectedSongIndexProperty().set(mp3Model.getSongs().indexOf(model.getResults().get(selectedIndex + 1)));
         }
     }
 
@@ -54,7 +51,7 @@ public class SearchTextFieldInteractor {
             int firstIndex = mp3Model.getSongs().indexOf(results.getFirst());
             model.getSelectedResultIndex().set(0);
             mp3Model.selectedSongIndexProperty().set(firstIndex);
-            onSelectedIndexChanged.accept(firstIndex);
+            mp3Model.setScrollToSelected(!mp3Model.isScrollToSelected());
         } else {
             model.getSelectedResultIndex().set(-1);
         }

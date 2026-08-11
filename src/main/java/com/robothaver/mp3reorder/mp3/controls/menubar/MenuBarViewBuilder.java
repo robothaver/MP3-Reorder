@@ -1,7 +1,6 @@
 package com.robothaver.mp3reorder.mp3.controls.menubar;
 
 import com.robothaver.mp3reorder.core.ApplicationInfo;
-import com.robothaver.mp3reorder.core.font.Size;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import javafx.scene.control.*;
@@ -22,24 +21,27 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
     private final MenuBarModel model;
     private final Consumer<Themes> onThemeChanged;
     private final Consumer<Locale> onLocaleChanged;
-    private final Consumer<Size> onSizeChanged;
+    private final Consumer<Integer> onSizeChanged;
     private final Runnable onOpenDirectory;
     private final Runnable onLaunchMaximizedChanged;
+    private final Runnable onUseSystemMenuBar;
     private final Runnable onDetailsMenuStateChanged;
     private final Runnable onStatusBarStateChanged;
+    private final Runnable onAudioPlayerToggled;
     private final Runnable onExit;
     private final Runnable onSetTracksByFileName;
     private final Runnable onRemoveIndexFromFileName;
     private final Runnable onSave;
     private final Runnable onSaveAs;
+    private final Runnable onReopenDir;
 
     private final MenuBar menuBar = new MenuBar();
-
 
     private final ViewLocalization localization = new ViewLocalization("language.menubar", LanguageController.getSelectedLocale());
 
     @Override
     public MenuBar build() {
+        menuBar.useSystemMenuBarProperty().bindBidirectional(model.getUseSystemMenuBar());
         menuBar.getMenus().addAll(
                 createFileMenu(),
                 createEditMenu(),
@@ -55,6 +57,9 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         MenuItem openOption = createItem("Open", Feather.FOLDER, new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
         openOption.textProperty().bind(localization.bindString("file.open"));
         openOption.setOnAction(_ -> onOpenDirectory.run());
+        MenuItem reOpenOption = createItem("Reopen directory", Feather.REFRESH_CW, new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN));
+        reOpenOption.textProperty().bind(localization.bindString("file.reopen"));
+        reOpenOption.setOnAction(_ -> onReopenDir.run());
         MenuItem saveOption = createItem("Save", Feather.SAVE, new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         saveOption.textProperty().bind(localization.bindString("file.save"));
         saveOption.setOnAction(_ -> onSave.run());
@@ -66,6 +71,7 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         exitOption.setOnAction(_ -> onExit.run());
         fileMenu.getItems().addAll(
                 openOption,
+                reOpenOption,
                 new SeparatorMenuItem(),
                 saveOption,
                 saveAsOption,
@@ -100,6 +106,11 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         launchMaximizedOption.onActionProperty().set(_ -> onLaunchMaximizedChanged.run());
         launchMaximizedOption.textProperty().bind(localization.bindString("launchMaximized"));
 
+        CheckMenuItem useSystemMenuBarOption = new CheckMenuItem("Use system menu bar", new FontIcon(Feather.LAYOUT));
+        useSystemMenuBarOption.selectedProperty().bindBidirectional(model.getUseSystemMenuBar());
+        useSystemMenuBarOption.onActionProperty().set(_ -> onUseSystemMenuBar.run());
+        useSystemMenuBarOption.textProperty().bind(localization.bindString("useSystemMenuBar"));
+
         CheckMenuItem detailsSideMenuOption = new CheckMenuItem("Details side menu", new FontIcon(Feather.SIDEBAR));
         detailsSideMenuOption.selectedProperty().bindBidirectional(model.getDetailsMenuEnabled());
         detailsSideMenuOption.onActionProperty().set(_ -> onDetailsMenuStateChanged.run());
@@ -109,6 +120,11 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
         statusBarOption.selectedProperty().bindBidirectional(model.getStatusBarEnabled());
         statusBarOption.onActionProperty().set(_ -> onStatusBarStateChanged.run());
         statusBarOption.textProperty().bind(localization.bindString("statusBar"));
+
+        CheckMenuItem audioPlayer = new CheckMenuItem("Audio player", new FontIcon(Feather.MUSIC));
+        audioPlayer.selectedProperty().bindBidirectional(model.getAudioPlayerEnabled());
+        audioPlayer.onActionProperty().set(_ -> onAudioPlayerToggled.run());
+        audioPlayer.textProperty().bind(localization.bindString("audioPlayer"));
 
         Menu themeMenu = new Menu("_Theme", new FontIcon(Feather.SUN));
         themeMenu.textProperty().bind(localization.bindString("theme"));
@@ -144,18 +160,13 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
 
         Menu sizeMenu = new Menu("_Size", new FontIcon(Feather.TYPE));
         sizeMenu.textProperty().bind(localization.bindString("size"));
-        for (Size size : Size.values()) {
-            CheckMenuItem sizeMenuItem = new CheckMenuItem(size.toString());
-            sizeMenuItem.setOnAction(_ -> onSizeChanged.accept(size));
-            if (model.getSelectedSize().get().getFontSize() == size.getFontSize()) {
-                sizeMenuItem.setSelected(true);
-            }
-            sizeMenu.getItems().add(sizeMenuItem);
+        for (int i = 6; i < 26; i += 2) {
+            sizeMenu.getItems().add(createSizeItem(i));
         }
 
         model.getSelectedSize().addListener((_, _, newValue) -> {
             for (MenuItem item : sizeMenu.getItems()) {
-                boolean selectedOption = item.getText().equals(newValue.toString());
+                boolean selectedOption = ((int) item.getUserData()) == newValue.intValue();
                 ((CheckMenuItem) item).setSelected(selectedOption);
             }
         });
@@ -168,9 +179,24 @@ public class MenuBarViewBuilder implements Builder<MenuBar> {
                 languageOption,
                 sizeMenu,
                 new SeparatorMenuItem(),
-                launchMaximizedOption
+                launchMaximizedOption,
+                useSystemMenuBarOption,
+                audioPlayer
         );
         return viewMenu;
+    }
+
+    private CheckMenuItem createSizeItem(int size) {
+        CheckMenuItem sizeMenuItem = new CheckMenuItem(size + "px");
+        sizeMenuItem.setOnAction(_ -> {
+            onSizeChanged.accept(size);
+            sizeMenuItem.setSelected((int) sizeMenuItem.getUserData() == model.getSelectedSize().get());
+        });
+        sizeMenuItem.setUserData(size);
+        if (model.getSelectedSize().get() == size) {
+            sizeMenuItem.setSelected(true);
+        }
+        return sizeMenuItem;
     }
 
     private MenuItem createItem(String text, Ikon icon, KeyCombination accelerator) {

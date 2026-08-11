@@ -41,11 +41,8 @@ bin/
 ### Mac OS ###
 .DS_Store
 /sorted/
-/bulira  zenék/
 /.idea/
-/SomeSet/
-/SaveTest/
-/SaveAsTest/
 /preferences.properties
 /logs/
-/WindowsTest/
+/songs/
+/TODO.txt

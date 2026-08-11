@@ -22,17 +22,6 @@ public class SongTextDataWidget implements Builder<Region> {
         titleProperty.set(titleString);
     }
 
-    public void bind(Property<String> newBinding) {
-        if (textField == null) return;
-
-        if (activeBinding != null) {
-            textField.textProperty().unbindBidirectional(activeBinding);
-        }
-
-        textField.textProperty().bindBidirectional(newBinding);
-        activeBinding = newBinding;
-    }
-
     @Override
     public Region build() {
         VBox vBox = new VBox();
@@ -48,6 +37,17 @@ public class SongTextDataWidget implements Builder<Region> {
         vBox.getChildren().addAll(titleLabel, textField);
 
         return vBox;
+    }
+
+    public void bind(Property<String> newBinding) {
+        if (textField == null) return;
+
+        if (activeBinding != null) {
+            textField.textProperty().unbindBidirectional(activeBinding);
+        }
+
+        textField.textProperty().bindBidirectional(newBinding);
+        activeBinding = newBinding;
     }
 
     public void setEditable(boolean editable) {

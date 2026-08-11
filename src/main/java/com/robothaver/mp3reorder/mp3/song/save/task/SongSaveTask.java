@@ -21,46 +21,39 @@ public class SongSaveTask implements Callable<Void> {
 
     @Override
     public Void call() throws IOException, NotSupportedException, InvalidDataException, UnsupportedTagException {
-        mp3File = song.getMp3File();
+        mp3File = new Mp3File(song.getPath());
 
         // Write the data to the mp3 file's tag
-        TagUtils.writeDataToTag(song);
+        TagUtils.writeDataToTag(song, mp3File);
 
         // Get what folder to save in
+        String newSongName = SongSaveUtils.createValidSongName(song);
         String parentDir = song.getPath().getParent().toString();
-        String newSongName = SongSaveUtils.buildSongName(song);
-        song.fileNameProperty().set(newSongName);
-
         Path newSavePath = Paths.get(parentDir, newSongName);
-        if (song.getFileName().equals(song.getPath().getFileName().toString())) {
+
+        if (song.getFileName().equals(newSongName)) {
             // The file has not been renamed
             saveWithExistingName(parentDir, newSongName, newSavePath);
         } else {
             // The file has a new name, have to remove the existing file
             saveWithNewName(newSavePath);
         }
-        // Have to re-read mp3 file to avoid byte change issues
-        reloadMp3File(newSavePath, mp3File.getId3v2Tag());
+        song.fileNameProperty().set(newSongName);
 
-        song.getFileChanged().set(false);
+        song.setFileChanged(false);
+
         return null;
     }
 
     private void saveWithExistingName(String parentDir, String newSongName, Path newSavePath) throws IOException, NotSupportedException {
-        Path tempSavePath = Paths.get(parentDir, "EDITED_" + newSongName);
+        Path tempSavePath = Paths.get(parentDir, newSongName + ".tmp");
         mp3File.save(tempSavePath.toString());
         Files.move(tempSavePath, newSavePath, REPLACE_EXISTING);
     }
 
     private void saveWithNewName(Path newSavePath) throws IOException, NotSupportedException {
         mp3File.save(newSavePath.toString());
-        Files.deleteIfExists(song.getPath());
+        if (!Files.isSameFile(song.getPath(), newSavePath)) Files.deleteIfExists(song.getPath());
         song.setPath(newSavePath);
-    }
-
-    private void reloadMp3File(Path savePath, ID3v2 tag) throws InvalidDataException, UnsupportedTagException, IOException {
-        Mp3File saveMp3File = new Mp3File(savePath);
-        saveMp3File.setId3v2Tag(tag);
-        song.setMp3File(saveMp3File);
     }
 }

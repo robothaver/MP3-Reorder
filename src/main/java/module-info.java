@@ -1,6 +1,7 @@
 module com.robothaver.mp3reorder {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.media;
     requires atlantafx.base;
     requires mp3agic;
     requires org.kordamp.ikonli.javafx;

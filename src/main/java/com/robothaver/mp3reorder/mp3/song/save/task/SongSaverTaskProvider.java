@@ -26,7 +26,7 @@ public class SongSaverTaskProvider implements SongTaskProvider<Void> {
         if (savePath == null) {
             return songs
                     .stream()
-                    .filter(song -> song.getFileChanged().get())
+                    .filter(Song::isFileChanged)
                     .map(song -> new SongTask<>(new SongSaveTask(song), song.getPath()))
                     .toList();
         }

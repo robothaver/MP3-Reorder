@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,9 @@ public class SearchTextFieldViewBuilder implements Builder<CustomTextField> {
     @Override
     public CustomTextField build() {
         CustomTextField customTextField = new CustomTextField();
-        customTextField.setMinWidth(500);
+        customTextField.setMinWidth(300);
+        customTextField.setMaxWidth(600);
+        HBox.setHgrow(customTextField, Priority.ALWAYS);
         customTextField.setPromptText("Search");
         customTextField.setLeft(new FontIcon(Feather.SEARCH));
         customTextField.setRight(createRightControls(customTextField.textProperty()));
@@ -96,7 +99,7 @@ public class SearchTextFieldViewBuilder implements Builder<CustomTextField> {
     private Button createClearButton() {
         Button button = new Button(null, new FontIcon(Feather.X));
         button.getStyleClass().addAll(Styles.BUTTON_CIRCLE, Styles.FLAT);
-        button.setOnAction(event -> onClearSearch.run());
+        button.setOnAction(_ -> onClearSearch.run());
         return button;
     }
 }

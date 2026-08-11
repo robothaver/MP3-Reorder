@@ -1,0 +1,7 @@
+.hover-slider .thumb {
+    visibility: hidden;
+}
+
+.hover-slider:hover .thumb {
+    visibility: visible;
+}

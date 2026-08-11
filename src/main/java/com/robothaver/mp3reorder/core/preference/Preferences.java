@@ -1,6 +1,5 @@
 package com.robothaver.mp3reorder.core.preference;
 
-import com.robothaver.mp3reorder.core.font.Size;
 import com.robothaver.mp3reorder.mp3.controls.menubar.Themes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +14,9 @@ public class Preferences {
     private boolean sideMenuEnabled;
     private boolean statusBarEnabled;
     private boolean launchMaximized;
+    private boolean useSystemMenuBar;
+    private boolean audioPlayerEnabled;
     private Themes selectedTheme;
-    private Size selectedSize;
+    private int selectedSize;
     private Locale selectedLocale;
 }

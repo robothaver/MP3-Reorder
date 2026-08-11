@@ -1,23 +1,25 @@
 package com.robothaver.mp3reorder.mp3.controls.menubar;
 
 import com.robothaver.mp3reorder.core.font.FontSizeControllerImpl;
-import com.robothaver.mp3reorder.core.font.Size;
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.preference.PreferenceStoreImpl;
 import com.robothaver.mp3reorder.core.preference.Preferences;
 import com.robothaver.mp3reorder.core.preference.PreferencesStore;
 import com.robothaver.mp3reorder.dialog.DialogManagerImpl;
+import com.robothaver.mp3reorder.dialog.option.OptionDialogMessage;
 import com.robothaver.mp3reorder.mp3.MP3Model;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
 import com.robothaver.mp3reorder.mp3.domain.Song;
 import com.robothaver.mp3reorder.mp3.utils.MP3FileUtils;
 import javafx.application.Application;
+import javafx.scene.control.ButtonType;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static com.robothaver.mp3reorder.mp3.utils.MP3FileUtils.getTrackNumberFromFileName;
 
@@ -30,6 +32,11 @@ public class MenuBarInteractor {
     public MenuBarInteractor(MP3Model mp3Model) {
         this.mp3Model = mp3Model;
         this.menuBarModel = mp3Model.getMenuBarModel();
+    }
+
+    public void onToggleAudioPlayer() {
+        preferencesStore.getPreferences().setAudioPlayerEnabled(mp3Model.isAudioPlayerEnabled());
+        preferencesStore.savePreferences();
     }
 
     public Path getSaveLocation() {
@@ -48,7 +55,7 @@ public class MenuBarInteractor {
         preferencesStore.savePreferences();
     }
 
-    public void setSize(Size size) {
+    public void setSize(int size) {
         menuBarModel.getSelectedSize().set(size);
         FontSizeControllerImpl.getInstance().setFontSize(size);
         preferencesStore.getPreferences().setSelectedSize(size);
@@ -59,6 +66,13 @@ public class MenuBarInteractor {
         boolean enabled = menuBarModel.getLaunchMaximized().get();
         Preferences preferences = preferencesStore.getPreferences();
         preferences.setLaunchMaximized(enabled);
+        preferencesStore.savePreferences();
+    }
+
+    public void changeUseSystemMenubar() {
+        boolean enabled = menuBarModel.getUseSystemMenuBar().get();
+        Preferences preferences = preferencesStore.getPreferences();
+        preferences.setUseSystemMenuBar(enabled);
         preferencesStore.savePreferences();
     }
 
@@ -118,5 +132,26 @@ public class MenuBarInteractor {
             }
         }
         mp3Model.getSongSearch().clear();
+    }
+
+    public boolean shouldSaveChanges() {
+        ButtonType save = new ButtonType(localization.getForKey("unsaved_changes_dialog.save"));
+        ButtonType ignore = new ButtonType(localization.getForKey("unsaved_changes_dialog.ignore"));
+        OptionDialogMessage dialogMessage = OptionDialogMessage.builder()
+                .title(localization.getForKey("unsaved_changes_dialog.title"))
+                .message(localization.getForKey("unsaved_changes_dialog.message"))
+                .options(List.of(ignore, save))
+                .build();
+        Optional<ButtonType> userChoice = DialogManagerImpl.getInstance().showOptionDialog(dialogMessage);
+        return userChoice.isPresent() && userChoice.get().equals(save);
+    }
+
+    public boolean hasUnsavedChanges() {
+        for (Song song : mp3Model.getSongs()) {
+            if (song.isFileChanged()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

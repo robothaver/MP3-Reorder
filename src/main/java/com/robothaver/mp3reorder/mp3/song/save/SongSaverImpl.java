@@ -16,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class SongSaverImpl implements SongSaver {
     private final Path savePath;
     private final List<Song> songs;
     private final ViewLocalization localization = new ViewLocalization("language.song_saver", LanguageController.getSelectedLocale());
+    private final Runnable onSuccess;
 
     @Override
     public void save() {
@@ -62,6 +65,8 @@ public class SongSaverImpl implements SongSaver {
                 log.info("All songs saved successfully");
                 DialogManagerImpl.getInstance().showAlert(Alert.AlertType.INFORMATION, localization.getForKey("saving.finished.title"), localization.getForKey("saving.finished.message"));
             }
+
+            onSuccess.run();
         });
         taskExecutor.setOnFailed(_ -> {
             Throwable ex = taskExecutor.getException();

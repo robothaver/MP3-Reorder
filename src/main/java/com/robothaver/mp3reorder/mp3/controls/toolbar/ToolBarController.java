@@ -4,19 +4,16 @@ import com.robothaver.mp3reorder.core.BaseController;
 import com.robothaver.mp3reorder.mp3.MP3Model;
 import javafx.scene.control.ToolBar;
 
-import java.util.function.Consumer;
-
 public class ToolBarController extends BaseController<ToolBar> {
 
-    public ToolBarController(MP3Model model, Consumer<Integer> onSelectedIndexChanged) {
-        ToolBarInteractor interactor = new ToolBarInteractor(model, onSelectedIndexChanged);
+    public ToolBarController(MP3Model model) {
+        ToolBarInteractor interactor = new ToolBarInteractor(model);
         this.viewBuilder = new ToolBarViewBuilder(
                 model,
                 interactor::moveSelectedSongToTop,
                 interactor::moveSelectedSongUp,
                 interactor::moveSelectedSongDown,
-                interactor::moveSelectedSongToBottom,
-                onSelectedIndexChanged
+                interactor::moveSelectedSongToBottom
         );
     }
 }

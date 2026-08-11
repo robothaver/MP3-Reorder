@@ -2,27 +2,37 @@ package com.robothaver.mp3reorder.mp3;
 
 
 import com.robothaver.mp3reorder.mp3.controls.StatusBar;
+import com.robothaver.mp3reorder.mp3.controls.audioplayer.AudioPlayerController;
+import com.robothaver.mp3reorder.mp3.controls.audioplayer.AudioPlayerModel;
 import com.robothaver.mp3reorder.mp3.controls.details.SongDetailsSideMenuViewBuilder;
 import com.robothaver.mp3reorder.mp3.controls.menubar.MenuBarController;
 import com.robothaver.mp3reorder.mp3.controls.table.MP3TableViewController;
+import com.robothaver.mp3reorder.mp3.controls.table.MP3TableViewModel;
 import com.robothaver.mp3reorder.mp3.controls.toolbar.ToolBarController;
-import com.robothaver.mp3reorder.mp3.domain.Song;
 import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Orientation;
-import javafx.scene.control.*;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import lombok.RequiredArgsConstructor;
+
+import java.util.function.IntConsumer;
 
 @RequiredArgsConstructor
 public class MP3ViewBuilder implements Builder<Region> {
     private final MP3Model model;
     private final Runnable onLoadSongs;
-
-    private TableView<Song> mp3FileTableView;
-
+    private final Runnable onCloseDetailsMenu;
+    private final Runnable onPlayNext;
+    private final Runnable onPlayPrevious;
+    private final Runnable onScrollToPlaying;
+    private final Runnable onPlayPressedWhenEmpty;
+    private final IntConsumer onTogglePlay;
 
     @Override
     public Region build() {
@@ -30,7 +40,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         MenuBar menuBar = new MenuBarController(model, onLoadSongs).getView();
 
         VBox tableControls = createTableControls();
-        VBox detailsSideMenu = new SongDetailsSideMenuViewBuilder(model).build();
+        VBox detailsSideMenu = new SongDetailsSideMenuViewBuilder(model, onCloseDetailsMenu).build();
         SplitPane splitPane = buildMainSplitPane(tableControls, detailsSideMenu);
 
         StatusBar statusBar = new StatusBar(model);
@@ -39,6 +49,7 @@ public class MP3ViewBuilder implements Builder<Region> {
         statusBar.managedProperty().bind(statusBarEnabled);
 
         baseContainer.getChildren().addAll(menuBar, splitPane, statusBar);
+
         return baseContainer;
     }
 
@@ -70,23 +81,40 @@ public class MP3ViewBuilder implements Builder<Region> {
 
     private VBox createTableControls() {
         VBox tableContainer = new VBox();
-        ToolBar toolBar = new ToolBarController(model, this::selectIndex).getView();
+        ToolBar toolBar = new ToolBarController(model).getView();
         toolBar.setPrefHeight(50);
 
-        mp3FileTableView = new MP3TableViewController(model, this::selectIndex).getView();
-        mp3FileTableView.getSelectionModel().selectedIndexProperty().addListener((_, _, newValue) -> {
-            int index = (int) newValue;
-            if (index != -1) {
-                model.selectedSongIndexProperty().setValue(newValue);
+        MP3TableViewController tableViewController = new MP3TableViewController(model.getTrackEditor(), model.getSongSearch(), model.getSongs());
+        MP3TableViewModel tableViewModel = tableViewController.getModel();
+        tableViewModel.selectedIndexProperty().bindBidirectional(model.selectedSongIndexProperty());
+        tableViewModel.orderDescendingProperty().bindBidirectional(model.orderDescendingProperty());
+        tableViewModel.songInPlayerProperty().bind(model.songInPlayerProperty());
+        tableViewModel.songPlayingProperty().bind(model.songPlayingProperty());
+        tableViewModel.scrollToSelectedProperty().bind(model.scrollToSelectedProperty());
+        tableViewModel.setOnTogglePlay(onTogglePlay);
+
+        AudioPlayerController audioPlayerController = new AudioPlayerController();
+
+        model.songInPlayerProperty().addListener((_, _, selectedSong) -> {
+            if (selectedSong == null) {
+                audioPlayerController.reset();
+            } else {
+                audioPlayerController.playSong(selectedSong.getFileName(), selectedSong.getArtist(), selectedSong.getAlbumImage(), selectedSong.getPath().toString());
             }
         });
 
-        tableContainer.getChildren().addAll(toolBar, mp3FileTableView);
-        return tableContainer;
-    }
+        AudioPlayerModel audioPlayerModel = audioPlayerController.getModel();
+        audioPlayerModel.playingProperty().bindBidirectional(model.songPlayingProperty());
+        audioPlayerModel.setOnPlayNext(onPlayNext);
+        audioPlayerModel.setOnPlayPrevious(onPlayPrevious);
+        audioPlayerModel.setOnTitleClicked(onScrollToPlaying);
+        audioPlayerModel.setOnPlayPressedWhenEmpty(onPlayPressedWhenEmpty);
 
-    public void selectIndex(int index) {
-        mp3FileTableView.getSelectionModel().select(index);
-        mp3FileTableView.scrollTo(index);
+        StackPane audioPlayer = audioPlayerController.getView();
+        audioPlayer.managedProperty().bind(model.audioPlayerEnabledProperty());
+        audioPlayer.visibleProperty().bind(model.audioPlayerEnabledProperty());
+
+        tableContainer.getChildren().addAll(toolBar, tableViewController.getView(), audioPlayer);
+        return tableContainer;
     }
 }

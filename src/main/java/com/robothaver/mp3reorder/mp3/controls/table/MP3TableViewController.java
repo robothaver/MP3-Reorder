@@ -1,19 +1,27 @@
 package com.robothaver.mp3reorder.mp3.controls.table;
 
 import com.robothaver.mp3reorder.core.BaseController;
-import com.robothaver.mp3reorder.mp3.MP3Model;
+import com.robothaver.mp3reorder.mp3.controls.search.SearchTextFieldModel;
 import com.robothaver.mp3reorder.mp3.domain.Song;
+import com.robothaver.mp3reorder.mp3.song.track.editor.MP3TrackEditor;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
-
-import java.util.function.Consumer;
+import lombok.Getter;
 
 public class MP3TableViewController extends BaseController<TableView<Song>> {
-    public MP3TableViewController(MP3Model model, Consumer<Integer> onSelectedIndexChanged) {
-        MP3TableViewInteractor interactor = new MP3TableViewInteractor(model, onSelectedIndexChanged);
+    @Getter
+    private final MP3TableViewModel model;
+
+    public MP3TableViewController(MP3TrackEditor trackEditor, SearchTextFieldModel searchModel, ObservableList<Song> songs) {
+        model = new MP3TableViewModel(songs);
+        MP3TableViewInteractor interactor = new MP3TableViewInteractor(model, trackEditor, searchModel);
+        model.setOnOpenInDefaultPlayer(interactor::openInDefaultPlayer);
+        model.setOnRevealInFolder(interactor::revealInFolder);
         viewBuilder = new MP3TableViewBuilder(
-                model.getSongs(),
+                model,
                 interactor::onTrackChangedForSong,
-                interactor::onFileRenamed
+                interactor::onFileRenamed,
+                interactor::onSongDragged
         );
     }
 }
