@@ -1,4 +1,4 @@
-package com.robothaver.mp3reorder.mp3.controls.table;
+package com.robothaver.mp3reorder.core.utils;
 
 import com.robothaver.mp3reorder.core.language.LanguageController;
 import com.robothaver.mp3reorder.core.language.ViewLocalization;
@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 
 import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Path;
 
 @Log4j2
@@ -48,22 +49,53 @@ public class DesktopApi {
 
             String os = System.getProperty("os.name").toLowerCase();
             String path = songPath.toAbsolutePath().toString();
+
             if (os.contains("win")) {
                 runCommand("cmd.exe", "/c", "explorer.exe /select,\"" + path + "\"");
             } else if (os.contains("mac")) {
                 runCommand("open", "-R", path);
             } else {
-                if (commandExists("dolphin")) {
-                    runCommand("dolphin", "--select", path);
-                } else if (commandExists("nautilus")) {
-                    runCommand("nautilus", "--select", path);
-                }
+                revealInFolderLinux(path, songPath);
             }
         } catch (Exception e) {
             log.error("Failed to reveal song in folder", e);
             showActionError(localization.getForKey("action.reveal_in_folder"), e);
         }
+    }
 
+    private static void revealInFolderLinux(String path, Path songPath) throws IOException, UnsupportedOperationException {
+        boolean dbusSuccess = tryOpenWithDBus(songPath.toAbsolutePath().toUri());
+        if (!dbusSuccess) {
+            if (commandExists("dolphin")) {
+                runCommand("dolphin", "--select", path);
+            } else if (commandExists("nautilus")) {
+                runCommand("nautilus", "--select", path);
+            } else if (commandExists("xdg-open")) {
+                runCommand("xdg-open", songPath.getParent().toString());
+            }
+        }
+    }
+
+    private static boolean tryOpenWithDBus(URI uri) {
+        if (commandExists("dbus-send")) {
+            try {
+                runCommand(
+                        "dbus-send",
+                        "--session",
+                        "--dest=org.freedesktop.FileManager1",
+                        "--type=method_call",
+                        "/org/freedesktop/FileManager1",
+                        "org.freedesktop.FileManager1.ShowItems",
+                        "array:string:" + uri,
+                        "string:"
+                );
+                return true;
+            } catch (Exception e) {
+                log.warn("D-Bus FileManager1 call failed, falling back to direct commands", e);
+            }
+        }
+
+        return false;
     }
 
     private static boolean commandExists(String command) {
@@ -82,8 +114,17 @@ public class DesktopApi {
         }
     }
 
-    private static void runCommand(String... parts) throws IOException {
-        new ProcessBuilder(parts).start();
+    private static void runCommand(String... command) throws IOException {
+        new ProcessBuilder(command).start();
+    }
+
+    private static Desktop getDesktop() {
+        try {
+            return Desktop.getDesktop();
+        } catch (Exception e) {
+            log.error("Failed to get desktop", e);
+        }
+        return null;
     }
 
     private static void showActionDesktopError(String actionName) {
@@ -96,14 +137,5 @@ public class DesktopApi {
 
     private static void showErrorDialog(String title, String message) {
         DialogManagerImpl.getInstance().showAlert(Alert.AlertType.WARNING, title, message);
-    }
-
-    private static Desktop getDesktop() {
-        try {
-            return Desktop.getDesktop();
-        } catch (Exception e) {
-            log.error("Failed to get desktop", e);
-        }
-        return null;
     }
 }
