@@ -1,7 +1,6 @@
 name: Build and Upload Release Assets
 
 on:
-  workflow_call:
   release:
     types: [ created ]
 
