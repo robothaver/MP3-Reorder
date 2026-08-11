@@ -19,9 +19,14 @@ jobs:
       - name: Build Jlink native image
         run: ./gradlew jpackageImage
 
+      - name: Archive .app bundle
+        run: |
+            cd build/jpackage
+            ditto -c -k --sequesterRsrc --keepParent MP3Reorder.app MP3Reorder-macOS.zip
+
       - name: Upload Artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
-          name: MP3Reorder_MacOS
-          path: build/jpackage/MP3Reorder.app
+          name: MP3Reorder-macOS
+          path: build/jpackage/MP3Reorder-macOS.zip
           if-no-files-found: error
