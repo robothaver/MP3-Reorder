@@ -4,7 +4,7 @@ on:
   - workflow_call
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout Code
@@ -17,7 +17,7 @@ jobs:
           cache: 'gradle'
 
       - name: Build Jlink native image
-        run: .\gradlew.bat jpackageImage
+        run: ./gradlew jpackageImage
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
