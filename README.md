@@ -72,7 +72,7 @@ Built with JavaFX and the [AtlantaFX](https://github.com/mkpaz/atlantafx) theme 
 ### Run the App
 
 ```bash
-git clone https://github.com/yourusername/MP3Reorder.git
+git clone https://github.com/robothaver/MP3-Reorder.git
 cd MP3Reorder
 ./gradlew run
 ```
