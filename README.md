@@ -40,8 +40,8 @@ loaded songs.
 
 ### Playback and system integration
 
-- Built-in Player: Listen to your tracks directly within the app. (On some Linux distributions, the JavaFX MediaPlayer might fail to initialize. In this case, installing the `ffmpeg-compat-57` package might solve the issue.)
-- System Integration: Open songs in your default music player or reveal them directly in your file explorer.
+- **Built-in Player:** Listen to your tracks directly within the app. (On some Linux distributions, the JavaFX MediaPlayer might fail to initialize. In this case, installing the `ffmpeg-compat-57` package might solve the issue.)
+- **System Integration:** Open songs in your default music player or reveal them directly in your file explorer.
 
 ### UI
 
@@ -84,6 +84,8 @@ To build a native, standalone executable for your current operating system using
 ```bash
 ./gradlew jpackageImage
 ```
+
+Finished build can be found in `build/jpackage`
 
 ## Screenshots
 
