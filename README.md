@@ -18,9 +18,14 @@ is editing the MP3 `track` field, but it also functions as a general ID3 tag edi
 genres, and more.
 
 ## How it works
-
-The application enforces track numbering. It only allows assigning tracks within the range of 1 to the total number of
+- Select a folder containing your `.mp3` files.
+- The app loads the `.mp3` files, ignores corrupted files, and does not scan subfolders.
+- It checks each song’s track field and assigns a valid track number if the existing one is invalid.
+- The application enforces track numbering. It only allows assigning tracks within the range of 1 to the total number of
 loaded songs.
+- You can edit the `track` and other `ID3` tags directly in the app, as well as rename the files.
+- Songs can be saved to the currently open directory, in which case the original files will be updated with your changes. If you rename a song, the original file will be replaced with the renamed version.
+- You can also choose a different save location, where all songs will be saved along with any changes made to them.
 
 ## Features
 
